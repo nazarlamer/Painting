@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/resource">
+        <file>res/TestObj.dat</file>
+    </qresource>
+</RCC>
