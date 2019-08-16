@@ -69,6 +69,27 @@
          <enum>QLayout::SetMaximumSize</enum>
         </property>
         <item>
+         <widget class="QTreeWidget" name="treeWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>171</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <column>
+           <property name="text">
+            <string notr="true">1</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
          <widget class="MyGraphicsView" name="graphicsView">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -88,7 +109,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>130</width>
+            <width>139</width>
             <height>16777215</height>
            </size>
           </property>
@@ -127,7 +148,7 @@
       <item>
        <widget class="QPushButton" name="pushButton">
         <property name="text">
-         <string>OPEN</string>
+         <string>Натиснути сюди після запуску програми OPEN</string>
         </property>
        </widget>
       </item>
