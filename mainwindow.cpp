@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    initScene();
 
     /*scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
@@ -64,6 +65,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::initScene()
+{
+    scene = new MyGraphicsScene(this);
+    scene->setSceneRect(0, 0, 20000, 20000);
+}
+
 /*void graphicsView::paintEvent(QPaintEvent *event)
 {
     static int count = 0;
@@ -85,11 +92,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-
-    //scene = new QGraphicsScene(this);
-    scene = new MyGraphicsScene(this);
-    scene->setSceneRect(0, 0, 20000, 20000);
-
     //QBrush bru(Qt::BrushStyle::VerPattern);
     //scene->setForegroundBrush(bru);
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);

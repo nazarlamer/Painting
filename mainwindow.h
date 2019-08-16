@@ -22,6 +22,9 @@ public:
     ~MainWindow();
     QGraphicsItem *SelectGrItem;
 
+private:
+    void initScene();
+
 private slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
@@ -41,7 +44,7 @@ private:
     Ui::MainWindow *ui;
 
     //QGraphicsScene *scene;
-    MyGraphicsScene *scene;
+    MyGraphicsScene *scene{nullptr};
     QGraphicsEllipseItem *ellipse;
     QGraphicsRectItem *rectangle;
     QGraphicsTextItem *text;
