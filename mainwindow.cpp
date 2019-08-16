@@ -234,7 +234,7 @@ void MainWindow::SaveGraphFile()
     filein.close(); // Закрываем fileout.txt
     */
 
-    if (not listElem.isEmpty()) {
+    if (!listElem.isEmpty()) {
         QFile file("Q_SXEMA");
         file.open(QIODevice::WriteOnly);
         QDataStream out(&file);
