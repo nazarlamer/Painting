@@ -33,8 +33,6 @@ private slots:
 
     void on_action_triggered();
 
-    void on_action_3_triggered();
-
     void on_action_5_triggered();
 
     void on_action_6_triggered();
