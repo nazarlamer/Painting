@@ -1,29 +1,25 @@
-#ifndef GRAWS_H
-#define GRAWS_H
+#pragma once
 
-#include <QGraphicsItem>
-#include <QPainter>
-#include <QDebug>
+#include "abstractgraw.h"
 
-
-class Graws: public QGraphicsItem
+class Graws: public AbstractGraw
 {
-
-    Q_PROPERTY(int id_el READ idelem WRITE idelem)
-
 public:
-    Graws(int IDElem);
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    int idelem;
+    // read about explicit (DELETE THIS COMMENT AFTER READ)
+    explicit Graws(int IDElem);
+
+    // QGraphicsItem interface
+public:
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 protected:
-    QRectF boundingRect() const;    /* We define a virtual method that returns the area in which the triangle is
-                                     * */
-    /* Define a method for rendering a triangle
-     * */
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    //QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
+    // AbstractGraws interface
+public:
+    int id() const override;
+
+private:
+    int idElem{-1};
 };
-
-#endif // GRAWS_H

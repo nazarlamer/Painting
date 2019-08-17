@@ -32,6 +32,7 @@ SOURCES += \
         mygraphicsview.cpp
 
 HEADERS += \
+        abstractgraw.h \
         graws.h \
         mainwindow.h \
         mygraphicsscene.h \
