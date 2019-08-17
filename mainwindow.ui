@@ -146,7 +146,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="openButton">
         <property name="text">
          <string>Натиснути сюди після запуску програми OPEN</string>
         </property>
@@ -162,7 +162,7 @@
      <x>0</x>
      <y>0</y>
      <width>834</width>
-     <height>18</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -187,11 +187,6 @@
    <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
-  <action name="action_2">
-   <property name="text">
-    <string>Пр</string>
-   </property>
-  </action>
   <action name="action_3">
    <property name="text">
     <string>Експорт</string>
@@ -217,7 +212,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>pushButton</tabstop>
+  <tabstop>openButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>
