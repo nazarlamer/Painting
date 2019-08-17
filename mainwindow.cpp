@@ -1,21 +1,17 @@
-#include <QDebug>
-#include <QPainter>
-#include <QPicture>
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "math.h"
+#include "mygraphicsscene.h"
+#include "components/grawitem.h"
+#include "components/componentfactory.h"
 
-#include <iostream>
-#include <fstream>
-
-#include <QWidget>
+#include <QDebug>
 #include <QTableWidgetItem>
 #include <QFile>
-
-#include<QMessageBox>
-#include<QCloseEvent>
-#include<QFileDialog>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QCloseEvent>
+#include <QVariant>
+#include <QGraphicsSceneMouseEvent>
 
 using namespace std;
 
@@ -24,148 +20,104 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    fillComponentLibrary();
     initScene();
-
-    /*scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(scene);
-
-    QBrush greenBrush(Qt::green);
-    QBrush blueBrush(Qt::blue);
-    QPen outlinePen(Qt::black);
-    outlinePen.setWidth(2);
-
-    rectangle = scene->addRect(0, 0, 80, 100, outlinePen, blueBrush);
-
-    // addEllipse(x,y,w,h,pen,brush)
-    ellipse = scene->addEllipse(0, -100, 300, 60, outlinePen, greenBrush);
-
-    text = scene->addText("bogotobogo.com", QFont("Arial", 20) );
-    // movable text
-    text->setFlag(QGraphicsItem::ItemIsMovable);
-    ellipse->setFlag(QGraphicsItem::ItemIsMovable);
-    rectangle->setFlag(QGraphicsItem::ItemIsMovable);
-    //ui->scrollAreaWidgetContents->setLayout(ui->graphicsView);*/
-
-    QPainter painterl;
-    QPainter painter2;
-
-    painterl.begin(this);
-    painterl.end();
-
-
-    painter2.begin(this);
-    painter2. end () ;
-
-
-
+    makeConnections();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete draftItem;
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (state == SceneState::NormalState)
+        return false;
+
+    if (watched != scene)
+        return false;
+
+    if (event->type() == QEvent::GraphicsSceneContextMenu)
+    {
+        setSceneState(SceneState::NormalState);
+        return true;
+    }
+
+    if (event->type() == QEvent::Enter && state == SceneState::CreateComponentState && draftItem)
+        scene->addItem(draftItem);
+
+    if (event->type() == QEvent::GraphicsSceneMouseMove)
+    {
+        auto mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(event);
+        const auto mousePos = mouseEvent->scenePos();
+
+        if (state == SceneState::CreateComponentState && draftItem)
+        {
+            const auto areaCenter = draftItem->boundingRect().center();
+            draftItem->setPos({ mousePos.x() - areaCenter.x(), mousePos.y() - areaCenter.y() });
+        }
+        return false;
+    }
+
+    return false;
 }
 
 void MainWindow::initScene()
 {
     scene = new MyGraphicsScene(this);
     scene->setSceneRect(0, 0, 20000, 20000);
+    scene->installEventFilter(this);
+    ui->graphicsView->setMouseTracking(true);
 }
 
-/*void graphicsView::paintEvent(QPaintEvent *event)
+void MainWindow::saveGraphFile() const
 {
-    static int count = 0;
-    qDebug("paintEvent, %d", count++);
+    if (!listElem.isEmpty())
+    {
+        QFile file("Q_SXEMA");
+        file.open(QIODevice::WriteOnly);
+        QDataStream out(&file);
+        for (int i=0; i<listElem.count(); i++)
+        {
+            out << listElem[i]->x();
+            out << listElem[i]->y();
+            out << listElem[i]->id();
+        }
+
+        file.close();
+    }
 }
 
-        QPainter painter(this);
-        painter.begin(this);
-        QRect rect(10,10,100,100);
-
-        QPen pen(Qt::red);
-        pen.setWidth(5);
-
-        painter.setPen(pen);
-        painter.drawRect(rect);
-        painter.end();
- */
-
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::loadGraphFile()
 {
-    //QBrush bru(Qt::BrushStyle::VerPattern);
-    //scene->setForegroundBrush(bru);
-    ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    ui->graphicsView->setScene(scene);
-
-    //scene->addLine(0,0,100,100);
-
-    rectangle = scene->addRect(0,0,100,100);
-    rectangle->setFlag(QGraphicsItem::ItemIsMovable);
-
-    /*
-    graws = new Graws(1);
-    graws->setFlag(QGraphicsItem::ItemIsMovable);
-    listElem << graws;
-
-    scene->addItem(graws);
-    graws->setPos(50,50);
-
-    graws = new Graws(2);
-    graws->setFlag(QGraphicsItem::ItemIsMovable);
-    listElem << graws;
-
-    scene->addItem(graws);
-    graws->setPos(100,100);
-    */
-
     QFile file2("Q_SXEMA");
     file2.open(QIODevice::ReadOnly);
     QDataStream in(&file2);    // read the data serialized from the file
     qreal elposx;
     qreal elposy;
     int eltypeb;
-    while (!in.atEnd()) {
+    while (!in.atEnd())
+    {
         in >> elposx;
         in >> elposy;
         in >> eltypeb;
 
-        graws = new Graws(eltypeb);
-        graws->setFlag(QGraphicsItem::ItemIsMovable);
-        listElem << graws;
-        scene->addItem(graws);
-        graws->setPos(elposx, elposy);
+        GrawItem *item = ComponentFactory::createComponent(eltypeb);
+        if (!item)
+            continue;
+
+        item->setFlag(QGraphicsItem::ItemIsMovable);
+        listElem << item;
+        scene->addItem(item);
+        item->setPos(elposx, elposy);
     }
     file2.close();
+}
 
-
-    /*
-    fstream inFile;
-    int posx;
-    int posy;
-    int buffer[2] = {0};
-    int typeob = 0;
-    inFile.open("SXEMA", ios::binary | ios::in);
-
-    inFile.seekg(0);
-    while(!inFile.eof())
-    {
-        inFile.read(reinterpret_cast<char*>(buffer), sizeof(int)*2);
-        posx =buffer[0];
-        posy =buffer[1];
-        inFile.read(reinterpret_cast<char*>(typeob), sizeof(int));
-
-        graws = new Graws(typeob);
-        graws->setFlag(QGraphicsItem::ItemIsMovable);
-        listElem << graws;
-
-        scene->addItem(graws);
-        graws->setPos(posx,posy);
-    }
-    inFile.close();
-    */
-
-    //ui->graphicsView->a
-    //scene->addItem(painter);
+void MainWindow::fillTable() const
+{
     // Разрешаем выделение только одного элемента
     ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     // Разрешаем выделение построчно
@@ -176,119 +128,93 @@ void MainWindow::on_pushButton_clicked()
     ui->tableWidget->setHorizontalHeaderLabels({"POSX", "POSY"});
 
     int InsR = 0;
-    listElem.first();
-    for (int i=0; i<listElem.count(); i++) {
-        graws = listElem[i];
+    for (int i=0; i<listElem.size(); ++i)
+    {
+        const GrawItem *graw = listElem[i];
         ui->tableWidget->insertRow(InsR);
-        ui->tableWidget->setItem(InsR,0, new QTableWidgetItem((QString::number(graws->x()))));
-        ui->tableWidget->setItem(InsR,1, new QTableWidgetItem((QString::number(graws->y()))));
+        ui->tableWidget->setItem(InsR,0, new QTableWidgetItem((QString::number(graw->x()))));
+        ui->tableWidget->setItem(InsR,1, new QTableWidgetItem((QString::number(graw->y()))));
         ui->tableWidget->setRowHeight(InsR,16);
     InsR += 1;
     }
 
     ui->tableWidget->resizeColumnsToContents();
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
-
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::fillComponentLibrary() const
 {
+    const int columnIndex = 0;
 
+    ui->treeWidget->setColumnCount(1);
+    ui->treeWidget->setHeaderHidden(true);
+    ui->treeWidget->setAlternatingRowColors(true);
 
-}
-
-void MainWindow::on_MainWindow_destroyed()
-{
-    SaveGraphFile();
-}
-
-void MainWindow::SaveGraphFile()
-{
-    /*std::fstream inFile;
-    inFile.open("SXEMA", std::ios::binary | std::ios::out);
-
-    if (not listElem.isEmpty()) {
-        listElem.first();
-        for (int i=0; i<listElem.count(); i++) {
-            graws = listElem[i];
-            inFile << (int) graws->x();
-            inFile << (int) graws->y();
-            inFile << graws->idelem;
-        }
-        inFile.close();
-    }*/
-
-    /*
-    QFile fileOut("Q_SXEMA");
-    fileOut.open(QIODevice::WriteOnly);
-    qreal f=100;
-    QByteArray block(reinterpret_cast<const char*>(&f), sizeof(f));
-    fileOut.write(block);
-    fileOut.close(); // Закрываем fileout.txt
-
-
-    QFile filein("Q_SXEMA");
-    filein.open(QIODevice::ReadOnly);
-    qreal fin;
-    QByteArray blockin = filein.read(sizeof(fin));
-    QDataStream streamOut(blockin);
-    streamOut >> fin;
-    filein.close(); // Закрываем fileout.txt
-    */
-
-    if (!listElem.isEmpty()) {
-        QFile file("Q_SXEMA");
-        file.open(QIODevice::WriteOnly);
-        QDataStream out(&file);
-        listElem.first();
-        for (int i=0; i<listElem.count(); i++) {
-            graws = listElem[i];
-            out << graws->x();
-            out << graws->y();
-            out << graws->idelem;
-        }
-
-        file.close();
+    QTreeWidgetItem *category1TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category1TreeItem->setText(columnIndex, "Categry 1");
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Line");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Line));
+        category1TreeItem->addChild(treeItem);
+    }
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Arrow");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Arrow));
+        category1TreeItem->addChild(treeItem);
     }
 
-    /*
-    QFile file2("Q_SXEMA");
-    file2.open(QIODevice::ReadOnly);
-    QDataStream in(&file2);    // read the data serialized from the file
-    qreal a;
-    int b;
-    while (!in.atEnd()) {
-    in >> a;           // extract "the answer is" and 42
-    qDebug() << a;
-    in >> a;           // extract "the answer is" and 42
-    qDebug() << a;
-    in >> b;
-    qDebug() << b;
+    QTreeWidgetItem *category2TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category2TreeItem->setText(columnIndex, "Categry 2");
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Circle");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Circle));
+        category2TreeItem->addChild(treeItem);
     }
-    file2.close();
-    */
-
-    /*
-    QFile fileIn("filein.txt");
-    QFile fileOut("fileout.txt");
-    if(fileIn.open(QIODevice::ReadOnly) && fileOut.open(QIODevice::WriteOnly))
-    { //Если первый файл открыт для чтения, а второй для записи успешн
-        QByteArray block = fileIn.read(10); // Считываем 10 байт в массив block из filein.txt
-        fileOut.write(block); // Записываем 10 байт в файл fileout.txt
-        fileIn.close(); // Закрываем filein.txt
-        fileOut.close(); // Закрываем fileout.txt
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Rectangle");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
+        category2TreeItem->addChild(treeItem);
     }
-    */
-
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::setSceneState(SceneState sceneState)
 {
-    SaveGraphFile();
+    state = sceneState;
+
+    if (state == SceneState::NormalState)
+    {
+        delete draftItem;
+        draftItem = nullptr;
+    }
+}
+
+void MainWindow::makeConnections()
+{
+    connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::onOpenButtonClicked);
+    connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
+    connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
+    connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
+    connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
+    connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
+    connect(scene, &MyGraphicsScene::mouseLeftScene, this, &MainWindow::onMouseLeftScene);
+    connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
+}
+
+void MainWindow::onOpenButtonClicked()
+{
+    ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    ui->graphicsView->setScene(scene);
+
+    loadGraphFile();
+    fillTable();
 }
 
 void MainWindow::closeEvent(QCloseEvent *bar){
-    SaveGraphFile();
+    saveGraphFile();
     //bar->accept();
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "APP_NAME",
                                                                 tr("Are you sure?\n"),
@@ -301,45 +227,96 @@ void MainWindow::closeEvent(QCloseEvent *bar){
     }
 }
 
-void MainWindow::on_pushButton_4_clicked()
+void MainWindow::onAddLineActionTriggered()
 {
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Line);
+    if (!graw)
+        return;
 
+    graw->setFlag(QGraphicsItem::ItemIsMovable);
+    listElem << graw;
+
+    scene->addItem(graw);
+    graw->setPos(100,100);
 }
 
-void MainWindow::on_action_triggered()
+void MainWindow::onAddArrowActionTriggered()
 {
-    /*
-    QPicture picDAT;
-    QPainter painter;
-    painter.begin(&picDAT);
-    painter.drawLine(20, 20, 50, 50);
-    painter.end();
-    picDAT.save("D:\\TestObj.dat");
-    */
-    graws = new Graws(3);
-    graws->setFlag(QGraphicsItem::ItemIsMovable);
-    listElem << graws;
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Arrow);
+    if (!graw)
+        return;
 
-    scene->addItem(graws);
-    graws->setPos(100,100);
+    graw->setFlag(QGraphicsItem::ItemIsMovable);
+    listElem << graw;
+
+    scene->addItem(graw);
+    graw->setPos(100,100);
 }
 
-void MainWindow::on_action_5_triggered()
+void MainWindow::onAddCircleActionTriggered()
 {
-    graws = new Graws(2);
-    graws->setFlag(QGraphicsItem::ItemIsMovable);
-    listElem << graws;
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Circle);
+    if (!graw)
+        return;
 
-    scene->addItem(graws);
-    graws->setPos(100,100);
+    graw->setFlag(QGraphicsItem::ItemIsMovable);
+    listElem << graw;
+
+    scene->addItem(graw);
+    graw->setPos(100,100);
 }
 
-void MainWindow::on_action_6_triggered()
+void MainWindow::onAddRectangleActionTriggered()
 {
-    graws = new Graws(4);
-    graws->setFlag(QGraphicsItem::ItemIsMovable);
-    listElem << graws;
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Rectangle);
+    if (!graw)
+        return;
 
-    scene->addItem(graws);
-    graws->setPos(100,100);
+    graw->setFlag(QGraphicsItem::ItemIsMovable);
+    listElem << graw;
+
+    scene->addItem(graw);
+    graw->setPos(100,100);
+}
+
+void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
+{
+    if (column != 0)
+        return;
+
+    const QVariant var = item->data(0, componentTypeRole);
+    if (!var.isValid())
+        return;
+
+    const ComponentType selectedType = static_cast<ComponentType>(var.toInt());
+    GrawItem *graw = ComponentFactory::createComponent(selectedType);
+    if (!graw)
+        return;
+
+    setSceneState(SceneState::CreateComponentState);
+    delete draftItem;
+    draftItem = graw;
+    draftItem->setFlag(QGraphicsItem::ItemIsMovable);
+    draftItem->setZValue(0);
+}
+
+void MainWindow::onMouseLeftScene()
+{
+    if (draftItem)
+        scene->removeItem(draftItem);
+}
+
+void MainWindow::onMousePressed(const QPointF &point)
+{
+    if (state != SceneState::CreateComponentState)
+        return;
+
+    if (!draftItem)
+        return;
+
+    GrawItem *newItem = ComponentFactory::createComponent(draftItem->componentType());
+    newItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    newItem->setPos(point);
+    scene->addItem(newItem);
+    listElem.append(newItem);
 }

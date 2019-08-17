@@ -146,7 +146,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="openButton">
         <property name="text">
          <string>Натиснути сюди після запуску програми OPEN</string>
         </property>
@@ -162,7 +162,7 @@
      <x>0</x>
      <y>0</y>
      <width>834</width>
-     <height>18</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -179,32 +179,51 @@
      <property name="title">
       <string>Додати елемент</string>
      </property>
-     <addaction name="action_5"/>
-     <addaction name="action_6"/>
+     <addaction name="addLineAction"/>
+     <addaction name="addArrowAction"/>
+     <addaction name="addCircleAction"/>
+     <addaction name="addRectangleAction"/>
     </widget>
     <addaction name="menu_3"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
-  <action name="action_2">
-   <property name="text">
-    <string>Пр</string>
-   </property>
-  </action>
   <action name="action_3">
    <property name="text">
     <string>Експорт</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="addLineAction">
    <property name="text">
-    <string>ел2</string>
+    <string>&amp;Add Line</string>
+   </property>
+   <property name="toolTip">
+    <string>Line</string>
    </property>
   </action>
-  <action name="action_6">
+  <action name="addArrowAction">
    <property name="text">
-    <string>ул4</string>
+    <string>&amp;Add Arrow</string>
+   </property>
+   <property name="toolTip">
+    <string>Arrow</string>
+   </property>
+  </action>
+  <action name="addCircleAction">
+   <property name="text">
+    <string>&amp;Add Circle</string>
+   </property>
+   <property name="toolTip">
+    <string>Circle</string>
+   </property>
+  </action>
+  <action name="addRectangleAction">
+   <property name="text">
+    <string>&amp;Add Rectangle</string>
+   </property>
+   <property name="toolTip">
+    <string>Rectangle</string>
    </property>
   </action>
  </widget>
@@ -217,7 +236,7 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>pushButton</tabstop>
+  <tabstop>openButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

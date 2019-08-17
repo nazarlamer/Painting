@@ -25,14 +25,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        graws.cpp \
+        components/arrowitem.cpp \
+        components/circleitem.cpp \
+        components/componentfactory.cpp \
+        components/grawitem.cpp \
+        components/lineitem.cpp \
+        components/rectangleitem.cpp \
         main.cpp \
         mainwindow.cpp \
         mygraphicsscene.cpp \
         mygraphicsview.cpp
 
 HEADERS += \
-        graws.h \
+        components/arrowitem.h \
+        components/circleitem.h \
+        components/componentfactory.h \
+        components/componenttype.h \
+        components/grawitem.h \
+        components/lineitem.h \
+        components/rectangleitem.h \
         mainwindow.h \
         mygraphicsscene.h \
         mygraphicsview.h
