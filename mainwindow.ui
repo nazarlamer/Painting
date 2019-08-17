@@ -179,8 +179,10 @@
      <property name="title">
       <string>Додати елемент</string>
      </property>
-     <addaction name="action_5"/>
-     <addaction name="action_6"/>
+     <addaction name="addLineAction"/>
+     <addaction name="addArrowAction"/>
+     <addaction name="addCircleAction"/>
+     <addaction name="addRectangleAction"/>
     </widget>
     <addaction name="menu_3"/>
    </widget>
@@ -192,14 +194,36 @@
     <string>Експорт</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="addLineAction">
    <property name="text">
-    <string>ел2</string>
+    <string>&amp;Add Line</string>
+   </property>
+   <property name="toolTip">
+    <string>Line</string>
    </property>
   </action>
-  <action name="action_6">
+  <action name="addArrowAction">
    <property name="text">
-    <string>ул4</string>
+    <string>&amp;Add Arrow</string>
+   </property>
+   <property name="toolTip">
+    <string>Arrow</string>
+   </property>
+  </action>
+  <action name="addCircleAction">
+   <property name="text">
+    <string>&amp;Add Circle</string>
+   </property>
+   <property name="toolTip">
+    <string>Circle</string>
+   </property>
+  </action>
+  <action name="addRectangleAction">
+   <property name="text">
+    <string>&amp;Add Rectangle</string>
+   </property>
+   <property name="toolTip">
+    <string>Rectangle</string>
    </property>
   </action>
  </widget>

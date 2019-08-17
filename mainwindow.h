@@ -24,10 +24,12 @@ protected:
 
 private slots:
     void onOpenButtonClicked();
+    void onAddLineActionTriggered();
+    void onAddArrowActionTriggered();
+    void onAddCircleActionTriggered();
+    void onAddRectangleActionTriggered();
 
     void on_action_triggered();
-    void on_action_5_triggered();
-    void on_action_6_triggered();
 
 private:
     void initScene();

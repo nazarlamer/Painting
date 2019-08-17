@@ -89,8 +89,8 @@ void MainWindow::fillTable() const
     ui->tableWidget->setHorizontalHeaderLabels({"POSX", "POSY"});
 
     int InsR = 0;
-    listElem.first();
-    for (int i=0; i<listElem.count(); i++) {
+    for (int i=0; i<listElem.size(); ++i)
+    {
         const GrawItem *graw = listElem[i];
         ui->tableWidget->insertRow(InsR);
         ui->tableWidget->setItem(InsR,0, new QTableWidgetItem((QString::number(graw->x()))));
@@ -106,6 +106,11 @@ void MainWindow::fillTable() const
 void MainWindow::makeConnections()
 {
     connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::onOpenButtonClicked);
+    connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
+    connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
+    connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
+    connect(ui->addRectangleAction, &QAction::triggered,
+            this, &MainWindow::onAddRectangleActionTriggered);
 }
 
 void MainWindow::onOpenButtonClicked()
@@ -141,9 +146,12 @@ void MainWindow::on_action_triggered()
     graw->setPos(100,100);
 }
 
-void MainWindow::on_action_5_triggered()
+void MainWindow::onAddLineActionTriggered()
 {
     GrawItem *graw = ComponentFactory::createComponent(ComponentType::Line);
+    if (!graw)
+        return;
+
     graw->setFlag(QGraphicsItem::ItemIsMovable);
     listElem << graw;
 
@@ -151,9 +159,38 @@ void MainWindow::on_action_5_triggered()
     graw->setPos(100,100);
 }
 
-void MainWindow::on_action_6_triggered()
+void MainWindow::onAddArrowActionTriggered()
 {
     GrawItem *graw = ComponentFactory::createComponent(ComponentType::Arrow);
+    if (!graw)
+        return;
+
+    graw->setFlag(QGraphicsItem::ItemIsMovable);
+    listElem << graw;
+
+    scene->addItem(graw);
+    graw->setPos(100,100);
+}
+
+void MainWindow::onAddCircleActionTriggered()
+{
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Circle);
+    if (!graw)
+        return;
+
+    graw->setFlag(QGraphicsItem::ItemIsMovable);
+    listElem << graw;
+
+    scene->addItem(graw);
+    graw->setPos(100,100);
+}
+
+void MainWindow::onAddRectangleActionTriggered()
+{
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Rectangle);
+    if (!graw)
+        return;
+
     graw->setFlag(QGraphicsItem::ItemIsMovable);
     listElem << graw;
 

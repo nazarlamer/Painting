@@ -26,10 +26,11 @@ CONFIG += c++11
 
 SOURCES += \
         components/arrowitem.cpp \
+        components/circleitem.cpp \
         components/componentfactory.cpp \
         components/grawitem.cpp \
-        components/graws.cpp \
         components/lineitem.cpp \
+        components/rectangleitem.cpp \
         main.cpp \
         mainwindow.cpp \
         mygraphicsscene.cpp \
@@ -37,11 +38,12 @@ SOURCES += \
 
 HEADERS += \
         components/arrowitem.h \
+        components/circleitem.h \
         components/componentfactory.h \
         components/componenttype.h \
         components/grawitem.h \
-        components/graws.h \
         components/lineitem.h \
+        components/rectangleitem.h \
         mainwindow.h \
         mygraphicsscene.h \
         mygraphicsview.h

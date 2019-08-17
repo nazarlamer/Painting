@@ -3,5 +3,7 @@
 enum class ComponentType
 {
     Line,
-    Arrow
+    Arrow,
+    Circle,
+    Rectangle
 };
