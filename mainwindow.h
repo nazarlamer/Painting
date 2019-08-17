@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-class AbstractGraw;
+class GrawItem;
 class MyGraphicsScene;
 
 namespace Ui {
@@ -42,7 +42,7 @@ private:
 
     // do not use concreate objects - use abstract objects like QGraphicsItem or some other abstract
     // class (DELETE THIS COMMENT AFTER READ)
-    QList<AbstractGraw*> listElem;
+    QList<GrawItem*> listElem;
 };
 
 #endif // MAINWINDOW_H

@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "graws.h"
 #include "mygraphicsscene.h"
+#include "components/grawitem.h"
+#include "components/componentfactory.h"
 
 #include <QDebug>
 #include <QTableWidgetItem>
@@ -64,7 +65,10 @@ void MainWindow::loadGraphFile()
         in >> elposy;
         in >> eltypeb;
 
-        AbstractGraw *item = new Graws(eltypeb);
+        GrawItem *item = ComponentFactory::createComponent(eltypeb);
+        if (!item)
+            continue;
+
         item->setFlag(QGraphicsItem::ItemIsMovable);
         listElem << item;
         scene->addItem(item);
@@ -87,7 +91,7 @@ void MainWindow::fillTable() const
     int InsR = 0;
     listElem.first();
     for (int i=0; i<listElem.count(); i++) {
-        const AbstractGraw *graw = listElem[i];
+        const GrawItem *graw = listElem[i];
         ui->tableWidget->insertRow(InsR);
         ui->tableWidget->setItem(InsR,0, new QTableWidgetItem((QString::number(graw->x()))));
         ui->tableWidget->setItem(InsR,1, new QTableWidgetItem((QString::number(graw->y()))));
@@ -129,7 +133,7 @@ void MainWindow::closeEvent(QCloseEvent *bar){
 
 void MainWindow::on_action_triggered()
 {
-    AbstractGraw *graw = new Graws(3);
+    GrawItem *graw = ComponentFactory::createComponent(3);
     graw->setFlag(QGraphicsItem::ItemIsMovable);
     listElem << graw;
 
@@ -139,7 +143,7 @@ void MainWindow::on_action_triggered()
 
 void MainWindow::on_action_5_triggered()
 {
-    AbstractGraw *graw = new Graws(2);
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Line);
     graw->setFlag(QGraphicsItem::ItemIsMovable);
     listElem << graw;
 
@@ -149,7 +153,7 @@ void MainWindow::on_action_5_triggered()
 
 void MainWindow::on_action_6_triggered()
 {
-    AbstractGraw *graw = new Graws(4);
+    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Arrow);
     graw->setFlag(QGraphicsItem::ItemIsMovable);
     listElem << graw;
 
