@@ -2,9 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "components/componenttype.h"
 
 class GrawItem;
 class MyGraphicsScene;
+class QTreeWidgetItem;
 
 namespace Ui {
 class MainWindow;
@@ -14,9 +16,20 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    enum class SceneState
+    {
+        CreateComponentState,
+        NormalState
+    };
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
+
+    // QObject interface
+public:
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
     // QWidget interface
 protected:
@@ -28,8 +41,9 @@ private slots:
     void onAddArrowActionTriggered();
     void onAddCircleActionTriggered();
     void onAddRectangleActionTriggered();
-
-    void on_action_triggered();
+    void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
+    void onMouseLeftScene();
+    void onMousePressed(const QPointF &point);
 
 private:
     void initScene();
@@ -38,14 +52,18 @@ private:
     void loadGraphFile();
     void fillTable() const;
     void fillComponentLibrary() const;
+    void setSceneState(SceneState sceneState);
 
 private:
     Ui::MainWindow *ui{nullptr};
     MyGraphicsScene *scene{nullptr};
+    SceneState state{SceneState::NormalState};
+    ComponentType selectedComponentType{ComponentType::None};
 
     // do not use concreate objects - use abstract objects like QGraphicsItem or some other abstract
     // class (DELETE THIS COMMENT AFTER READ)
     QList<GrawItem*> listElem;
+    GrawItem *draftItem{nullptr};
     const int componentTypeRole{Qt::UserRole + 1};
 };
 

@@ -20,9 +20,10 @@ GrawItem *ComponentFactory::createComponent(ComponentType type)
 
     case ComponentType::Rectangle:
         return new RectangleItem(static_cast<int>(type));
-    }
 
-    return nullptr;
+    default:
+        return nullptr;
+    }
 }
 
 GrawItem *ComponentFactory::createComponent(int id)

@@ -2,7 +2,8 @@
 #include <math.h>
 #include <QDebug>
 #include <QPainter>
-
+#include <QEvent>
+#include <QGraphicsSceneMouseEvent>
 
 MyGraphicsScene::MyGraphicsScene(QObject *parent): QGraphicsScene (parent)
 {
@@ -105,4 +106,19 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
    painter->drawLines(lines.data(), lines.size());
    */
 
+}
+
+void MyGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mousePressEvent(event);
+    if (event->button() == Qt::LeftButton)
+        emit leftButtonMousePress(event->scenePos());
+}
+
+bool MyGraphicsScene::event(QEvent *event)
+{
+    if (event->type() == QEvent::Leave)
+        emit mouseLeftScene();
+
+    return QGraphicsScene::event(event);
 }

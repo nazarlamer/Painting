@@ -11,6 +11,7 @@
 #include <QFileDialog>
 #include <QCloseEvent>
 #include <QVariant>
+#include <QGraphicsSceneMouseEvent>
 
 using namespace std;
 
@@ -27,12 +28,48 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete draftItem;
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (state == SceneState::NormalState)
+        return false;
+
+    if (watched != scene)
+        return false;
+
+    if (event->type() == QEvent::GraphicsSceneContextMenu)
+    {
+        setSceneState(SceneState::NormalState);
+        return true;
+    }
+
+    if (event->type() == QEvent::Enter && state == SceneState::CreateComponentState && draftItem)
+        scene->addItem(draftItem);
+
+    if (event->type() == QEvent::GraphicsSceneMouseMove)
+    {
+        auto mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(event);
+        const auto mousePos = mouseEvent->scenePos();
+
+        if (state == SceneState::CreateComponentState && draftItem)
+        {
+            const auto areaCenter = draftItem->boundingRect().center();
+            draftItem->setPos({ mousePos.x() - areaCenter.x(), mousePos.y() - areaCenter.y() });
+        }
+        return false;
+    }
+
+    return false;
 }
 
 void MainWindow::initScene()
 {
     scene = new MyGraphicsScene(this);
     scene->setSceneRect(0, 0, 20000, 20000);
+    scene->installEventFilter(this);
+    ui->graphicsView->setMouseTracking(true);
 }
 
 void MainWindow::saveGraphFile() const
@@ -144,14 +181,27 @@ void MainWindow::fillComponentLibrary() const
     }
 }
 
+void MainWindow::setSceneState(SceneState sceneState)
+{
+    state = sceneState;
+
+    if (state == SceneState::NormalState)
+    {
+        delete draftItem;
+        draftItem = nullptr;
+    }
+}
+
 void MainWindow::makeConnections()
 {
     connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::onOpenButtonClicked);
     connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
     connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
     connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
-    connect(ui->addRectangleAction, &QAction::triggered,
-            this, &MainWindow::onAddRectangleActionTriggered);
+    connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
+    connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
+    connect(scene, &MyGraphicsScene::mouseLeftScene, this, &MainWindow::onMouseLeftScene);
+    connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
 }
 
 void MainWindow::onOpenButtonClicked()
@@ -175,16 +225,6 @@ void MainWindow::closeEvent(QCloseEvent *bar){
     } else {
         bar->accept();
     }
-}
-
-void MainWindow::on_action_triggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(3);
-    graw->setFlag(QGraphicsItem::ItemIsMovable);
-    listElem << graw;
-
-    scene->addItem(graw);
-    graw->setPos(100,100);
 }
 
 void MainWindow::onAddLineActionTriggered()
@@ -237,4 +277,46 @@ void MainWindow::onAddRectangleActionTriggered()
 
     scene->addItem(graw);
     graw->setPos(100,100);
+}
+
+void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
+{
+    if (column != 0)
+        return;
+
+    const QVariant var = item->data(0, componentTypeRole);
+    if (!var.isValid())
+        return;
+
+    const ComponentType selectedType = static_cast<ComponentType>(var.toInt());
+    GrawItem *graw = ComponentFactory::createComponent(selectedType);
+    if (!graw)
+        return;
+
+    setSceneState(SceneState::CreateComponentState);
+    delete draftItem;
+    draftItem = graw;
+    draftItem->setFlag(QGraphicsItem::ItemIsMovable);
+    draftItem->setZValue(0);
+}
+
+void MainWindow::onMouseLeftScene()
+{
+    if (draftItem)
+        scene->removeItem(draftItem);
+}
+
+void MainWindow::onMousePressed(const QPointF &point)
+{
+    if (state != SceneState::CreateComponentState)
+        return;
+
+    if (!draftItem)
+        return;
+
+    GrawItem *newItem = ComponentFactory::createComponent(draftItem->componentType());
+    newItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    newItem->setPos(point);
+    scene->addItem(newItem);
+    listElem.append(newItem);
 }

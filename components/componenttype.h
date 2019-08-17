@@ -4,6 +4,7 @@
 
 enum class ComponentType
 {
+    None,
     Line,
     Arrow,
     Circle,
