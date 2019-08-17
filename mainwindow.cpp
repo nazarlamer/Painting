@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCloseEvent>
+#include <QVariant>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    fillComponentLibrary();
     initScene();
     makeConnections();
 }
@@ -101,6 +103,45 @@ void MainWindow::fillTable() const
 
     ui->tableWidget->resizeColumnsToContents();
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+}
+
+void MainWindow::fillComponentLibrary() const
+{
+    const int columnIndex = 0;
+
+    ui->treeWidget->setColumnCount(1);
+    ui->treeWidget->setHeaderHidden(true);
+    ui->treeWidget->setAlternatingRowColors(true);
+
+    QTreeWidgetItem *category1TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category1TreeItem->setText(columnIndex, "Categry 1");
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Line");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Line));
+        category1TreeItem->addChild(treeItem);
+    }
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Arrow");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Arrow));
+        category1TreeItem->addChild(treeItem);
+    }
+
+    QTreeWidgetItem *category2TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category2TreeItem->setText(columnIndex, "Categry 2");
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Circle");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Circle));
+        category2TreeItem->addChild(treeItem);
+    }
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Rectangle");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
+        category2TreeItem->addChild(treeItem);
+    }
 }
 
 void MainWindow::makeConnections()

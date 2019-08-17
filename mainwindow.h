@@ -37,6 +37,7 @@ private:
     void saveGraphFile() const;
     void loadGraphFile();
     void fillTable() const;
+    void fillComponentLibrary() const;
 
 private:
     Ui::MainWindow *ui{nullptr};
@@ -45,6 +46,7 @@ private:
     // do not use concreate objects - use abstract objects like QGraphicsItem or some other abstract
     // class (DELETE THIS COMMENT AFTER READ)
     QList<GrawItem*> listElem;
+    const int componentTypeRole{Qt::UserRole + 1};
 };
 
 #endif // MAINWINDOW_H

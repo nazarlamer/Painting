@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QMetaType>
+
 enum class ComponentType
 {
     Line,
@@ -7,3 +9,6 @@ enum class ComponentType
     Circle,
     Rectangle
 };
+
+// for QVariant support
+Q_DECLARE_METATYPE(ComponentType)
