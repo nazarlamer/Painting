@@ -123,9 +123,9 @@ void MainWindow::fillTable() const
     // Разрешаем выделение построчно
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableWidget->setColumnCount(2);
+    ui->tableWidget->setColumnCount(3);
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tableWidget->setHorizontalHeaderLabels({"POSX", "POSY"});
+    ui->tableWidget->setHorizontalHeaderLabels({"POSX", "POSY","SEL"});
 
     int InsR = 0;
     for (int i=0; i<listElem.size(); ++i)
@@ -134,8 +134,9 @@ void MainWindow::fillTable() const
         ui->tableWidget->insertRow(InsR);
         ui->tableWidget->setItem(InsR,0, new QTableWidgetItem((QString::number(graw->x()))));
         ui->tableWidget->setItem(InsR,1, new QTableWidgetItem((QString::number(graw->y()))));
+        ui->tableWidget->setItem(InsR,2, new QTableWidgetItem(""));
         ui->tableWidget->setRowHeight(InsR,16);
-    InsR += 1;
+        InsR += 1;
     }
 
     ui->tableWidget->resizeColumnsToContents();
@@ -310,7 +311,17 @@ void MainWindow::onMouseLeftScene()
 void MainWindow::onMousePressed(const QPointF &point)
 {
     if (state != SceneState::CreateComponentState)
+    {
+        for (int i=0; i<listElem.size(); ++i)
+        {
+            const GrawItem *grawsel = listElem[i];
+            if (grawsel->isSelect) {
+                ui->tableWidget->selectRow(i);
+                return;
+            }
+        }
         return;
+    }
 
     if (!draftItem)
         return;
