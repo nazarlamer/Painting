@@ -63,12 +63,11 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
    }
    */
 
-   const QRectF rectp = rect.normalized();
    painter->save();
 
-   painter->setBrush(QColor(255, 237, 176, 255));
-   painter->drawRect(rect);
+   painter->fillRect(rect, QColor(255, 237, 176, 255));
 
+   const QRectF rectp = rect.normalized();
    painter->setPen(QPen(Qt::lightGray,1));
    int l = int(rectp.left());
    l -= (l % 10);
