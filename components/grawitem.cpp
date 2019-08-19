@@ -1,5 +1,6 @@
 #include "grawitem.h"
-#include <math.h>
+#include <QGraphicsSceneMouseEvent>
+#include <cmath>
 
 GrawItem::GrawItem(int id) : _id(id)
 {
@@ -28,16 +29,4 @@ QVariant GrawItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QV
 
     }
     return QGraphicsItem::itemChange(change, value);
-}
-
-void GrawItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    setSelected(true);
-    return QGraphicsItem::mousePressEvent(event);
-}
-
-void GrawItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    setSelected(false);
-    return QGraphicsItem::mouseReleaseEvent(event);
 }

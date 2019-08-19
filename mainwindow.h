@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QVector>
 #include "components/componenttype.h"
 
 class GrawItem;
@@ -44,6 +45,7 @@ private slots:
     void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
     void onMouseLeftScene();
     void onMousePressed(const QPointF &point);
+    void onSelectionChanged();
 
 private:
     void initScene();
@@ -53,6 +55,7 @@ private:
     void fillTable() const;
     void fillComponentLibrary() const;
     void setSceneState(SceneState sceneState);
+    void addItemToTable(const GrawItem *item) const;
 
 private:
     Ui::MainWindow *ui{nullptr};
@@ -62,7 +65,7 @@ private:
 
     // do not use concreate objects - use abstract objects like QGraphicsItem or some other abstract
     // class (DELETE THIS COMMENT AFTER READ)
-    QList<GrawItem*> listElem;
+    QVector<GrawItem*> listElem;
     GrawItem *draftItem{nullptr};
     const int componentTypeRole{Qt::UserRole + 1};
 };
