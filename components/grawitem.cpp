@@ -32,12 +32,12 @@ QVariant GrawItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QV
 
 void GrawItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    isSelect = true;
+    setSelected(true);
     return QGraphicsItem::mousePressEvent(event);
 }
 
 void GrawItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    isSelect = false;
+    setSelected(false);
     return QGraphicsItem::mouseReleaseEvent(event);
 }

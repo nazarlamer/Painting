@@ -315,7 +315,7 @@ void MainWindow::onMousePressed(const QPointF &point)
         for (int i=0; i<listElem.size(); ++i)
         {
             const GrawItem *grawsel = listElem[i];
-            if (grawsel->isSelect) {
+            if (grawsel->isSelected()) {
                 ui->tableWidget->selectRow(i);
                 return;
             }
