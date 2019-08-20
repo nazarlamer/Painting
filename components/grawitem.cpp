@@ -4,7 +4,7 @@
 
 GrawItem::GrawItem(int id) : _id(id)
 {
-    setFlags(//QGraphicsItem::ItemIsSelectable |
+    setFlags(QGraphicsItem::ItemIsSelectable |
              QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemSendsGeometryChanges);
 }
@@ -14,6 +14,9 @@ int GrawItem::id() const { return _id; }
 QVariant GrawItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     //qDebug() << "itemChange";
+    if (change == ItemSelectedChange && scene())
+        return value;
+
     if (change == ItemPositionChange && scene())
     {
         // value is the new position.
