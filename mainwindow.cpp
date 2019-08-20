@@ -94,7 +94,7 @@ void MainWindow::loadGraphFile()
 {
     QFile file2("Q_SXEMA");
     file2.open(QIODevice::ReadOnly);
-    QDataStream in(&file2);
+    QDataStream in(&file2);    // read the data serialized from the file
     qreal elposx;
     qreal elposy;
     int eltypeb;
@@ -108,7 +108,6 @@ void MainWindow::loadGraphFile()
         if (!item)
             continue;
 
-        item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
         listElem << item;
         scene->addItem(item);
         item->setPos(elposx, elposy);
@@ -127,10 +126,16 @@ void MainWindow::fillTable() const
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableWidget->setHorizontalHeaderLabels({"POSX", "POSY","SEL"});
 
+    int InsR = 0;
     for (int i=0; i<listElem.size(); ++i)
     {
         const GrawItem *graw = listElem[i];
-        addItemToTable(graw);
+        ui->tableWidget->insertRow(InsR);
+        ui->tableWidget->setItem(InsR,0, new QTableWidgetItem((QString::number(graw->x()))));
+        ui->tableWidget->setItem(InsR,1, new QTableWidgetItem((QString::number(graw->y()))));
+        ui->tableWidget->setItem(InsR,2, new QTableWidgetItem(""));
+        ui->tableWidget->setRowHeight(InsR,16);
+        InsR += 1;
     }
 
     ui->tableWidget->resizeColumnsToContents();
@@ -187,16 +192,6 @@ void MainWindow::setSceneState(SceneState sceneState)
     }
 }
 
-void MainWindow::addItemToTable(const GrawItem *item) const
-{
-    const int nextRow = ui->tableWidget->rowCount();
-    ui->tableWidget->insertRow(nextRow);
-    ui->tableWidget->setItem(nextRow,0, new QTableWidgetItem((QString::number(item->x()))));
-    ui->tableWidget->setItem(nextRow,1, new QTableWidgetItem((QString::number(item->y()))));
-    ui->tableWidget->setItem(nextRow,2, new QTableWidgetItem(""));
-    ui->tableWidget->setRowHeight(nextRow,16);
-}
-
 void MainWindow::makeConnections()
 {
     connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::onOpenButtonClicked);
@@ -207,7 +202,6 @@ void MainWindow::makeConnections()
     connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
     connect(scene, &MyGraphicsScene::mouseLeftScene, this, &MainWindow::onMouseLeftScene);
     connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
-    connect(scene, &MyGraphicsScene::selectionChanged, this, &MainWindow::onSelectionChanged);
 }
 
 void MainWindow::onOpenButtonClicked()
@@ -219,8 +213,7 @@ void MainWindow::onOpenButtonClicked()
     fillTable();
 }
 
-void MainWindow::closeEvent(QCloseEvent *bar)
-{
+void MainWindow::closeEvent(QCloseEvent *bar){
     saveGraphFile();
     //bar->accept();
     QMessageBox::StandardButton resBtn = QMessageBox::question( this, "APP_NAME",
@@ -240,9 +233,7 @@ void MainWindow::onAddLineActionTriggered()
     if (!graw)
         return;
 
-    graw->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     listElem << graw;
-
     scene->addItem(graw);
     graw->setPos(100,100);
 }
@@ -253,9 +244,7 @@ void MainWindow::onAddArrowActionTriggered()
     if (!graw)
         return;
 
-    graw->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     listElem << graw;
-
     scene->addItem(graw);
     graw->setPos(100,100);
 }
@@ -266,9 +255,7 @@ void MainWindow::onAddCircleActionTriggered()
     if (!graw)
         return;
 
-    graw->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     listElem << graw;
-
     scene->addItem(graw);
     graw->setPos(100,100);
 }
@@ -279,9 +266,7 @@ void MainWindow::onAddRectangleActionTriggered()
     if (!graw)
         return;
 
-    graw->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     listElem << graw;
-
     scene->addItem(graw);
     graw->setPos(100,100);
 }
@@ -317,29 +302,26 @@ void MainWindow::onMouseLeftScene()
 void MainWindow::onMousePressed(const QPointF &point)
 {
     if (state != SceneState::CreateComponentState)
+    {
+        for (int i=0; i<listElem.size(); ++i)
+        {
+            const GrawItem *grawsel = listElem[i];
+            if (grawsel->isSelected()) {
+                ui->tableWidget->selectRow(i);
+                return;
+            }
+        }
         return;
+    }
 
     if (!draftItem)
         return;
 
     GrawItem *newItem = ComponentFactory::createComponent(draftItem->componentType());
-    newItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    //newItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable); ??? Цього не потрібно робити, ботім доданий елемент переміщається разом з іншим
     newItem->setPos(point);
     scene->addItem(newItem);
-    listElem.push_back(newItem);
-    addItemToTable(newItem);
-}
+    listElem.append(newItem);
 
-void MainWindow::onSelectionChanged()
-{
-    for (int i=0; i<listElem.size(); ++i)
-    {
-        const GrawItem *grawsel = listElem[i];
-        if (grawsel->isSelected())
-        {
-            ui->tableWidget->selectRow(i);
-            ui->tableWidget->scrollToItem(ui->tableWidget->selectedItems().front());
-            return;
-        }
-    }
+    setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
 }
