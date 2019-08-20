@@ -1,2 +1,5 @@
 Painting.pro.user
 mainwindow.cpp.rej
+components/grawitem.h.rej
+components/grawitem.cpp.rej
+mainwindow.h.rej
