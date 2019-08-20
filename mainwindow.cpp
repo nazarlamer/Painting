@@ -94,7 +94,7 @@ void MainWindow::loadGraphFile()
 {
     QFile file2("Q_SXEMA");
     file2.open(QIODevice::ReadOnly);
-    QDataStream in(&file2);    // read the data serialized from the file
+    QDataStream in(&file2);
     qreal elposx;
     qreal elposy;
     int eltypeb;
