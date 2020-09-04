@@ -2,12 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <QGraphicsItem>
+#include <QVector>
+#include "components/componenttype.h"
 
-#include <graws.h>
-#include <mygraphicsscene.h>
+class GrawItem;
+class MyGraphicsScene;
+class QTreeWidgetItem;
 
 namespace Ui {
 class MainWindow;
@@ -17,42 +17,57 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    enum class SceneState
+    {
+        CreateComponentState,
+        NormalState
+    };
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-    QGraphicsItem *SelectGrItem;
+    ~MainWindow() override;
+
+    // QObject interface
+public:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+    // QWidget interface
+protected:
+    void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+
+private slots:
+    void onAddLineActionTriggered();
+    void onAddArrowActionTriggered();
+    void onAddCircleActionTriggered();
+    void onAddRectangleActionTriggered();
+    void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
+    void onMouseLeftScene();
+    void onMousePressed(const QPointF &point);
 
 private:
     void initScene();
-
-private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
-    void on_MainWindow_destroyed();
-
-    void on_pushButton_3_clicked();
-
-    void on_pushButton_4_clicked();
-
-    void on_action_triggered();
-
-    void on_action_5_triggered();
-
-    void on_action_6_triggered();
+    void makeConnections();
+    void saveGraphFile() const;
+    void loadGraphFile();
+    void fillTable() const;
+    void fillComponentLibrary() const;
+    void setSceneState(SceneState sceneState);
+    void addItemToTable(const GrawItem *item) const;
+    bool IsLoad = false;
 
 private:
-    Ui::MainWindow *ui;
-
-    //QGraphicsScene *scene;
+    Ui::MainWindow *ui{nullptr};
     MyGraphicsScene *scene{nullptr};
-    QGraphicsEllipseItem *ellipse;
-    QGraphicsRectItem *rectangle;
-    QGraphicsTextItem *text;
-    Graws *graws;
-    QList<Graws*> listElem;
+    SceneState state{SceneState::NormalState};
+    ComponentType selectedComponentType{ComponentType::None};
 
-    void SaveGraphFile();
-    void closeEvent(QCloseEvent *bar);
+    // do not use concreate objects - use abstract objects like QGraphicsItem or some other abstract
+    // class (DELETE THIS COMMENT AFTER READ)
+    QVector<GrawItem*> listElem;
+    GrawItem *draftItem{nullptr};
+    const int componentTypeRole{Qt::UserRole + 1};
 };
 
 #endif // MAINWINDOW_H
