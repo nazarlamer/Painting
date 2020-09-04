@@ -311,7 +311,6 @@ void MainWindow::onMousePressed(const QPointF &point)
         return;
 
     GrawItem *newItem = ComponentFactory::createComponent(draftItem->componentType());
-    //newItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable); ??? Цього не потрібно робити, ботім доданий елемент переміщається разом з іншим
     newItem->setPos(point);
     scene->addItem(newItem);
     listElem.append(newItem);

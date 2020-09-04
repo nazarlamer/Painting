@@ -31,6 +31,7 @@ public:
     // QObject interface
 public:
     bool eventFilter(QObject *watched, QEvent *event) override;
+
     // QWidget interface
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -61,8 +62,6 @@ private:
     SceneState state{SceneState::NormalState};
     ComponentType selectedComponentType{ComponentType::None};
 
-    // do not use concreate objects - use abstract objects like QGraphicsItem or some other abstract
-    // class (DELETE THIS COMMENT AFTER READ)
     QVector<GrawItem*> listElem;
     GrawItem *draftItem{nullptr};
     const int componentTypeRole{Qt::UserRole + 1};
