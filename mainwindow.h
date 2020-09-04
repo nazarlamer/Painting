@@ -31,13 +31,13 @@ public:
     // QObject interface
 public:
     bool eventFilter(QObject *watched, QEvent *event) override;
-
     // QWidget interface
 protected:
     void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
-    void onOpenButtonClicked();
     void onAddLineActionTriggered();
     void onAddArrowActionTriggered();
     void onAddCircleActionTriggered();
@@ -45,7 +45,6 @@ private slots:
     void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
     void onMouseLeftScene();
     void onMousePressed(const QPointF &point);
-    void onSelectionChanged();
 
 private:
     void initScene();
@@ -56,6 +55,7 @@ private:
     void fillComponentLibrary() const;
     void setSceneState(SceneState sceneState);
     void addItemToTable(const GrawItem *item) const;
+    bool IsLoad = false;
 
 private:
     Ui::MainWindow *ui{nullptr};

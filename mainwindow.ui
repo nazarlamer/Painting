@@ -35,31 +35,6 @@
       <property name="spacing">
        <number>0</number>
       </property>
-      <item alignment="Qt::AlignTop">
-       <widget class="QListWidget" name="listWidget">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>80</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <property name="spacing">
@@ -126,7 +101,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -145,13 +120,6 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item>
-       <widget class="QPushButton" name="openButton">
-        <property name="text">
-         <string>Натиснути сюди після запуску програми OPEN</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -235,9 +203,6 @@
    <header>mygraphicsview.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>openButton</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

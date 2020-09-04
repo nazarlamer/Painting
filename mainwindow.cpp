@@ -194,7 +194,6 @@ void MainWindow::setSceneState(SceneState sceneState)
 
 void MainWindow::makeConnections()
 {
-    connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::onOpenButtonClicked);
     connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
     connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
     connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
@@ -204,22 +203,12 @@ void MainWindow::makeConnections()
     connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
 }
 
-void MainWindow::onOpenButtonClicked()
-{
-    ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    ui->graphicsView->setScene(scene);
-
-    loadGraphFile();
-    fillTable();
-}
-
 void MainWindow::closeEvent(QCloseEvent *bar){
     saveGraphFile();
     //bar->accept();
-    QMessageBox::StandardButton resBtn = QMessageBox::question( this, "APP_NAME",
-                                                                tr("Are you sure?\n"),
-                                                                QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
-                                                                QMessageBox::Yes);
+    QMessageBox::StandardButton resBtn = QMessageBox::question(this,
+        "Паінтер", tr("Завершити роботу програми?\n"), QMessageBox::No | QMessageBox::Yes);
+
     if (resBtn != QMessageBox::Yes) {
         bar->ignore();
     } else {
@@ -324,4 +313,31 @@ void MainWindow::onMousePressed(const QPointF &point)
     listElem.append(newItem);
 
     setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
+}
+
+void MainWindow::showEvent(QShowEvent *event) {
+    QWidget::showEvent(event);
+    if (!IsLoad) {
+        ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        ui->graphicsView->setScene(scene);
+
+        loadGraphFile();
+        fillTable();
+        IsLoad = true;
+    }
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    //qDebug() << QKeySequence(event->key()).toString();
+    if (event->key()== Qt::Key_Delete) {
+
+        QMessageBox::StandardButton resBtn = QMessageBox::question(this,
+            "Паінтер", tr("Видалити активний елемент?\n"), QMessageBox::No | QMessageBox::Yes);
+
+        if (resBtn != QMessageBox::Yes) {
+            //bar->ignore();
+        } else {
+            //bar->accept();
+        }
+    }
 }
