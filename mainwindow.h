@@ -34,7 +34,6 @@ public:
     // QWidget interface
 protected:
     void closeEvent(QCloseEvent *event) override;
-    void showEvent(QShowEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
@@ -55,7 +54,6 @@ private:
     void fillComponentLibrary() const;
     void setSceneState(SceneState sceneState);
     void addItemToTable(const GrawItem *item) const;
-    bool IsLoad = false;
 
 private:
     Ui::MainWindow *ui{nullptr};
