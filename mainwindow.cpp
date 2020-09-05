@@ -288,6 +288,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     draftItem = graw;
     draftItem->setFlag(QGraphicsItem::ItemIsMovable);
     //draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    //!!! Після цього нові елементи перестають привязуватись до сітки
     draftItem->setZValue(0);
 }
 
