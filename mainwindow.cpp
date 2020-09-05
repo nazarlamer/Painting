@@ -187,14 +187,6 @@ void MainWindow::fillComponentLibrary() const
         category2TreeItem->addChild(treeItem);
     }
 
-    QTreeWidgetItem *category3TreeItem = new QTreeWidgetItem(ui->treeWidget);
-    category3TreeItem->setText(columnIndex, "Categry Polyline");
-    {
-        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-        treeItem->setText(columnIndex, "Polyline");
-        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
-        category3TreeItem->addChild(treeItem);
-    }
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -341,11 +333,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             //bar->ignore();
         } else {
             //bar->accept();
+            //QItemSelectionModel *select = ui->tableWidget->selectionModel();
+
+            //select->hasSelection()
+            //qDebug() << select->selectedRows().last();
+            //select->selectedColumns()
         }
     }
 
     if  (event->key()== Qt::Key_Escape) {
         MainWindow::onMouseLeftScene();
-
     }
 }
