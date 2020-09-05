@@ -186,7 +186,14 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
         category2TreeItem->addChild(treeItem);
     }
-
+    QTreeWidgetItem *category3TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category3TreeItem->setText(columnIndex, "Categry Polyline");
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Polyline");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
+        category3TreeItem->addChild(treeItem);
+    }
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
