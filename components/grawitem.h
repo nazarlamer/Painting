@@ -6,6 +6,7 @@
 /*!
  * \brief The GrawItem is the base abstract class for all components.
  */
+
 class GrawItem : public QGraphicsItem
 {
 public:

@@ -12,6 +12,7 @@
 #include <QCloseEvent>
 #include <QVariant>
 #include <QGraphicsSceneMouseEvent>
+#include <QScrollBar>
 
 using namespace std;
 
@@ -71,9 +72,11 @@ void MainWindow::initScene()
     scene = new MyGraphicsScene(this);
     scene->setSceneRect(0, 0, 20000, 20000);
     scene->installEventFilter(this);
+
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setMouseTracking(true);
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    ui->graphicsView->horizontalScrollBar()->setValue(1);
 }
 
 void MainWindow::saveGraphFile() const
@@ -183,6 +186,15 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
         category2TreeItem->addChild(treeItem);
     }
+
+    QTreeWidgetItem *category3TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category3TreeItem->setText(columnIndex, "Categry Polyline");
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Polyline");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
+        category3TreeItem->addChild(treeItem);
+    }
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -198,10 +210,10 @@ void MainWindow::setSceneState(SceneState sceneState)
 
 void MainWindow::makeConnections()
 {
-    connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
-    connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
-    connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
-    connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
+    //connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
+    //connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
+    //connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
+    //connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
     connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
     connect(scene, &MyGraphicsScene::mouseLeftScene, this, &MainWindow::onMouseLeftScene);
     connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
@@ -220,7 +232,7 @@ void MainWindow::closeEvent(QCloseEvent *bar){
     }
 }
 
-void MainWindow::onAddLineActionTriggered()
+/*void MainWindow::onAddLineActionTriggered()
 {
     GrawItem *graw = ComponentFactory::createComponent(ComponentType::Line);
     if (!graw)
@@ -262,7 +274,7 @@ void MainWindow::onAddRectangleActionTriggered()
     listElem << graw;
     scene->addItem(graw);
     graw->setPos(100,100);
-}
+}*/
 
 void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 {
@@ -315,7 +327,7 @@ void MainWindow::onMousePressed(const QPointF &point)
     scene->addItem(newItem);
     listElem.append(newItem);
 
-    setSceneState(SceneState::NormalState);  //Коли додано новий елемент то занулюємо статус
+    setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {

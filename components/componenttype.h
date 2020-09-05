@@ -8,7 +8,8 @@ enum class ComponentType
     Line,
     Arrow,
     Circle,
-    Rectangle
+    Rectangle,
+    Polyline
 };
 
 // for QVariant support
