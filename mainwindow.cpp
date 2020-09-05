@@ -23,8 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     fillComponentLibrary();
     initScene();
     makeConnections();
-    loadGraphFile();
-    fillTable();
 }
 
 MainWindow::~MainWindow()
@@ -71,9 +69,7 @@ void MainWindow::initScene()
     scene = new MyGraphicsScene(this);
     scene->setSceneRect(0, 0, 20000, 20000);
     scene->installEventFilter(this);
-    ui->graphicsView->setScene(scene);
     ui->graphicsView->setMouseTracking(true);
-    ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
 }
 
 void MainWindow::saveGraphFile() const
@@ -311,11 +307,24 @@ void MainWindow::onMousePressed(const QPointF &point)
         return;
 
     GrawItem *newItem = ComponentFactory::createComponent(draftItem->componentType());
+    //newItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable); ??? Цього не потрібно робити, ботім доданий елемент переміщається разом з іншим
     newItem->setPos(point);
     scene->addItem(newItem);
     listElem.append(newItem);
 
     setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
+}
+
+void MainWindow::showEvent(QShowEvent *event) {
+    QWidget::showEvent(event);
+    if (!IsLoad) {
+        ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+        ui->graphicsView->setScene(scene);
+
+        loadGraphFile();
+        fillTable();
+        IsLoad = true;
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {

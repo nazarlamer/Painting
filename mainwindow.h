@@ -31,10 +31,10 @@ public:
     // QObject interface
 public:
     bool eventFilter(QObject *watched, QEvent *event) override;
-
     // QWidget interface
 protected:
     void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
@@ -55,6 +55,7 @@ private:
     void fillComponentLibrary() const;
     void setSceneState(SceneState sceneState);
     void addItemToTable(const GrawItem *item) const;
+    bool IsLoad = false;
 
 private:
     Ui::MainWindow *ui{nullptr};
@@ -62,6 +63,8 @@ private:
     SceneState state{SceneState::NormalState};
     ComponentType selectedComponentType{ComponentType::None};
 
+    // do not use concreate objects - use abstract objects like QGraphicsItem or some other abstract
+    // class (DELETE THIS COMMENT AFTER READ)
     QVector<GrawItem*> listElem;
     GrawItem *draftItem{nullptr};
     const int componentTypeRole{Qt::UserRole + 1};
