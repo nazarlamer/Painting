@@ -286,7 +286,8 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 
     delete draftItem;
     draftItem = graw;
-    draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    draftItem->setFlag(QGraphicsItem::ItemIsMovable);
+    //draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     draftItem->setZValue(0);
 }
 
