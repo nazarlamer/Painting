@@ -331,4 +331,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
             //bar->accept();
         }
     }
+
+    if  (event->key()== Qt::Key_Escape) {
+        MainWindow::onMouseLeftScene();
+
+    }
 }
