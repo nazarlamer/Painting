@@ -12,6 +12,7 @@
 #include <QCloseEvent>
 #include <QVariant>
 #include <QGraphicsSceneMouseEvent>
+#include <QScrollBar>
 
 using namespace std;
 
@@ -71,9 +72,11 @@ void MainWindow::initScene()
     scene = new MyGraphicsScene(this);
     scene->setSceneRect(0, 0, 20000, 20000);
     scene->installEventFilter(this);
+
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setMouseTracking(true);
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    ui->graphicsView->horizontalScrollBar()->setValue(1);
 }
 
 void MainWindow::saveGraphFile() const
@@ -183,6 +186,7 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
         category2TreeItem->addChild(treeItem);
     }
+
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -198,10 +202,10 @@ void MainWindow::setSceneState(SceneState sceneState)
 
 void MainWindow::makeConnections()
 {
-    connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
-    connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
-    connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
-    connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
+    //connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
+    //connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
+    //connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
+    //connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
     connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
     connect(scene, &MyGraphicsScene::mouseLeftScene, this, &MainWindow::onMouseLeftScene);
     connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
@@ -220,7 +224,7 @@ void MainWindow::closeEvent(QCloseEvent *bar){
     }
 }
 
-void MainWindow::onAddLineActionTriggered()
+/*void MainWindow::onAddLineActionTriggered()
 {
     GrawItem *graw = ComponentFactory::createComponent(ComponentType::Line);
     if (!graw)
@@ -262,7 +266,7 @@ void MainWindow::onAddRectangleActionTriggered()
     listElem << graw;
     scene->addItem(graw);
     graw->setPos(100,100);
-}
+}*/
 
 void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 {
@@ -282,7 +286,9 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 
     delete draftItem;
     draftItem = graw;
-    draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    draftItem->setFlag(QGraphicsItem::ItemIsMovable);
+    //draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    //!!! Після цього нові елементи перестають привязуватись до сітки
     draftItem->setZValue(0);
 }
 
@@ -348,6 +354,5 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     if  (event->key()== Qt::Key_Escape) {
         MainWindow::onMouseLeftScene();
-
     }
 }
