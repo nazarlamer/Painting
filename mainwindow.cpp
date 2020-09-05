@@ -315,7 +315,7 @@ void MainWindow::onMousePressed(const QPointF &point)
     scene->addItem(newItem);
     listElem.append(newItem);
 
-    setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
+    setSceneState(SceneState::NormalState);  //Коли додано новий елемент то занулюємо статус
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
