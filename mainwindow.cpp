@@ -286,7 +286,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 
     delete draftItem;
     draftItem = graw;
-    draftItem->setFlag(QGraphicsItem::ItemIsMovable);
+    draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     draftItem->setZValue(0);
 }
 
@@ -322,22 +322,31 @@ void MainWindow::onMousePressed(const QPointF &point)
     setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event) {
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
     //qDebug() << QKeySequence(event->key()).toString();
     if (event->key()== Qt::Key_Delete) {
 
-        QMessageBox::StandardButton resBtn = QMessageBox::question(this,
-            "Паінтер", tr("Видалити активний елемент?\n"), QMessageBox::No | QMessageBox::Yes);
+        const QMessageBox::StandardButton resBtn = QMessageBox::question(this,
+            "Паінтер", tr("Видалити виділені елементи?\n"), QMessageBox::No | QMessageBox::Yes);
 
-        if (resBtn != QMessageBox::Yes) {
-            //bar->ignore();
-        } else {
-            //bar->accept();
-            //QItemSelectionModel *select = ui->tableWidget->selectionModel();
-
-            //select->hasSelection()
-            //qDebug() << select->selectedRows().last();
-            //select->selectedColumns()
+        if (resBtn == QMessageBox::Yes)
+        {
+            const QList<QGraphicsItem *> selectedItems = scene->selectedItems();
+            for (QGraphicsItem *selectedItem : selectedItems)
+            {
+                // remove GrawItems only
+                if (GrawItem *grawItem = dynamic_cast<GrawItem *>(selectedItem))
+                {
+                    const int index = listElem.indexOf(grawItem);
+                    if (index != -1)
+                    {
+                        listElem.remove(index);
+                        scene->removeItem(selectedItem);
+                        // TODO: update table of data
+                    }
+                }
+            }
         }
     }
 
