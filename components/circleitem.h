@@ -15,5 +15,9 @@ public:
     // GrawItem interface
 public:
     ComponentType componentType() const override;
+
+private:
+    void paintSelected(QPainter *painter);
+    void paintNotSelected(QPainter *painter);
 };
 
