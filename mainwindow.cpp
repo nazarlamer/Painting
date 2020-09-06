@@ -241,8 +241,10 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     const QVariant var = item->data(0, componentTypeRole);
     if (!var.isValid())
         return;
+    qDebug() << var.toInt();
 
     const ComponentType selectedType = static_cast<ComponentType>(var.toInt());
+
     GrawItem *graw = ComponentFactory::createComponent(selectedType);
     if (!graw)
         return;
