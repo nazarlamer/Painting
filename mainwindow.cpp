@@ -91,6 +91,7 @@ void MainWindow::saveGraphFile() const
             out << listElem[i]->x();
             out << listElem[i]->y();
             out << listElem[i]->id();
+            out << listElem[i]->rotation();
         }
 
         file.close();
@@ -102,14 +103,18 @@ void MainWindow::loadGraphFile()
     QFile file2("Q_SXEMA");
     file2.open(QIODevice::ReadOnly);
     QDataStream in(&file2);    // read the data serialized from the file
+
     qreal elposx;
     qreal elposy;
     int eltypeb;
+    qreal elrotate;
+
     while (!in.atEnd())
     {
         in >> elposx;
         in >> elposy;
         in >> eltypeb;
+        in >> elrotate;
 
         GrawItem *item = ComponentFactory::createComponent(eltypeb);
         if (!item)
@@ -118,6 +123,7 @@ void MainWindow::loadGraphFile()
         listElem << item;
         scene->addItem(item);
         item->setPos(elposx, elposy);
+        item->setRotation(elrotate);
     }
     file2.close();
 }
