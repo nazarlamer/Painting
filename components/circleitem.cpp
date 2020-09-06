@@ -47,4 +47,3 @@ void CircleItem::paintNotSelected(QPainter *painter)
     painter->setBrush(Qt::yellow);
     painter->drawEllipse(QRect(-20, -20, 40, 40));
 }
-

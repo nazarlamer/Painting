@@ -38,10 +38,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
-    //void onAddLineActionTriggered();
-    //void onAddArrowActionTriggered();
-    //void onAddCircleActionTriggered();
-    //void onAddRectangleActionTriggered();
     void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
     void onMouseLeftScene();
     void onMousePressed(const QPointF &point);
