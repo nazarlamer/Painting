@@ -12,6 +12,7 @@
 #include <QCloseEvent>
 #include <QVariant>
 #include <QGraphicsSceneMouseEvent>
+#include <QScrollBar>
 
 using namespace std;
 
@@ -71,9 +72,11 @@ void MainWindow::initScene()
     scene = new MyGraphicsScene(this);
     scene->setSceneRect(0, 0, 20000, 20000);
     scene->installEventFilter(this);
+
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setMouseTracking(true);
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+    ui->graphicsView->horizontalScrollBar()->setValue(1);
 }
 
 void MainWindow::saveGraphFile() const
@@ -88,6 +91,7 @@ void MainWindow::saveGraphFile() const
             out << listElem[i]->x();
             out << listElem[i]->y();
             out << listElem[i]->id();
+            out << listElem[i]->rotation();
         }
 
         file.close();
@@ -99,14 +103,18 @@ void MainWindow::loadGraphFile()
     QFile file2("Q_SXEMA");
     file2.open(QIODevice::ReadOnly);
     QDataStream in(&file2);    // read the data serialized from the file
+
     qreal elposx;
     qreal elposy;
     int eltypeb;
+    qreal elrotate;
+
     while (!in.atEnd())
     {
         in >> elposx;
         in >> elposy;
         in >> eltypeb;
+        in >> elrotate;
 
         GrawItem *item = ComponentFactory::createComponent(eltypeb);
         if (!item)
@@ -115,6 +123,7 @@ void MainWindow::loadGraphFile()
         listElem << item;
         scene->addItem(item);
         item->setPos(elposx, elposy);
+        item->setRotation(elrotate);
     }
     file2.close();
 }
@@ -183,6 +192,7 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
         category2TreeItem->addChild(treeItem);
     }
+
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -198,10 +208,6 @@ void MainWindow::setSceneState(SceneState sceneState)
 
 void MainWindow::makeConnections()
 {
-    connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
-    connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
-    connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
-    connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
     connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
     connect(scene, &MyGraphicsScene::mouseLeftScene, this, &MainWindow::onMouseLeftScene);
     connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
@@ -218,50 +224,6 @@ void MainWindow::closeEvent(QCloseEvent *bar){
     } else {
         bar->accept();
     }
-}
-
-void MainWindow::onAddLineActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Line);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
-}
-
-void MainWindow::onAddArrowActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Arrow);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
-}
-
-void MainWindow::onAddCircleActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Circle);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
-}
-
-void MainWindow::onAddRectangleActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Rectangle);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
 }
 
 void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
@@ -283,6 +245,8 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     delete draftItem;
     draftItem = graw;
     draftItem->setFlag(QGraphicsItem::ItemIsMovable);
+    //draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    //!!! Після цього нові елементи перестають привязуватись до сітки
     draftItem->setZValue(0);
 }
 
@@ -315,25 +279,55 @@ void MainWindow::onMousePressed(const QPointF &point)
     scene->addItem(newItem);
     listElem.append(newItem);
 
+    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0, new QTableWidgetItem((QString::number(newItem->x()))));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1, new QTableWidgetItem((QString::number(newItem->y()))));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2, new QTableWidgetItem(""));
+    ui->tableWidget->setRowHeight(ui->tableWidget->rowCount()-1,16);
+
     setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event) {
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
     //qDebug() << QKeySequence(event->key()).toString();
     if (event->key()== Qt::Key_Delete) {
 
-        QMessageBox::StandardButton resBtn = QMessageBox::question(this,
-            "Паінтер", tr("Видалити активний елемент?\n"), QMessageBox::No | QMessageBox::Yes);
+        const QMessageBox::StandardButton resBtn = QMessageBox::question(this,
+            "Паінтер", tr("Видалити виділені елементи?\n"), QMessageBox::No | QMessageBox::Yes);
 
-        if (resBtn != QMessageBox::Yes) {
-            //bar->ignore();
-        } else {
-            //bar->accept();
+        if (resBtn == QMessageBox::Yes)
+        {
+            const QList<QGraphicsItem *> selectedItems = scene->selectedItems();
+            for (QGraphicsItem *selectedItem : selectedItems)
+            {
+                // remove GrawItems only
+                if (GrawItem *grawItem = dynamic_cast<GrawItem *>(selectedItem))
+                {
+                    const int index = listElem.indexOf(grawItem);
+                    if (index != -1)
+                    {
+                        listElem.remove(index);
+                        scene->removeItem(selectedItem);
+                        ui->tableWidget->removeRow(index);
+                    }
+                }
+            }
         }
     }
 
     if  (event->key()== Qt::Key_Escape) {
         MainWindow::onMouseLeftScene();
+    }
 
+    if (event->key()== Qt::Key_R) {
+        const QList<QGraphicsItem *> selectedItems = scene->selectedItems();
+        for (QGraphicsItem *selectedItem : selectedItems)
+        {
+            if (GrawItem *grawItem = dynamic_cast<GrawItem *>(selectedItem))
+            {
+                grawItem->RotateFlip();
+            }
+        }
     }
 }
