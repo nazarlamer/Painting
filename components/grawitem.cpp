@@ -33,3 +33,7 @@ QVariant GrawItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QV
     }
     return QGraphicsItem::itemChange(change, value);
 }
+
+void GrawItem::RotateFlip() {
+    setRotation(rotation()+90);
+}

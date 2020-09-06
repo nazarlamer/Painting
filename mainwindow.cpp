@@ -202,10 +202,6 @@ void MainWindow::setSceneState(SceneState sceneState)
 
 void MainWindow::makeConnections()
 {
-    //connect(ui->addLineAction, &QAction::triggered, this, &MainWindow::onAddLineActionTriggered);
-    //connect(ui->addArrowAction, &QAction::triggered, this, &MainWindow::onAddArrowActionTriggered);
-    //connect(ui->addCircleAction, &QAction::triggered, this, &MainWindow::onAddCircleActionTriggered);
-    //connect(ui->addRectangleAction, &QAction::triggered, this, &MainWindow::onAddRectangleActionTriggered);
     connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
     connect(scene, &MyGraphicsScene::mouseLeftScene, this, &MainWindow::onMouseLeftScene);
     connect(scene, &MyGraphicsScene::leftButtonMousePress, this, &MainWindow::onMousePressed);
@@ -223,50 +219,6 @@ void MainWindow::closeEvent(QCloseEvent *bar){
         bar->accept();
     }
 }
-
-/*void MainWindow::onAddLineActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Line);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
-}
-
-void MainWindow::onAddArrowActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Arrow);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
-}
-
-void MainWindow::onAddCircleActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Circle);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
-}
-
-void MainWindow::onAddRectangleActionTriggered()
-{
-    GrawItem *graw = ComponentFactory::createComponent(ComponentType::Rectangle);
-    if (!graw)
-        return;
-
-    listElem << graw;
-    scene->addItem(graw);
-    graw->setPos(100,100);
-}*/
 
 void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 {
@@ -321,6 +273,12 @@ void MainWindow::onMousePressed(const QPointF &point)
     scene->addItem(newItem);
     listElem.append(newItem);
 
+    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0, new QTableWidgetItem((QString::number(newItem->x()))));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1, new QTableWidgetItem((QString::number(newItem->y()))));
+    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2, new QTableWidgetItem(""));
+    ui->tableWidget->setRowHeight(ui->tableWidget->rowCount()-1,16);
+
     setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
 }
 
@@ -345,7 +303,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                     {
                         listElem.remove(index);
                         scene->removeItem(selectedItem);
-                        // TODO: update table of data
+                        ui->tableWidget->removeRow(index);
                     }
                 }
             }
@@ -354,5 +312,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     if  (event->key()== Qt::Key_Escape) {
         MainWindow::onMouseLeftScene();
+    }
+
+    if (event->key()== Qt::Key_R) {
+        const QList<QGraphicsItem *> selectedItems = scene->selectedItems();
+        for (QGraphicsItem *selectedItem : selectedItems)
+        {
+            if (GrawItem *grawItem = dynamic_cast<GrawItem *>(selectedItem))
+            {
+                grawItem->RotateFlip();
+            }
+        }
     }
 }
