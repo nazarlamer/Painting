@@ -63,7 +63,6 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
 }
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent *event){
-
     //if (rightMousePressed)
     //{
         //qDebug() << event->x() << " " <<event->y();
