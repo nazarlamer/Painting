@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     fillComponentLibrary();
     initScene();
     makeConnections();
@@ -200,6 +201,10 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
         category3TreeItem->addChild(treeItem);
     }
+    QTreeWidgetItem *category4TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category4TreeItem->setText(columnIndex, "New polyline mouse");
+    category4TreeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::PolylineMouse));
+
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -267,6 +272,11 @@ void MainWindow::onMouseLeftScene()
 
 void MainWindow::onMousePressed(const QPointF &point)
 {
+    if (state == SceneState::NewLineMouse)
+    {
+        return;
+    }
+
     if (state != SceneState::CreateComponentState)
     {
         for (int i=0; i<listElem.size(); ++i)

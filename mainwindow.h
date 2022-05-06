@@ -21,7 +21,9 @@ private:
     enum class SceneState
     {
         CreateComponentState,
-        NormalState
+        NormalState,
+        NewLineMouse
+        NewLineMouseVyzol
     };
 
 public:
