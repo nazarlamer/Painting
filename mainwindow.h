@@ -22,7 +22,7 @@ private:
     {
         CreateComponentState,
         NormalState,
-        NewLineMouse
+        NewLineMouse,
         NewLineMouseVyzol
     };
 
