@@ -28,6 +28,7 @@ SOURCES += \
         components/arrowitem.cpp \
         components/circleitem.cpp \
         components/componentfactory.cpp \
+        components/elements/graphvyzol.cpp \
         components/elements/polylineitem.cpp \
         components/grawitem.cpp \
         components/lineitem.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
         components/circleitem.h \
         components/componentfactory.h \
         components/componenttype.h \
+        components/elements/graphvyzol.h \
         components/elements/polylineitem.h \
         components/grawitem.h \
         components/lineitem.h \

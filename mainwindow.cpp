@@ -237,9 +237,6 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
         category3TreeItem->addChild(treeItem);
     }
-    QTreeWidgetItem *category4TreeItem = new QTreeWidgetItem(ui->treeWidget);
-    category4TreeItem->setText(columnIndex, "New polyline mouse");
-    category4TreeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::PolylineMouse));
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -283,11 +280,11 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     if (!var.isValid())
         return;
 
-    if (var==qVariantFromValue(ComponentType::PolylineMouse)) {
+    /*if (var==qVariantFromValue(ComponentType::PolylineMouse)) {
         scene->setSceneMouseEnent(false);
         setSceneState(SceneState::NewLineMouse);
         return;
-    }
+    }*/
 
     qDebug() << var.toInt();
 
