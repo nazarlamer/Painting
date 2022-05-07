@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../grawitem.h"
+#include <QVector>
 
 class PolylineItem : public GrawItem
 {
@@ -16,7 +17,10 @@ public:
     ComponentType componentType() const override;
 
 private:
+    QVector<GrawItem*> ListVyzl;
+
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
+
 };
 

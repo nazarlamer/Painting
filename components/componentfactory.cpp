@@ -25,8 +25,6 @@ GrawItem *ComponentFactory::createComponent(ComponentType type)
     case ComponentType::Polyline:
         return new PolylineItem(static_cast<int>(type));
 
-
-
     default:
         return nullptr;
     }

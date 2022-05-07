@@ -37,3 +37,10 @@ QVariant GrawItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QV
 void GrawItem::RotateFlip() {
     setRotation(rotation()+90);
 }
+
+bool GrawItem::IsVyzlElement() {
+    if (_id == 5)
+        return true;
+    else
+        return false;
+}

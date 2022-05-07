@@ -65,6 +65,7 @@ private:
 
     QVector<GrawItem*> listElem;
     GrawItem *draftItem{nullptr};
+    GrawItem *PolyItem{nullptr}; //для додавання вузлових елементів
     const int componentTypeRole{Qt::UserRole + 1};
 };
 

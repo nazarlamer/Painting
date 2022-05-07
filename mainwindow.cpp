@@ -150,7 +150,7 @@ void MainWindow::loadGraphFile()
     QByteArray saveData = filejs.readAll();
     QJsonDocument DocJs(QJsonDocument::fromJson(saveData));
     auto array = DocJs.array();
-    for(const auto& json : array)
+    for(const auto& json: array)
     {
       auto obj = json.toObject();
       GrawItem *item = ComponentFactory::createComponent(obj["ID"].toInt());
@@ -280,12 +280,6 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     if (!var.isValid())
         return;
 
-    /*if (var==qVariantFromValue(ComponentType::PolylineMouse)) {
-        scene->setSceneMouseEnent(false);
-        setSceneState(SceneState::NewLineMouse);
-        return;
-    }*/
-
     qDebug() << var.toInt();
 
     const ComponentType selectedType = static_cast<ComponentType>(var.toInt());
@@ -306,26 +300,13 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 
 void MainWindow::onMouseLeftScene()
 {
-    if (state == SceneState::NewLineMouse)
-    {
-        setSceneState(SceneState::NewLineMouseVyzol);
-        return;
-    }
-
     if (draftItem)
         scene->removeItem(draftItem);
 }
 
 void MainWindow::onMousePressed(const QPointF &point)
 {
-    if (state == SceneState::NewLineMouseVyzol)
-    {
-        setSceneState(SceneState::NormalState);
-        scene->setSceneMouseEnent(true);
-        return;
-    }
-
-    if (state != SceneState::CreateComponentState and state != SceneState::NewLineMouse)
+    if (state != SceneState::CreateComponentState)
     {
         for (int i=0; i<listElem.size(); ++i)
         {
@@ -342,17 +323,27 @@ void MainWindow::onMousePressed(const QPointF &point)
         return;
 
     GrawItem *newItem = ComponentFactory::createComponent(draftItem->componentType());
-    newItem->setPos(point);
-    scene->addItem(newItem);
-    listElem.append(newItem);
+    if (!newItem->IsVyzlElement() or !PolyItem) {
+        newItem->setPos(point);
+        scene->addItem(newItem);
+        listElem.append(newItem);
 
-    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0, new QTableWidgetItem((QString::number(newItem->x()))));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1, new QTableWidgetItem((QString::number(newItem->y()))));
-    ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2, new QTableWidgetItem(""));
-    ui->tableWidget->setRowHeight(ui->tableWidget->rowCount()-1,16);
+        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+        ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,0, new QTableWidgetItem((QString::number(newItem->x()))));
+        ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1, new QTableWidgetItem((QString::number(newItem->y()))));
+        ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2, new QTableWidgetItem(""));
+        ui->tableWidget->setRowHeight(ui->tableWidget->rowCount()-1,16);
+    }
 
-    setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
+    if (newItem->IsVyzlElement()) {
+        if (!PolyItem) {
+            PolyItem=newItem;
+        }else{
+            PolyItem->AddNewVyzl(point);
+        }
+    }else{
+        setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

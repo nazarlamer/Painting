@@ -14,6 +14,8 @@ public:
     virtual ComponentType componentType() const = 0;
     int id() const;
     void RotateFlip();
+    bool IsVyzlElement();
+
     // QGraphicsItem interface
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
