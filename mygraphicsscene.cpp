@@ -9,6 +9,7 @@
 MyGraphicsScene::MyGraphicsScene(QObject *parent): QGraphicsScene (parent)
 {
     qDebug() << "MyGraphicsScene";
+    MouseEvent=true;
 }
 
 void MyGraphicsScene::setSceneRect(qreal x, qreal y, qreal w, qreal h) {
@@ -113,6 +114,9 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 
 void MyGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (!MouseEvent)
+        return;
+
     QGraphicsScene::mousePressEvent(event);
     if (event->button() == Qt::LeftButton)
         emit leftButtonMousePress(event->scenePos());
@@ -124,4 +128,9 @@ bool MyGraphicsScene::event(QEvent *event)
         emit mouseLeftScene();
 
     return QGraphicsScene::event(event);
+}
+
+void MyGraphicsScene::setSceneMouseEnent(bool ievent)
+{
+    MouseEvent = ievent;
 }

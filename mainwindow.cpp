@@ -84,7 +84,7 @@ void MainWindow::saveGraphFile() const
 {
     if (!listElem.isEmpty())
     {
-        QFile file("Q_SXEMA");
+        /*QFile file("Q_SXEMA");
         file.open(QIODevice::WriteOnly);
         QDataStream out(&file);
         for (int i=0; i<listElem.count(); i++)
@@ -94,14 +94,30 @@ void MainWindow::saveGraphFile() const
             out << listElem[i]->id();
             out << listElem[i]->rotation();
         }
+        file.close();*/
 
-        file.close();
+        QFile filejs("Q_SXEMA_JS.aqjs");
+        filejs.open(QIODevice::WriteOnly);
+        QJsonArray jsonArray;
+        for (int i=0; i<listElem.count(); i++)
+        {
+            QJsonObject jsElement;
+            jsElement.insert("X", listElem[i]->x());
+            jsElement.insert("Y", listElem[i]->y());
+            jsElement.insert("ID", listElem[i]->id());
+            jsElement.insert("R", listElem[i]->rotation());
+            jsonArray.append(jsElement);
+        }
+        QJsonDocument jsFile;
+        jsFile.setArray(jsonArray);
+        filejs.write(jsFile.toJson());
+        filejs.close();
     }
 }
 
 void MainWindow::loadGraphFile()
 {
-    QFile file2("Q_SXEMA");
+    /*QFile file2("Q_SXEMA");
     file2.open(QIODevice::ReadOnly);
     QDataStream in(&file2);    // read the data serialized from the file
 
@@ -126,7 +142,27 @@ void MainWindow::loadGraphFile()
         item->setPos(elposx, elposy);
         item->setRotation(elrotate);
     }
-    file2.close();
+    file2.close();*/
+
+    QFile filejs(QStringLiteral("Q_SXEMA_JS.aqjs"));
+    filejs.open(QIODevice::ReadOnly);
+
+    QByteArray saveData = filejs.readAll();
+    QJsonDocument DocJs(QJsonDocument::fromJson(saveData));
+    auto array = DocJs.array();
+    for(const auto& json : array)
+    {
+      auto obj = json.toObject();
+      GrawItem *item = ComponentFactory::createComponent(obj["ID"].toInt());
+      if (!item)
+          continue;
+
+      listElem << item;
+      scene->addItem(item);
+      item->setPos(obj["X"].toInt(), obj["Y"].toInt());
+      item->setRotation(obj["R"].toInt());
+
+    }
 }
 
 void MainWindow::fillTable() const
@@ -248,6 +284,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
         return;
 
     if (var==qVariantFromValue(ComponentType::PolylineMouse)) {
+        scene->setSceneMouseEnent(false);
         setSceneState(SceneState::NewLineMouse);
         return;
     }
@@ -287,10 +324,11 @@ void MainWindow::onMousePressed(const QPointF &point)
     if (state == SceneState::NewLineMouseVyzol)
     {
         setSceneState(SceneState::NormalState);
+        scene->setSceneMouseEnent(true);
         return;
     }
 
-    if (state != SceneState::CreateComponentState)
+    if (state != SceneState::CreateComponentState and state != SceneState::NewLineMouse)
     {
         for (int i=0; i<listElem.size(); ++i)
         {

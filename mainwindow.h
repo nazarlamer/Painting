@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QVector>
 #include "components/componenttype.h"
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 
 class GrawItem;
 class MyGraphicsScene;

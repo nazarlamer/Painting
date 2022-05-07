@@ -16,7 +16,6 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-
         setDragMode(QGraphicsView::ScrollHandDrag);
 
         //    rightMousePressed = true;
@@ -33,7 +32,6 @@ void MyGraphicsView::mousePressEvent(QMouseEvent *event)
     //if (event->button() == Qt::LeftButton) {
 
     //}
-
 
     // передаём остальные кнопки в базовый класс
     QGraphicsView::mousePressEvent(event);

@@ -22,6 +22,10 @@ signals:
    // QObject interface
 public:
    bool event(QEvent *event) override;
+   void setSceneMouseEnent(bool ievent);
+
+private:
+   bool MouseEvent;
 
 };
 
