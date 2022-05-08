@@ -44,3 +44,8 @@ bool GrawItem::IsVyzlElement() {
     else
         return false;
 }
+
+void GrawItem::AddPoint(const QPointF &pos)
+{
+
+}

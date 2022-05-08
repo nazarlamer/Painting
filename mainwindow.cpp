@@ -45,6 +45,9 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
     if (event->type() == QEvent::GraphicsSceneContextMenu)
     {
+        if (PolyItem)
+            PolyItem=nullptr;
+
         setSceneState(SceneState::NormalState);
         return true;
     }
@@ -52,6 +55,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     if (event->type() == QEvent::Enter && state == SceneState::CreateComponentState && draftItem)
         scene->addItem(draftItem);
 
+    //переміщення мишки
     if (event->type() == QEvent::GraphicsSceneMouseMove)
     {
         auto mouseEvent = static_cast<QGraphicsSceneMouseEvent *>(event);
@@ -291,7 +295,14 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     setSceneState(SceneState::CreateComponentState);
 
     delete draftItem;
-    draftItem = graw;
+    if (graw->IsVyzlElement()) {
+        GrawItem *grawV = ComponentFactory::createComponent(ComponentType::GraphVyzol);
+        grawV->_type_parent = var.toInt();
+        draftItem = grawV;
+    }
+    else
+        draftItem = graw;
+
     draftItem->setFlag(QGraphicsItem::ItemIsMovable);
     //draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     //!!! Після цього нові елементи перестають привязуватись до сітки
@@ -322,9 +333,14 @@ void MainWindow::onMousePressed(const QPointF &point)
     if (!draftItem)
         return;
 
-    GrawItem *newItem = ComponentFactory::createComponent(draftItem->componentType());
+    GrawItem *newItem;
+    if (draftItem->_type_parent>0)
+        newItem = ComponentFactory::createComponent(draftItem->_type_parent);
+    else
+        newItem = ComponentFactory::createComponent(draftItem->componentType());
+
     if (!newItem->IsVyzlElement() or !PolyItem) {
-        newItem->setPos(point);
+        newItem->setPos(draftItem->pos());
         scene->addItem(newItem);
         listElem.append(newItem);
 
@@ -339,11 +355,13 @@ void MainWindow::onMousePressed(const QPointF &point)
         if (!PolyItem) {
             PolyItem=newItem;
         }else{
-            PolyItem->AddNewVyzl(point);
+            PolyItem->AddPoint(draftItem->pos());
+            PolyItem->update();
         }
     }else{
         setSceneState(SceneState::NormalState); //Коли додано новий елемент то занулюємо статус
     }
+    //newItem->AddPoint(QPointF(2,5));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

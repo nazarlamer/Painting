@@ -6,3 +6,5 @@ mainwindow.h.rej
 mainwindow.cpp.autosave
 components/grawitem.h.autosave
 components/elements/polyline.h.autosave
+components/nonegitem.h
+components/nonegitem.cpp

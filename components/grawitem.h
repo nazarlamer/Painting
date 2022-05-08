@@ -15,6 +15,8 @@ public:
     int id() const;
     void RotateFlip();
     bool IsVyzlElement();
+    virtual void AddPoint(const QPointF &pos);
+    int _type_parent{0};
 
     // QGraphicsItem interface
 protected:
@@ -22,4 +24,5 @@ protected:
 
 private:
     int _id{-1};
+
 };

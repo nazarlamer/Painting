@@ -15,12 +15,12 @@ public:
     // GrawItem interface
 public:
     ComponentType componentType() const override;
+    void AddPoint(const QPointF &iPos) override;
 
 private:
     QVector<GrawItem*> ListVyzl;
 
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
-
 };
 
