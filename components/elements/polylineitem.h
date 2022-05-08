@@ -23,5 +23,9 @@ private:
 
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
+
+protected:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+
 };
 

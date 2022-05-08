@@ -91,6 +91,18 @@ void PolylineItem::paintNotSelected(QPainter *painter)
     painter->drawPolyline(points);
 }
 
+void PolylineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    //qDebug() << "mouseMoveEvent";
+    if (ListVyzl.count() > 0) {
+        for (int i=0; i<ListVyzl.count(); i++) {
+            ListVyzl[i]->setDeltaX(pos().x());
+            ListVyzl[i]->setDeltaY(pos().y());
+        }
+    }
+    QGraphicsItem::mouseMoveEvent(event);
+}
+
 ComponentType PolylineItem::componentType() const
 {
     return ComponentType::Polyline;
@@ -100,6 +112,8 @@ void PolylineItem::AddPoint(const QPointF &iPos)
 {
     if (ListVyzl.count() == 0) {
         GrawItem *newItemZero = ComponentFactory::createComponent(ComponentType::GraphVyzol);
+        newItemZero->setDeltaX(pos().x());
+        newItemZero->setDeltaY(pos().y());
         ListVyzl.append(newItemZero);
     }
 
@@ -114,24 +128,24 @@ void PolylineItem::AddPoint(const QPointF &iPos)
             if (newpos.x()<pos().x()) {
                 deltx = pos().x()-newpos.x();
                 for (int i=0; i<ListVyzl.count(); i++) {
-                    ListVyzl[i]->setPtX(ListVyzl[i]->getPoint().x()+delty);
-                    ListVyzl[i]->setDeltaX(pos().x());
+                    ListVyzl[i]->setPtX(ListVyzl[i]->getPoint().x()+deltx);
+                    ListVyzl[i]->setDeltaX(pos().x()-deltx);
                 }
             }
             if (newpos.y()<pos().y()) {
                 delty = pos().y()-newpos.y();
                 for (int i=0; i<ListVyzl.count(); i++) {
                     ListVyzl[i]->setPtY(ListVyzl[i]->getPoint().y()+delty);
-                    ListVyzl[i]->setDeltaY(pos().y());
+                    ListVyzl[i]->setDeltaY(pos().y()-delty);
                 }
             }
         }
     }
 
-    newItem->setPtX(iPos.x()-pos().x());
-    newItem->setPtY(iPos.y()-pos().y());
-    newItem->setDeltaX(pos().x());
-    newItem->setDeltaY(pos().y());
+    newItem->setPtX(iPos.x()-pos().x()+deltx);
+    newItem->setPtY(iPos.y()-pos().y()+delty);
+    newItem->setDeltaX(pos().x()-deltx);
+    newItem->setDeltaY(pos().y()-delty);
 
     //newpos.setX(iPos.x()-pos().x()+deltx);
     //newpos.setY(iPos.y()-pos().y()+delty);
