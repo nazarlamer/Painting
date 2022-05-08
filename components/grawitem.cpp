@@ -64,3 +64,18 @@ void GrawItem::setDeltaY(qreal iDeltaY)
 {
 
 }
+
+void GrawItem::setPtX(qreal iptX)
+{
+
+}
+
+void GrawItem::setPtY(qreal iptY)
+{
+
+}
+
+QPointF GrawItem::getPoint() const
+{
+
+}

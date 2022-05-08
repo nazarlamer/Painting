@@ -15,10 +15,10 @@ QRectF PolylineItem::boundingRect() const
     if (ListVyzl.count()>0) {
         for (int i=0; i<ListVyzl.count(); i++)
         {
-            if (max_x < ListVyzl[i]->x())
-                max_x = ListVyzl[i]->x();
-            if (max_y < ListVyzl[i]->y())
-                max_y = ListVyzl[i]->y();
+            if (max_x < ListVyzl[i]->getPoint().x())
+                max_x = ListVyzl[i]->getPoint().x();
+            if (max_y < ListVyzl[i]->getPoint().y())
+                max_y = ListVyzl[i]->getPoint().y();
         }
         return QRectF(0, 0, max_x, max_y);
     }else {
@@ -66,7 +66,8 @@ void PolylineItem::paintSelected(QPainter *painter)
     if (ListVyzl.count() > 0) {
         for (int i=0; i<ListVyzl.count(); i++)
         {
-            points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
+            //points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
+            points.append(ListVyzl[i]->getPoint());
         }
     }
     painter->drawPolyline(points);
@@ -83,7 +84,8 @@ void PolylineItem::paintNotSelected(QPainter *painter)
     if (ListVyzl.count() > 0) {
         for (int i=0; i<ListVyzl.count(); i++)
         {
-            points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
+            //points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
+            points.append(ListVyzl[i]->getPoint());
         }
     }
     painter->drawPolyline(points);
@@ -111,21 +113,30 @@ void PolylineItem::AddPoint(const QPointF &iPos)
         if (ListVyzl.count() > 0) {
             if (newpos.x()<pos().x()) {
                 deltx = pos().x()-newpos.x();
-                for (int i=0; i<ListVyzl.count(); i++)
-                    ListVyzl[i]->setX(ListVyzl[i]->x()+deltx);
+                for (int i=0; i<ListVyzl.count(); i++) {
+                    ListVyzl[i]->setPtX(ListVyzl[i]->getPoint().x()+delty);
+                    ListVyzl[i]->setDeltaX(pos().x());
+                }
             }
             if (newpos.y()<pos().y()) {
                 delty = pos().y()-newpos.y();
-                for (int i=0; i<ListVyzl.count(); i++)
-                    ListVyzl[i]->setY(ListVyzl[i]->y()+delty);
+                for (int i=0; i<ListVyzl.count(); i++) {
+                    ListVyzl[i]->setPtY(ListVyzl[i]->getPoint().y()+delty);
+                    ListVyzl[i]->setDeltaY(pos().y());
+                }
             }
         }
     }
 
-    newpos.setX(iPos.x()-pos().x()+deltx);
-    newpos.setY(iPos.y()-pos().y()+delty);
+    newItem->setPtX(iPos.x()-pos().x());
+    newItem->setPtY(iPos.y()-pos().y());
+    newItem->setDeltaX(pos().x());
+    newItem->setDeltaY(pos().y());
 
-    newItem->setPos(newpos);
+    //newpos.setX(iPos.x()-pos().x()+deltx);
+    //newpos.setY(iPos.y()-pos().y()+delty);
+
+    //newItem->setPos(newpos);
     ListVyzl.append(newItem);
 
     setX(pos().x()-deltx);

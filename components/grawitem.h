@@ -21,6 +21,11 @@ public:
     virtual void setDeltaX(qreal iDeltaX);
     virtual void setDeltaY(qreal iDeltaY);
 
+    virtual void setPtX(qreal iptX);
+    virtual void setPtY(qreal iptY);
+
+    virtual QPointF getPoint() const;
+
     // QGraphicsItem interface
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
