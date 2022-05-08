@@ -49,3 +49,18 @@ void GrawItem::AddPoint(const QPointF &pos)
 {
 
 }
+
+QVector<GrawItem *> GrawItem::GetPoints() const
+{
+
+}
+
+void GrawItem::setDeltaX(qreal iDeltaX)
+{
+
+}
+
+void GrawItem::setDeltaY(qreal iDeltaY)
+{
+
+}

@@ -70,6 +70,7 @@ void PolylineItem::paintSelected(QPainter *painter)
         }
     }
     painter->drawPolyline(points);
+
 }
 
 void PolylineItem::paintNotSelected(QPainter *painter)
@@ -127,7 +128,16 @@ void PolylineItem::AddPoint(const QPointF &iPos)
     newItem->setPos(newpos);
     ListVyzl.append(newItem);
 
-
     setX(pos().x()-deltx);
     setY(pos().y()-delty);
+}
+
+QVector<GrawItem*>PolylineItem::GetPoints() const
+{
+    for (int i=0; i<ListVyzl.count(); i++) {
+        ListVyzl[i]->setDeltaX(x());
+        ListVyzl[i]->setDeltaY(y());
+    }
+
+    return ListVyzl;
 }

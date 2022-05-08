@@ -356,6 +356,21 @@ void MainWindow::onMousePressed(const QPointF &point)
             PolyItem=newItem;
         }else{
             PolyItem->AddPoint(draftItem->pos());
+
+            for (int k=0; k<PolyItem->GetPoints().count(); k++) {
+                GrawItem *grawvyzol = PolyItem->GetPoints()[k];
+
+                bool addscene=true;
+                for (int i=0; i<listElem.count(); i++)
+                {
+                    const GrawItem *grawitem = listElem[i];
+                    if  (grawvyzol == grawitem) {
+                        addscene=false;
+                        break;
+                    }
+                }
+                if (addscene) scene->addItem(grawvyzol);
+            }
             PolyItem->update();
         }
     }else{

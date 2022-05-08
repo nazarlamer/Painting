@@ -20,6 +20,18 @@ void GraphVyzol::paint(QPainter *painter, const QStyleOptionGraphicsItem */*opti
         paintNotSelected(painter);
 }
 
+qreal GraphVyzol::x()
+{
+    qreal pX=this->x();
+    return pX+deltaX;
+}
+
+qreal GraphVyzol::y()
+{
+    qreal pY=this->y();
+    return pY+deltaY;
+}
+
 void GraphVyzol::paintSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::blue, 1));
@@ -37,4 +49,14 @@ void GraphVyzol::paintNotSelected(QPainter *painter)
 ComponentType GraphVyzol::componentType() const
 {
     return ComponentType::GraphVyzol;
+}
+
+void GraphVyzol::setDeltaX(qreal iDeltaX)
+{
+    deltaX = iDeltaX;
+}
+
+void GraphVyzol::setDeltaY(qreal iDeltaY)
+{
+    deltaY = iDeltaY;
 }

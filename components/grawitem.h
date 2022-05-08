@@ -17,6 +17,9 @@ public:
     bool IsVyzlElement();
     virtual void AddPoint(const QPointF &pos);
     int _type_parent{0};
+    virtual QVector<GrawItem*> GetPoints() const;
+    virtual void setDeltaX(qreal iDeltaX);
+    virtual void setDeltaY(qreal iDeltaY);
 
     // QGraphicsItem interface
 protected:
@@ -24,5 +27,4 @@ protected:
 
 private:
     int _id{-1};
-
 };
