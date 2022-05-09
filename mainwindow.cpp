@@ -369,7 +369,14 @@ void MainWindow::onMousePressed(const QPointF &point)
                         break;
                     }
                 }
-                if (addscene) scene->addItem(grawvyzol);
+                if (addscene) {
+                    grawvyzol->setDeltaX(0);
+                    grawvyzol->setDeltaY(0);
+                    grawvyzol->setParentItem(PolyItem);
+                    listElem.append(grawvyzol);
+                    scene->addItem(grawvyzol);
+
+                }
             }
             PolyItem->update();
         }

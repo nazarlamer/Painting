@@ -26,6 +26,7 @@ public:
 
     virtual QPointF getPoint() const;
 
+
     // QGraphicsItem interface
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;

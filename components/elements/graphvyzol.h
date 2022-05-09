@@ -28,5 +28,9 @@ private:
     qreal deltaY=0;
     qreal ptX=0;
     qreal ptY=0;
+
+protected:
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
 };
 

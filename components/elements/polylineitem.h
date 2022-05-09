@@ -23,9 +23,11 @@ private:
 
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
+    void UpdateVyzols();
+
 
 protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 

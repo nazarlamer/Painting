@@ -1,5 +1,6 @@
 #include "graphvyzol.h"
 #include <QPainter>
+#include <QDebug>
 
 GraphVyzol::GraphVyzol(int id) : GrawItem(id)
 {
@@ -34,6 +35,18 @@ void GraphVyzol::paintNotSelected(QPainter *painter)
     painter->drawEllipse(QRect(-5, -5, 10, 10));
 }
 
+void GraphVyzol::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    //qDebug() << "updateparent";
+    if (parentItem()) {
+        //
+        setPtX(x());
+        setPtY(y());
+        parentItem()->update();
+    }
+    QGraphicsItem::mouseReleaseEvent(event);
+}
+
 ComponentType GraphVyzol::componentType() const
 {
     return ComponentType::GraphVyzol;
@@ -41,13 +54,23 @@ ComponentType GraphVyzol::componentType() const
 
 void GraphVyzol::setDeltaX(qreal iDeltaX)
 {
-    deltaX = iDeltaX;
+    if (!parentItem()){
+        deltaX = iDeltaX;
+    }else{
+        deltaX = 0;
+    }
+
     setX(ptX+deltaX);
 }
 
 void GraphVyzol::setDeltaY(qreal iDeltaY)
 {
-    deltaY = iDeltaY;
+    if (!parentItem()){
+        deltaY = iDeltaY;
+    }else{
+        deltaY = 0;
+    }
+
     setY(ptY+deltaY);
 }
 
