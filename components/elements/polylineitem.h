@@ -25,6 +25,11 @@ private:
     void paintNotSelected(QPainter *painter);
     void UpdateVyzols();
 
+public slots:
+    void isUpdateChild() override;
+
+signals:
+   void signalParent();
 
 protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;

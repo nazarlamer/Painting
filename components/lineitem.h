@@ -16,6 +16,9 @@ public:
 public:
     ComponentType componentType() const override;
 
+signals:
+   void signalParent();
+
 private:
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);

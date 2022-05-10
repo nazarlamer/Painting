@@ -26,6 +26,13 @@ public:
 
     virtual QPointF getPoint() const;
 
+    void setParentItem(QGraphicsItem *parent);
+
+public slots:
+   virtual void isUpdateChild();
+
+signals:
+   void signalParent();
 
     // QGraphicsItem interface
 protected:

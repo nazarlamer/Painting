@@ -79,3 +79,13 @@ QPointF GrawItem::getPoint() const
 {
 
 }
+
+void GrawItem::setParentItem(QGraphicsItem *parent)
+{
+    QGraphicsItem::setParentItem(parent);
+}
+
+void GrawItem::isUpdateChild()
+{
+
+}

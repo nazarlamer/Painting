@@ -126,6 +126,11 @@ void PolylineItem::UpdateVyzols()
     //setY(y()-delty);
 }
 
+void PolylineItem::isUpdateChild()
+{
+    qDebug() << "PolylineItem :: isUpdateChild";
+}
+
 void PolylineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     qDebug() << "mouseMoveEvent";
