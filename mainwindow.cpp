@@ -370,8 +370,7 @@ void MainWindow::onMousePressed(const QPointF &point)
                     }
                 }
                 if (addscene) {
-                    //connect(grawvyzol, SIGNAL(signalParent()), PolyItem, SLOT(isUpdateChild()));
-                    //connect(grawvyzol, &GrawItem::signalParent, PolyItem, &GrawItem::isUpdateChild);
+                    connect(grawvyzol, &GrawItem::signalParent, PolyItem, &GrawItem::isUpdateChild);
                     grawvyzol->setDeltaX(0);
                     grawvyzol->setDeltaY(0);
                     grawvyzol->setParentItem(PolyItem);
