@@ -33,6 +33,7 @@ public slots:
 
 signals:
    void signalParent();
+   void updScen();
 
     // QGraphicsItem interface
 protected:

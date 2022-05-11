@@ -34,6 +34,12 @@ void MyGraphicsScene::setSceneRect(qreal x, qreal y, qreal w, qreal h) {
     */
 }
 
+void MyGraphicsScene::UpdateScen()
+{
+    qDebug() << "MyGraphicsScene :: UpdateScen";
+    update();
+}
+
 static const int GRID_STEP = 30;
 
 void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)

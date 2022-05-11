@@ -352,6 +352,7 @@ void MainWindow::onMousePressed(const QPointF &point)
     }
 
     if (newItem->IsVyzlElement()) {
+        connect(newItem, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         if (!PolyItem) {
             PolyItem=newItem;
         }else{

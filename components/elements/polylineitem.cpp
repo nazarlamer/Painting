@@ -25,7 +25,6 @@ QRectF PolylineItem::boundingRect() const
     }else {
         return QRectF(-5, -5, 10, 10);
     }
-
 }
 
 void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/,
@@ -46,14 +45,6 @@ void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*op
         painter->setPen(QPen(Qt::red, 1));
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(boundingRect());
-    }
-
-    for (int i=0; i<ListVyzl.count(); i++)
-    {
-        if (ListVyzl[i]->x()<0 or ListVyzl[i]->y()<0) {
-            UpdateVyzols();
-            break;
-        }
     }
 
     if (isSelected())
@@ -114,21 +105,52 @@ void PolylineItem::UpdateVyzols()
             }
         }
     }
+
     deltx = deltx * -1;
     delty = delty * -1;
+    if (deltx>0 or delty>0) {
+        for (int i=0; i<ListVyzl.count(); i++) {
+            ListVyzl[i]->setPtX(ListVyzl[i]->getPoint().x()+deltx);
+            ListVyzl[i]->setPtY(ListVyzl[i]->getPoint().y()+delty);
+        }
 
-    //for (int i=0; i<ListVyzl.count(); i++) {
-    //    ListVyzl[i]->setPtX(ListVyzl[i]->getPoint().x()+deltx);
-    //    ListVyzl[i]->setPtY(ListVyzl[i]->getPoint().y()+delty);
-    //}
+        setX(x()-deltx);
+        setY(y()-delty);
+    }
 
-    //setX(x()-deltx);
-    //setY(y()-delty);
+    deltx = boundingRect().width();
+    delty = boundingRect().height();
+
+    if (ListVyzl.count() > 0) {
+
+        for (int i=0; i<ListVyzl.count(); i++) {
+
+            if (ListVyzl[i]->x()<deltx)
+                deltx = ListVyzl[i]->x();
+
+            if (ListVyzl[i]->y()<delty)
+                delty = ListVyzl[i]->y();
+        }
+    }
+
+    if (deltx>0 or delty>0) {
+        for (int i=0; i<ListVyzl.count(); i++) {
+            ListVyzl[i]->setPtX(ListVyzl[i]->getPoint().x()-deltx);
+            ListVyzl[i]->setPtY(ListVyzl[i]->getPoint().y()-delty);
+        }
+
+        setX(x()+deltx);
+        setY(y()+delty);
+    }
+
+    emit updScen();
 }
 
 void PolylineItem::isUpdateChild()
 {
     qDebug() << "PolylineItem :: isUpdateChild";
+    update();
+    UpdateVyzols();
 }
 
 void PolylineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -211,10 +233,16 @@ void PolylineItem::AddPoint(const QPointF &iPos)
 
 QVector<GrawItem*>PolylineItem::GetPoints() const
 {
+    qDebug() << "PolylineItem : :GetPoints()";
     for (int i=0; i<ListVyzl.count(); i++) {
         ListVyzl[i]->setDeltaX(x());
         ListVyzl[i]->setDeltaY(y());
     }
 
     return ListVyzl;
+}
+
+void PolylineItem::setW()
+{
+
 }

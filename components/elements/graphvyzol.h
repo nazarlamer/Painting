@@ -21,9 +21,6 @@ public:
     void setPtY(qreal iptY) override;
     QPointF getPoint() const override;
 
-signals:
-   void signalParent();
-
 private:
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);

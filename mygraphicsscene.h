@@ -6,9 +6,13 @@
 class MyGraphicsScene: public QGraphicsScene
 {
     Q_OBJECT
+
 public:
     MyGraphicsScene(QObject *parent);
     void setSceneRect(qreal x, qreal y, qreal w, qreal h);
+
+public slots:
+    void UpdateScen();
 
 signals:
     void mouseLeftScene();

@@ -37,14 +37,9 @@ void GraphVyzol::paintNotSelected(QPainter *painter)
 
 void GraphVyzol::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    //qDebug() << "updateparent";
-    //if (parentItem()) {
-    //    setPtX(x());
-    //    setPtY(y());
-   //     parentItem()->update();
-    //}
-
-    //emit signalParent();
+    ptX=x();
+    ptY=y();
+    emit signalParent();
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
