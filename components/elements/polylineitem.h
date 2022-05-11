@@ -22,7 +22,6 @@ private:
     QVector<GrawItem*> ListVyzl;
     qreal _width = 0;
     qreal _heigth = 0;
-    void setW();
 
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);

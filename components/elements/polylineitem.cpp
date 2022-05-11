@@ -241,8 +241,3 @@ QVector<GrawItem*>PolylineItem::GetPoints() const
 
     return ListVyzl;
 }
-
-void PolylineItem::setW()
-{
-
-}

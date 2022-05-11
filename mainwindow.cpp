@@ -110,6 +110,19 @@ void MainWindow::saveGraphFile() const
             jsElement.insert("Y", listElem[i]->y());
             jsElement.insert("ID", listElem[i]->id());
             jsElement.insert("R", listElem[i]->rotation());
+
+            if (listElem[i]->IsVyzlElement()) {
+                QJsonArray NodesArray;
+                for (int k=0; k<listElem[i]->GetPoints().count(); k++) {
+                    GrawItem *grawvyzol = listElem[i]->GetPoints()[k];
+                    QJsonArray NodeArray;
+                    NodeArray.append(grawvyzol->x());
+                    NodeArray.append(grawvyzol->y());
+                    NodesArray.append(NodeArray);
+                }
+                jsElement.insert("NODES", NodesArray);
+            }
+
             jsonArray.append(jsElement);
         }
         QJsonDocument jsFile;
