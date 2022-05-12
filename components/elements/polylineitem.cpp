@@ -5,7 +5,8 @@
 
 PolylineItem::PolylineItem(int id) : GrawItem(id)
 {
-
+    setFlag(QGraphicsItem::ItemIsSelectable, false);
+    setFlag(QGraphicsItem::ItemIsMovable, false);
 }
 
 QRectF PolylineItem::boundingRect() const
@@ -229,6 +230,11 @@ void PolylineItem::AddPoint(const QPointF &iPos)
 
     setX(pos().x()-deltx);
     setY(pos().y()-delty);
+}
+
+void PolylineItem::AddPoint(GrawItem *igi)
+{
+    ListVyzl.append(igi);
 }
 
 QVector<GrawItem*>PolylineItem::GetPoints() const

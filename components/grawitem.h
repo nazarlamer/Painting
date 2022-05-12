@@ -16,6 +16,7 @@ public:
     void RotateFlip();
     bool IsVyzlElement();
     virtual void AddPoint(const QPointF &pos);
+    virtual void AddPoint(GrawItem *igi);
     int _type_parent{0};
     virtual QVector<GrawItem*> GetPoints() const;
     virtual void setDeltaX(qreal iDeltaX);

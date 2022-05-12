@@ -16,6 +16,7 @@ public:
 public:
     ComponentType componentType() const override;
     void AddPoint(const QPointF &iPos) override;
+    void AddPoint(GrawItem *igi) override;
     QVector<GrawItem*> GetPoints() const override;
 
 private:

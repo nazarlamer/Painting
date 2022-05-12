@@ -105,6 +105,12 @@ void MainWindow::saveGraphFile() const
         QJsonArray jsonArray;
         for (int i=0; i<listElem.count(); i++)
         {
+            if (listElem[i]->componentType() == ComponentType::GraphVyzol)
+                continue;
+
+            if (listElem[i]->IsVyzlElement() and listElem[i]->GetPoints().count()==0)
+                continue;
+
             QJsonObject jsElement;
             jsElement.insert("X", listElem[i]->x());
             jsElement.insert("Y", listElem[i]->y());
@@ -124,6 +130,7 @@ void MainWindow::saveGraphFile() const
             }
 
             jsonArray.append(jsElement);
+
         }
         QJsonDocument jsFile;
         jsFile.setArray(jsonArray);
@@ -169,15 +176,34 @@ void MainWindow::loadGraphFile()
     auto array = DocJs.array();
     for(const auto& json: array)
     {
-      auto obj = json.toObject();
-      GrawItem *item = ComponentFactory::createComponent(obj["ID"].toInt());
-      if (!item)
-          continue;
+        auto obj = json.toObject();
+        GrawItem *item = ComponentFactory::createComponent(obj["ID"].toInt());
+        if (!item)
+            continue;
 
-      listElem << item;
-      scene->addItem(item);
-      item->setPos(obj["X"].toInt(), obj["Y"].toInt());
-      item->setRotation(obj["R"].toInt());
+        item->setPos(obj["X"].toInt(), obj["Y"].toInt());
+        item->setRotation(obj["R"].toInt());
+        scene->addItem(item);
+        listElem << item;
+
+        if (item->IsVyzlElement()) {
+            auto arrNodes = obj["NODES"].toArray();
+            for(const auto& ArrNode: arrNodes) {
+                GrawItem *itemNode = ComponentFactory::createComponent(ComponentType::GraphVyzol);
+
+                auto obPosx = ArrNode.toArray();
+                itemNode->setParentItem(item);
+
+                itemNode->setPtX(obPosx[0].toInt());
+                itemNode->setPtY(obPosx[1].toInt());
+
+                connect(itemNode, &GrawItem::signalParent, item, &GrawItem::isUpdateChild);
+                item->AddPoint(itemNode);
+                listElem << itemNode;
+                //scene->addItem(itemNode);
+            }
+            connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+      }
 
     }
 }
@@ -389,7 +415,7 @@ void MainWindow::onMousePressed(const QPointF &point)
                     grawvyzol->setDeltaY(0);
                     grawvyzol->setParentItem(PolyItem);
                     listElem.append(grawvyzol);
-                    scene->addItem(grawvyzol);
+                    //scene->addItem(grawvyzol);
                 }
             }
             PolyItem->update();

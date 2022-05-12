@@ -39,13 +39,18 @@ void GrawItem::RotateFlip() {
 }
 
 bool GrawItem::IsVyzlElement() {
-    if (_id == 5)
+    if (componentType()==ComponentType::Polyline)
         return true;
     else
         return false;
 }
 
 void GrawItem::AddPoint(const QPointF &pos)
+{
+
+}
+
+void GrawItem::AddPoint(GrawItem *igi)
 {
 
 }
