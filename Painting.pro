@@ -30,6 +30,7 @@ SOURCES += \
         components/componentfactory.cpp \
         components/elements/graphnode.cpp \
         components/elements/polylineitem.cpp \
+        components/elements/twogtext.cpp \
         components/grawitem.cpp \
         components/lineitem.cpp \
         components/rectangleitem.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
         components/componenttype.h \
         components/elements/graphnode.h \
         components/elements/polylineitem.h \
+        components/elements/twogtext.h \
         components/grawitem.h \
         components/lineitem.h \
         components/rectangleitem.h \

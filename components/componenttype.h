@@ -10,7 +10,8 @@ enum class ComponentType
     Circle,
     Rectangle,
     Polyline,
-    GraphNode
+    GraphNode,
+    TwoText
 };
 
 // for QVariant support
