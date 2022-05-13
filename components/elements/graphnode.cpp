@@ -59,6 +59,16 @@ void GraphNode::setDeltaX(qreal iDeltaX)
     setX(ptX+deltaX);
 }
 
+/*
+В чому різниця між setDelta і setPt функціями? Чи не можна було в клієнтському коді порахувати потрібні
+зміщення і передати результат стандартним методам setX, setY?
+
+consty qreal deltaForX = calculateDeltaForX();
+consty qreal deltaForY = calculateDeltaForY();
+item->setX(deltaForX);
+item->setY(deltaForY);
+ */
+
 void GraphNode::setDeltaY(qreal iDeltaY)
 {
     if (!parentItem()){
