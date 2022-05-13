@@ -1,5 +1,6 @@
 #include "polylineitem.h"
 #include <QPainter>
+/*Не коректне підключення хідер файла.*/
 #include "../componentfactory.h"
 #include <QDebug>
 
