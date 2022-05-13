@@ -36,7 +36,7 @@ public:
     /*
      Віртуальні (інтерфейсні) методи без документації (коментарів).
         І ще одне, чи підтримують всі елементи таке зміщення?
-     */
+    */
 
     virtual void setPtX(qreal iptX);
     virtual void setPtY(qreal iptY);

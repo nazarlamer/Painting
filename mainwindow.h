@@ -25,8 +25,8 @@ private:
     {
         CreateComponentState,
         NormalState,
-        NewLineMouse,
-        NewLineMouseVyzol
+        ReadOnlyState,
+        PrintState
     };
 
 public:

@@ -12,5 +12,10 @@ public:
     // GrawItem interface
 public:
     ComponentType componentType() const;
+
+private:
+    void paintSelected(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintNotSelected(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 

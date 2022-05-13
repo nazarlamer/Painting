@@ -282,6 +282,10 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
         category3TreeItem->addChild(treeItem);
     }
+    QTreeWidgetItem *treeItem = new QTreeWidgetItem (ui->treeWidget);
+    treeItem->setText(columnIndex, "2text");
+    treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::TwoText));
+
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
