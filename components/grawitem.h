@@ -14,7 +14,7 @@ public:
     virtual ComponentType componentType() const = 0;
     int id() const;
     void RotateFlip();
-    bool IsVyzlElement();
+    bool IsNodesElement() const;
     virtual void AddPoint(const QPointF &pos);
     virtual void AddPoint(GrawItem *igi);
     int _type_parent{0};

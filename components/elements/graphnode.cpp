@@ -92,8 +92,14 @@ void GraphNode::setPtY(qreal iptY)
     setY(ptY+deltaY);
 }
 
+/*
+Цей метод вертає точку на що, на середину фігури чи її низ(верх)???
+Що має думати клієнгт при такому виклику:
+circle->getPoint(); ???
+*/
 QPointF GraphNode::getPoint() const
 {
+    //qDebug() << "GraphNode::getPoint() 111";
     return QPointF(ptX, ptY);
 }
 

@@ -38,7 +38,8 @@ void GrawItem::RotateFlip() {
     setRotation(rotation()+90);
 }
 
-bool GrawItem::IsVyzlElement() {
+bool GrawItem::IsNodesElement() const
+{
     if (componentType()==ComponentType::Polyline)
         return true;
     else

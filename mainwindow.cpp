@@ -108,7 +108,7 @@ void MainWindow::saveGraphFile() const
             if (listElem[i]->componentType() == ComponentType::GraphNode)
                 continue;
 
-            if (listElem[i]->IsVyzlElement() and listElem[i]->GetPoints().count()==0)
+            if (listElem[i]->IsNodesElement() and listElem[i]->GetPoints().count()==0)
                 continue;
 
             QJsonObject jsElement;
@@ -117,7 +117,7 @@ void MainWindow::saveGraphFile() const
             jsElement.insert("ID", listElem[i]->id());
             jsElement.insert("R", listElem[i]->rotation());
 
-            if (listElem[i]->IsVyzlElement()) {
+            if (listElem[i]->IsNodesElement()) {
                 QJsonArray NodesArray;
                 for (int k=0; k<listElem[i]->GetPoints().count(); k++) {
                     GrawItem *grawvyzol = listElem[i]->GetPoints()[k];
@@ -186,7 +186,7 @@ void MainWindow::loadGraphFile()
         scene->addItem(item);
         listElem << item;
 
-        if (item->IsVyzlElement()) {
+        if (item->IsNodesElement()) {
             auto arrNodes = obj["NODES"].toArray();
             for(const auto& ArrNode: arrNodes) {
                 GrawItem *itemNode = ComponentFactory::createComponent(ComponentType::GraphNode);
@@ -334,7 +334,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     setSceneState(SceneState::CreateComponentState);
 
     delete draftItem;
-    if (graw->IsVyzlElement()) {
+    if (graw->IsNodesElement()) {
         GrawItem *grawV = ComponentFactory::createComponent(ComponentType::GraphNode);
         grawV->_type_parent = var.toInt();
         draftItem = grawV;
@@ -378,7 +378,7 @@ void MainWindow::onMousePressed(const QPointF &point)
     else
         newItem = ComponentFactory::createComponent(draftItem->componentType());
 
-    if (!newItem->IsVyzlElement() or !PolyItem) {
+    if (!newItem->IsNodesElement() or !PolyItem) {
         newItem->setPos(draftItem->pos());
         scene->addItem(newItem);
         listElem.append(newItem);
@@ -390,7 +390,7 @@ void MainWindow::onMousePressed(const QPointF &point)
         ui->tableWidget->setRowHeight(ui->tableWidget->rowCount()-1,16);
     }
 
-    if (newItem->IsVyzlElement()) {
+    if (newItem->IsNodesElement()) {
         connect(newItem, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         if (!PolyItem) {
             PolyItem=newItem;
