@@ -33,6 +33,11 @@ public:
     virtual void setDeltaX(qreal iDeltaX);
     virtual void setDeltaY(qreal iDeltaY);
 
+    /*
+     Віртуальні (інтерфейсні) методи без документації (коментарів).
+        І ще одне, чи підтримують всі елементи таке зміщення?
+     */
+
     virtual void setPtX(qreal iptX);
     virtual void setPtY(qreal iptY);
 
