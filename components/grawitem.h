@@ -15,8 +15,13 @@ public:
     int id() const;
     void RotateFlip();
     bool IsNodesElement() const;
+    /*
+    Абстрактний класс GrawItem, від якого наслідуються зараз усі фігури, говорить, що у нього можна додавати точки.
+    Коло є GrawItem, бо наслідується від нього. Чи є сенс додавати точки в коло? ООП, Карл!!!
+    */
     virtual void AddPoint(const QPointF &pos);
     virtual void AddPoint(GrawItem *igi);
+
     int _type_parent{0};
     virtual QVector<GrawItem*> GetPoints() const;
     virtual void setDeltaX(qreal iDeltaX);
