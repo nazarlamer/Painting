@@ -45,8 +45,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
     if (event->type() == QEvent::GraphicsSceneContextMenu)
     {
-        if (PolyItem)
+        if (PolyItem){
+            delete PolyItem;
             PolyItem=nullptr;
+        }
 
         setSceneState(SceneState::NormalState);
         return true;
