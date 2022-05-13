@@ -2,10 +2,10 @@
 
 #include "../grawitem.h"
 
-class GraphVyzol : public GrawItem
+class GraphNode : public GrawItem
 {
 public:
-    explicit GraphVyzol(int id);
+    explicit GraphNode(int id);
 
     // QGraphicsItem interface
 public:

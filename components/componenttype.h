@@ -10,7 +10,7 @@ enum class ComponentType
     Circle,
     Rectangle,
     Polyline,
-    GraphVyzol
+    GraphNode
 };
 
 // for QVariant support

@@ -5,7 +5,10 @@
 #include "circleitem.h"
 #include "rectangleitem.h"
 #include "elements/polylineitem.h"
-#include "elements/graphvyzol.h"
+#include "elements/graphnode.h"
+
+// В GrawItem можна зберігати ComponentType як айді
+//і тоді ці статік касти будуть не потрібні.
 
 GrawItem *ComponentFactory::createComponent(ComponentType type)
 {
@@ -26,8 +29,8 @@ GrawItem *ComponentFactory::createComponent(ComponentType type)
     case ComponentType::Polyline:
         return new PolylineItem(static_cast<int>(type));
 
-    case ComponentType::GraphVyzol:
-        return new GraphVyzol(static_cast<int>(type));
+    case ComponentType::GraphNode:
+        return new GraphNode(static_cast<int>(type));
 
     default:
         return nullptr;

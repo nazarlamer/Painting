@@ -186,13 +186,13 @@ ComponentType PolylineItem::componentType() const
 void PolylineItem::AddPoint(const QPointF &iPos)
 {
     if (ListVyzl.count() == 0) {
-        GrawItem *newItemZero = ComponentFactory::createComponent(ComponentType::GraphVyzol);
+        GrawItem *newItemZero = ComponentFactory::createComponent(ComponentType::GraphNode);
         newItemZero->setDeltaX(pos().x());
         newItemZero->setDeltaY(pos().y());
         ListVyzl.append(newItemZero);
     }
 
-    GrawItem *newItem = ComponentFactory::createComponent(ComponentType::GraphVyzol);
+    GrawItem *newItem = ComponentFactory::createComponent(ComponentType::GraphNode);
     QPointF newpos = iPos;
 
     qreal deltx = 0;

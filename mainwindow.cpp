@@ -105,7 +105,7 @@ void MainWindow::saveGraphFile() const
         QJsonArray jsonArray;
         for (int i=0; i<listElem.count(); i++)
         {
-            if (listElem[i]->componentType() == ComponentType::GraphVyzol)
+            if (listElem[i]->componentType() == ComponentType::GraphNode)
                 continue;
 
             if (listElem[i]->IsVyzlElement() and listElem[i]->GetPoints().count()==0)
@@ -189,7 +189,7 @@ void MainWindow::loadGraphFile()
         if (item->IsVyzlElement()) {
             auto arrNodes = obj["NODES"].toArray();
             for(const auto& ArrNode: arrNodes) {
-                GrawItem *itemNode = ComponentFactory::createComponent(ComponentType::GraphVyzol);
+                GrawItem *itemNode = ComponentFactory::createComponent(ComponentType::GraphNode);
 
                 auto obPosx = ArrNode.toArray();
                 itemNode->setParentItem(item);
@@ -335,7 +335,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
 
     delete draftItem;
     if (graw->IsVyzlElement()) {
-        GrawItem *grawV = ComponentFactory::createComponent(ComponentType::GraphVyzol);
+        GrawItem *grawV = ComponentFactory::createComponent(ComponentType::GraphNode);
         grawV->_type_parent = var.toInt();
         draftItem = grawV;
     }

@@ -1,18 +1,18 @@
-#include "graphvyzol.h"
+#include "graphnode.h"
 #include <QPainter>
 #include <QDebug>
 
-GraphVyzol::GraphVyzol(int id) : GrawItem(id)
+GraphNode::GraphNode(int id) : GrawItem(id)
 {
 
 }
 
-QRectF GraphVyzol::boundingRect() const
+QRectF GraphNode::boundingRect() const
 {
     return QRectF(-5, -5, 10, 10);
 }
 
-void GraphVyzol::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/,
+void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/,
                       QWidget */*widget*/)
 {
     if (isSelected())
@@ -21,21 +21,21 @@ void GraphVyzol::paint(QPainter *painter, const QStyleOptionGraphicsItem */*opti
         paintNotSelected(painter);
 }
 
-void GraphVyzol::paintSelected(QPainter *painter)
+void GraphNode::paintSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::blue, 1));
     painter->setBrush(Qt::SolidPattern);
     painter->drawEllipse(QRect(-5, -5, 10, 10));
 }
 
-void GraphVyzol::paintNotSelected(QPainter *painter)
+void GraphNode::paintNotSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::cyan, 1));
     painter->setBrush(Qt::SolidPattern);
     painter->drawEllipse(QRect(-5, -5, 10, 10));
 }
 
-void GraphVyzol::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void GraphNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     ptX=x();
     ptY=y();
@@ -43,12 +43,12 @@ void GraphVyzol::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
-ComponentType GraphVyzol::componentType() const
+ComponentType GraphNode::componentType() const
 {
-    return ComponentType::GraphVyzol;
+    return ComponentType::GraphNode;
 }
 
-void GraphVyzol::setDeltaX(qreal iDeltaX)
+void GraphNode::setDeltaX(qreal iDeltaX)
 {
     if (!parentItem()){
         deltaX = iDeltaX;
@@ -59,7 +59,7 @@ void GraphVyzol::setDeltaX(qreal iDeltaX)
     setX(ptX+deltaX);
 }
 
-void GraphVyzol::setDeltaY(qreal iDeltaY)
+void GraphNode::setDeltaY(qreal iDeltaY)
 {
     if (!parentItem()){
         deltaY = iDeltaY;
@@ -70,19 +70,19 @@ void GraphVyzol::setDeltaY(qreal iDeltaY)
     setY(ptY+deltaY);
 }
 
-void GraphVyzol::setPtX(qreal iptX)
+void GraphNode::setPtX(qreal iptX)
 {
     ptX = iptX;
     setX(ptX+deltaX);
 }
 
-void GraphVyzol::setPtY(qreal iptY)
+void GraphNode::setPtY(qreal iptY)
 {
     ptY = iptY;
     setY(ptY+deltaY);
 }
 
-QPointF GraphVyzol::getPoint() const
+QPointF GraphNode::getPoint() const
 {
     return QPointF(ptX, ptY);
 }
