@@ -56,6 +56,16 @@ void GrawItem::AddPoint(GrawItem *igi)
 
 }
 
+void GrawItem::setTypeParent(int iTypeParent)
+{
+    _type_parent = iTypeParent;
+}
+
+int GrawItem::getTypeParent()
+{
+    return _type_parent;
+}
+
 QVector<GrawItem *> GrawItem::GetPoints() const
 {
 

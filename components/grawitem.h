@@ -24,7 +24,11 @@ public:
     virtual void AddPoint(const QPointF &pos);
     virtual void AddPoint(GrawItem *igi);
 
-    int _type_parent{0};
+    /*int _type_parent{0}; а потім 40 годин дебагу чого воно не працює.*/
+
+    void setTypeParent(int iTypeParent);
+    int getTypeParent();
+
     virtual QVector<GrawItem*> GetPoints() const;
     virtual void setDeltaX(qreal iDeltaX);
     virtual void setDeltaY(qreal iDeltaY);
@@ -49,4 +53,5 @@ protected:
 
 private:
     int _id{-1};
+    int _type_parent{0};
 };

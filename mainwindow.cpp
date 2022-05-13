@@ -338,7 +338,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     delete draftItem;
     if (graw->IsNodesElement()) {
         GrawItem *grawV = ComponentFactory::createComponent(ComponentType::GraphNode);
-        grawV->_type_parent = var.toInt();
+        grawV->setTypeParent(var.toInt());
         draftItem = grawV;
     }
     else
@@ -375,8 +375,8 @@ void MainWindow::onMousePressed(const QPointF &point)
         return;
 
     GrawItem *newItem;
-    if (draftItem->_type_parent>0)
-        newItem = ComponentFactory::createComponent(draftItem->_type_parent);
+    if (draftItem->getTypeParent()>0)
+        newItem = ComponentFactory::createComponent(draftItem->getTypeParent());
     else
         newItem = ComponentFactory::createComponent(draftItem->componentType());
 
