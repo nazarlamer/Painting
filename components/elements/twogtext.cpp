@@ -45,43 +45,28 @@ void Twogtext::paintNotSelected(QPainter *painter, const QStyleOptionGraphicsIte
 
 void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    //QString ttt("50, 20 dfgdfg dfgdfgdf ddd");
-    //QTextItem *text;
+    /*QString ttt("50, 20 dfgdfg dfgdfgdf ddd");
+    QTextItem *text;
     //text->text()="jhjnnj";
     //QRectF QFontMetricsF::boundingRect(const QString & text)
-    //painter->drawText(0,0,ttt);
-    //painter->drawText(boundingRect(), Qt::AlignTop, ttt);
+    painter->drawText(0,0,ttt);
+    painter->drawText(boundingRect(), Qt::AlignTop, ttt);*/
 
-    QFont ft;
-    ft.setPixelSize(12);
-    ft.setBold(true);
-
-    QGraphicsTextItem *qri = new QGraphicsTextItem("dfsad", this);
-
+    QGraphicsTextItem *qri = new QGraphicsTextItem("dfsad00");
     qri->setFlag(QGraphicsItem::ItemIsSelectable, false);
     qri->setFlag(QGraphicsItem::ItemIsMovable, false);
     qri->setTextWidth(80);
-    qri->setFont(ft);
+    qri->font().setBold(true);
+    qri->font().setPointSizeF(8);
     qri->paint(painter,option,widget);
-    qri->setScale(1);
 
-    QFont ft2;
-    ft2.setPixelSize(12);
-    ft2.setBold(false);
-
-    QGraphicsTextItem *qri2 = new QGraphicsTextItem("dfsad784554", this);
+    QGraphicsTextItem *qri2 = new QGraphicsTextItem("dfsad00", this);
     qri2->setFlag(QGraphicsItem::ItemIsSelectable, false);
     qri2->setFlag(QGraphicsItem::ItemIsMovable, false);
     qri2->setTextWidth(80);
-    qri2->setFont(ft2);
+    qri2->font().setBold(true);
+    qri2->font().setPointSizeF(8);
     qri2->setY(qri->boundingRect().height());
-    qri2->setScale(1);
-     //  painter->drawTextItem(0,0,qri2)
-    //qri2->setTransform(trans);
-    //qri2->itemTransform(this);
-
-    //qri2->paint(painter,option,widget);
-
 
 }
 
