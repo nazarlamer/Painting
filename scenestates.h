@@ -7,7 +7,8 @@ enum class SceneState
     CreateComponentState,
     NormalState,
     ReadOnlyState,
-    PrintState
+    PrintState,
+    SaveSvgFile
 };
 
 // for QVariant support

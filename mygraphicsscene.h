@@ -2,6 +2,7 @@
 #define MYGRAPHICSSCENE_H
 
 #include <QGraphicsScene>
+#include "scenestates.h"
 
 class MyGraphicsScene: public QGraphicsScene
 {
@@ -10,6 +11,7 @@ class MyGraphicsScene: public QGraphicsScene
 public:
     MyGraphicsScene(QObject *parent);
     void setSceneRect(qreal x, qreal y, qreal w, qreal h);
+    void setSceneState(SceneState iscenestate);
 
 public slots:
     void UpdateScen();
@@ -27,6 +29,9 @@ signals:
 public:
    bool event(QEvent *event) override;
    void setSceneMouseEnent(bool ievent);
+
+private:
+    SceneState _scenestate{SceneState::NormalState};
 
 };
 

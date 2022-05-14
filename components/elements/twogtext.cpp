@@ -24,6 +24,7 @@ Twogtext::Twogtext(int id) : GrawItem(id)
     NodeWidth = ComponentFactory::createComponent(ComponentType::GraphNode);
     NodeWidth->setParentItem(this);
     NodeWidth->setX(BoundingRectW);
+    NodeWidth->setFixY(0);
     connect(NodeWidth, &GrawItem::signalParent, this, &GrawItem::isUpdateChild);
 }
 
@@ -85,7 +86,11 @@ void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *opti
 void Twogtext::isUpdateChild()
 {
     qDebug() << "Twogtext :: isUpdateChild";
-    BoundingRectW = NodeWidth->x();
+    if (NodeWidth->x()<10) {
+        NodeWidth->setX(10);
+        BoundingRectW = 10;
+    }else
+        BoundingRectW = NodeWidth->x();
     NodeWidth->setY(0);
     update();
     emit updScen();

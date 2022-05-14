@@ -18,5 +18,7 @@ public:
 private:
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
+    void paintMain(QPainter *painter);
+
 };
 

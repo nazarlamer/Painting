@@ -34,6 +34,12 @@ void MyGraphicsScene::setSceneRect(qreal x, qreal y, qreal w, qreal h) {
     */
 }
 
+void MyGraphicsScene::setSceneState(SceneState iscenestate)
+{
+    _scenestate = iscenestate;
+    update();
+}
+
 void MyGraphicsScene::UpdateScen()
 {
     qDebug() << "MyGraphicsScene :: UpdateScen";
@@ -68,36 +74,36 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
    }
    */
 
+    painter->save();
 
-   painter->save();
+    painter->fillRect(rect, QColor(255, 237, 176, 255));
 
-   painter->fillRect(rect, QColor(255, 237, 176, 255));
+    if (_scenestate!=SceneState::SaveSvgFile) {
 
-   const QRectF rectp = rect.normalized();
-   painter->setPen(QPen(Qt::lightGray,1));
-   int l = int(rectp.left());
-   l -= (l % 10);
+        const QRectF rectp = rect.normalized();
+        painter->setPen(QPen(Qt::lightGray,1));
+        int l = int(rectp.left());
+        l -= (l % 10);
 
-   int r = int(rectp.right());
-   r -= (r % 10);
-   if(r < int(rectp.right()))
-    r += 10;
+        int r = int(rectp.right());
+        r -= (r % 10);
+        if(r < int(rectp.right()))
+        r += 10;
 
-    int t = int(rectp.top());
-    t -= (t % 10);
+        int t = int(rectp.top());
+        t -= (t % 10);
 
-    int b = int(rectp.bottom());
-    b -= (b % 10);
-    if(b < int(rectp.bottom()))
-       b += 10;
+        int b = int(rectp.bottom());
+        b -= (b % 10);
+        if(b < int(rectp.bottom()))
+           b += 10;
 
-    for( int x = l; x <= r; x+=10)
-       for( int y = t; y <= b; y+=10)
-          painter->drawPoint(x, y);
+        for( int x = l; x <= r; x+=10)
+           for( int y = t; y <= b; y+=10)
+              painter->drawPoint(x, y);
+    }
 
     painter->restore();
-
-
 
    /*
    const int gridSize = 10;

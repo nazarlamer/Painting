@@ -483,24 +483,40 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::on_actionSvg_triggered()
 {
-    //QGraphicsScene scene1(this);
-    //ui->view->setScene( &scene1 );
+    //qDebug() << " Scene has " << scene->items().count() << " items" ;
+    int maxX = 0;
+    int maxY = 0;
 
-    //scene1.addRect(QRectF(0, 0, 100, 200), QPen(Qt::black), QBrush(Qt::green));
-    //scene1.addText( "sdfsdfsdfsdfsdfsdfsd" );
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        if ((ItemScene->x()+ItemScene->boundingRect().width())>maxX)
+            maxX = ItemScene->x()+ItemScene->boundingRect().width();
 
-    qDebug() << " Scene has " << scene->items().count() << " items" ;
+        if (ItemScene->y()+ItemScene->boundingRect().height()>maxY)
+            maxY = ItemScene->y()+ItemScene->boundingRect().height();
+
+    }
+    maxX = maxX + 10;
+    maxY = maxY + 10;
+
+
+    QRectF rs = scene->sceneRect();
+    scene->setSceneRect(0,0,maxX,maxY);
+    scene->setSceneState(SceneState::SaveSvgFile);
 
     QSvgGenerator svgGen;
 
     svgGen.setFileName( "scene2svg.svg" );
-    svgGen.setSize(QSize(20000, 20000));
-    svgGen.setViewBox(QRect(0, 0, 20000, 20000));
+    svgGen.setSize(QSize(scene->width(), scene->height()));
+    svgGen.setViewBox(QRect(0, 0, scene->width(), scene->height()));
     svgGen.setTitle(tr("SVG Generator Example Drawing"));
     svgGen.setDescription(tr("An SVG drawing created by the SVG Generator "
                              "Example provided with Qt."));
 
     QPainter painter( &svgGen );
     scene->render( &painter );
-    qDebug() << " Svg Save" ;
+
+    scene->setSceneRect(0,0,rs.width(), rs.height());
+    scene->setSceneState(SceneState::NormalState);
+    //qDebug() << " Svg Save" ;
 }

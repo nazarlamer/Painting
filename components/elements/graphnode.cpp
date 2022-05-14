@@ -45,6 +45,13 @@ void GraphNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
+void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseMoveEvent(event);
+    if (_fixY>=0)
+        setY(_fixY);
+}
+
 ComponentType GraphNode::componentType() const
 {
     return ComponentType::GraphNode;
@@ -103,6 +110,11 @@ QPointF GraphNode::getPoint() const
 {
     //qDebug() << "GraphNode::getPoint() 111";
     return QPointF(ptX, ptY);
+}
+
+void GraphNode::setFixY(int iFixY)
+{
+    _fixY = iFixY;
 }
 
 

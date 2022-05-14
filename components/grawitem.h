@@ -45,7 +45,7 @@ public:
 
     void setParentItem(QGraphicsItem *parent);
 
-    //virtual void setFixY(qreal iptY);
+    virtual void setFixY(int iFixY);
 
 public slots:
    virtual void isUpdateChild();
@@ -61,5 +61,5 @@ protected:
 private:
     int _id{-1};
     int _type_parent{0};
-    int _fix_Y{-1};
+
 };
