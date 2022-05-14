@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += widgets svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -42,7 +43,7 @@ SOURCES += \
 HEADERS += \
         components/arrowitem.h \
         components/circleitem.h \
-        components/componentfactory.h \
+        componentfactory.h \
         components/componenttype.h \
         components/elements/graphnode.h \
         components/elements/polylineitem.h \
@@ -52,7 +53,8 @@ HEADERS += \
         components/rectangleitem.h \
         mainwindow.h \
         mygraphicsscene.h \
-        mygraphicsview.h
+        mygraphicsview.h \
+        scenestates.h
 
 FORMS += \
         mainwindow.ui

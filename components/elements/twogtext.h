@@ -20,5 +20,11 @@ private:
     QGraphicsTextItem *grftxt1;
     QGraphicsTextItem *grftxt2;
     int BoundingRectH = 20;
+    int BoundingRectW = 80;
+
+    GrawItem *NodeWidth;
+
+public slots:
+    void isUpdateChild() override;
 };
 

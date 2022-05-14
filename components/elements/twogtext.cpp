@@ -4,6 +4,7 @@
 #include <QTextItem>
 #include <QGraphicsTextItem>
 #include <cmath>
+#include "../componentfactory.h"
 
 Twogtext::Twogtext(int id) : GrawItem(id)
 {
@@ -19,11 +20,16 @@ Twogtext::Twogtext(int id) : GrawItem(id)
     fnt2.setBold(false);
     fnt2.setPixelSize(12);
     grftxt2->setFont(fnt2);
+
+    NodeWidth = ComponentFactory::createComponent(ComponentType::GraphNode);
+    NodeWidth->setParentItem(this);
+    NodeWidth->setX(BoundingRectW);
+    connect(NodeWidth, &GrawItem::signalParent, this, &GrawItem::isUpdateChild);
 }
 
 QRectF Twogtext::boundingRect() const
 {
-    return QRectF(0, 0, 80, BoundingRectH);
+    return QRectF(0, 0, BoundingRectW, BoundingRectH);
 }
 
 void Twogtext::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -43,7 +49,7 @@ void Twogtext::paintSelected(QPainter *painter, const QStyleOptionGraphicsItem *
 {
     painter->setPen(QPen(Qt::blue, 1));
     painter->setBrush(Qt::NoBrush);
-    painter->drawRect(QRect(0, 0, 80, BoundingRectH));
+    painter->drawRect(QRect(0, 0, BoundingRectW, BoundingRectH));
     paintMain(painter,option,widget);
 }
 
@@ -51,7 +57,7 @@ void Twogtext::paintNotSelected(QPainter *painter, const QStyleOptionGraphicsIte
 {
     painter->setPen(QPen(Qt::red, 1));
     painter->setBrush(Qt::NoBrush);
-    painter->drawRect(QRect(0, 0, 80, BoundingRectH));
+    painter->drawRect(QRect(0, 0, BoundingRectW, BoundingRectH));
     paintMain(painter,option,widget);
 }
 
@@ -62,9 +68,9 @@ void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->setBrush(QColor(225,225,225));
     painter->drawRect(boundingRect());
 
-    grftxt1->setTextWidth(80);
+    grftxt1->setTextWidth(BoundingRectW);
     grftxt1->setPlainText("asasas dfgdfg dfgdfgdf bdfgdergerg");
-    grftxt2->setTextWidth(80);
+    grftxt2->setTextWidth(BoundingRectW);
     grftxt2->setPlainText("zxxsdsdd xfdgdsfg dxfgdfg sdfgsdgdsfg");
     grftxt2->setY(grftxt1->boundingRect().height());
     qreal heiF = grftxt1->boundingRect().height()+grftxt2->boundingRect().height();
@@ -75,5 +81,15 @@ void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *opti
     }
 
 }
+
+void Twogtext::isUpdateChild()
+{
+    qDebug() << "Twogtext :: isUpdateChild";
+    BoundingRectW = NodeWidth->x();
+    NodeWidth->setY(0);
+    update();
+    emit updScen();
+}
+
 
 

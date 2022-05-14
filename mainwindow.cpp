@@ -14,6 +14,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QScrollBar>
 
+#include <QSvgGenerator>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -187,6 +189,9 @@ void MainWindow::loadGraphFile()
         item->setRotation(obj["R"].toInt());
         scene->addItem(item);
         listElem << item;
+
+        if (item->id()==7)
+            connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
 
         if (item->IsNodesElement()) {
             auto arrNodes = obj["NODES"].toArray();
@@ -474,4 +479,28 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             }
         }
     }
+}
+
+void MainWindow::on_actionSvg_triggered()
+{
+    //QGraphicsScene scene1(this);
+    //ui->view->setScene( &scene1 );
+
+    //scene1.addRect(QRectF(0, 0, 100, 200), QPen(Qt::black), QBrush(Qt::green));
+    //scene1.addText( "sdfsdfsdfsdfsdfsdfsd" );
+
+    qDebug() << " Scene has " << scene->items().count() << " items" ;
+
+    QSvgGenerator svgGen;
+
+    svgGen.setFileName( "scene2svg.svg" );
+    svgGen.setSize(QSize(20000, 20000));
+    svgGen.setViewBox(QRect(0, 0, 20000, 20000));
+    svgGen.setTitle(tr("SVG Generator Example Drawing"));
+    svgGen.setDescription(tr("An SVG drawing created by the SVG Generator "
+                             "Example provided with Qt."));
+
+    QPainter painter( &svgGen );
+    scene->render( &painter );
+    qDebug() << " Svg Save" ;
 }

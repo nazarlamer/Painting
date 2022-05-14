@@ -1,3 +1,4 @@
+/*Ще не остаточна версія Ітема*/
 #include "graphnode.h"
 #include <QPainter>
 #include <QDebug>
@@ -25,15 +26,16 @@ void GraphNode::paintSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::blue, 1));
     painter->setBrush(Qt::SolidPattern);
-    painter->drawEllipse(QRect(-5, -5, 10, 10));
+    painter->drawEllipse(QRect(-4, -4, 8, 8));
 }
 
 void GraphNode::paintNotSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::cyan, 1));
     painter->setBrush(Qt::SolidPattern);
-    painter->drawEllipse(QRect(-5, -5, 10, 10));
+    painter->drawEllipse(QRect(-4, -4, 8, 8));
 }
+
 
 void GraphNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {

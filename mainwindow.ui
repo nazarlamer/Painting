@@ -144,6 +144,8 @@
      <string>Файл</string>
     </property>
     <addaction name="action_3"/>
+    <addaction name="separator"/>
+    <addaction name="actionSvg"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -198,6 +200,11 @@
    </property>
    <property name="toolTip">
     <string>Rectangle</string>
+   </property>
+  </action>
+  <action name="actionSvg">
+   <property name="text">
+    <string>Svg</string>
    </property>
   </action>
  </widget>

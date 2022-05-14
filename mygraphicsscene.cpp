@@ -45,8 +45,7 @@ static const int GRID_STEP = 30;
 void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
    //qDebug() << rect.x();
-
-    /*
+   /*
    int step = GRID_STEP;
    painter->setPen(QPen(QColor(200, 200, 255, 125)));
    // draw horizontal grid
@@ -68,6 +67,7 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
       painter->drawLine(x, rect.top(), x, rect.bottom());
    }
    */
+
 
    painter->save();
 
@@ -97,21 +97,18 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 
     painter->restore();
 
+
+
    /*
    const int gridSize = 10;
-
    qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
    qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
-
    QVarLengthArray<QLineF, 100> lines;
-
    for (qreal x = left; x < rect.right(); x += gridSize)
        lines.append(QLineF(x, rect.top(), x, rect.bottom()));
    for (qreal y = top; y < rect.bottom(); y += gridSize)
        lines.append(QLineF(rect.left(), y, rect.right(), y));
-
    qDebug() << lines.size();
-
    painter->drawLines(lines.data(), lines.size());
    */
 

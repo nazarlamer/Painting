@@ -1,3 +1,4 @@
+/*Ще не остаточна версія Ітема*/
 #pragma once
 
 #include "../grawitem.h"
