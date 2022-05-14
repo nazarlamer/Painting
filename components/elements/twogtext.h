@@ -17,5 +17,8 @@ private:
     void paintSelected(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void paintNotSelected(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QGraphicsTextItem *grftxt1;
+    QGraphicsTextItem *grftxt2;
+    int BoundingRectH = 20;
 };
 

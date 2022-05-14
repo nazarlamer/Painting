@@ -3,15 +3,27 @@
 #include <QDebug>
 #include <QTextItem>
 #include <QGraphicsTextItem>
+#include <cmath>
 
 Twogtext::Twogtext(int id) : GrawItem(id)
 {
+    grftxt1 = new QGraphicsTextItem(this);
+    QFont fnt1 = grftxt1->font();
+    fnt1.setBold(true);
+    fnt1.setPixelSize(12);
+    grftxt1->setFont(fnt1);
+    grftxt1->setDefaultTextColor(QColor(255,0,0));
 
+    grftxt2 = new QGraphicsTextItem(this);
+    QFont fnt2 = grftxt2->font();
+    fnt2.setBold(false);
+    fnt2.setPixelSize(12);
+    grftxt2->setFont(fnt2);
 }
 
 QRectF Twogtext::boundingRect() const
 {
-    return QRectF(0, 0, 80, 60);
+    return QRectF(0, 0, 80, BoundingRectH);
 }
 
 void Twogtext::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -31,7 +43,7 @@ void Twogtext::paintSelected(QPainter *painter, const QStyleOptionGraphicsItem *
 {
     painter->setPen(QPen(Qt::blue, 1));
     painter->setBrush(Qt::NoBrush);
-    painter->drawRect(QRect(0, 0, 80, 60));
+    painter->drawRect(QRect(0, 0, 80, BoundingRectH));
     paintMain(painter,option,widget);
 }
 
@@ -39,34 +51,28 @@ void Twogtext::paintNotSelected(QPainter *painter, const QStyleOptionGraphicsIte
 {
     painter->setPen(QPen(Qt::red, 1));
     painter->setBrush(Qt::NoBrush);
-    painter->drawRect(QRect(0, 0, 80, 60));
+    painter->drawRect(QRect(0, 0, 80, BoundingRectH));
     paintMain(painter,option,widget);
 }
 
 void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    /*QString ttt("50, 20 dfgdfg dfgdfgdf ddd");
-    QTextItem *text;
-    //text->text()="jhjnnj";
-    //QRectF QFontMetricsF::boundingRect(const QString & text)
-    painter->drawText(0,0,ttt);
-    painter->drawText(boundingRect(), Qt::AlignTop, ttt);*/
 
-    QGraphicsTextItem *qri = new QGraphicsTextItem("dfsad00");
-    qri->setFlag(QGraphicsItem::ItemIsSelectable, false);
-    qri->setFlag(QGraphicsItem::ItemIsMovable, false);
-    qri->setTextWidth(80);
-    qri->font().setBold(true);
-    qri->font().setPointSizeF(8);
-    qri->paint(painter,option,widget);
+    painter->setBrush(Qt::SolidPattern);
+    painter->setBrush(QColor(225,225,225));
+    painter->drawRect(boundingRect());
 
-    QGraphicsTextItem *qri2 = new QGraphicsTextItem("dfsad00", this);
-    qri2->setFlag(QGraphicsItem::ItemIsSelectable, false);
-    qri2->setFlag(QGraphicsItem::ItemIsMovable, false);
-    qri2->setTextWidth(80);
-    qri2->font().setBold(true);
-    qri2->font().setPointSizeF(8);
-    qri2->setY(qri->boundingRect().height());
+    grftxt1->setTextWidth(80);
+    grftxt1->setPlainText("asasas dfgdfg dfgdfgdf bdfgdergerg");
+    grftxt2->setTextWidth(80);
+    grftxt2->setPlainText("zxxsdsdd xfdgdsfg dxfgdfg sdfgsdgdsfg");
+    grftxt2->setY(grftxt1->boundingRect().height());
+    qreal heiF = grftxt1->boundingRect().height()+grftxt2->boundingRect().height();
+    int hei = round(heiF/10)*10;
+    if (hei != BoundingRectH) {
+        BoundingRectH=hei;
+        update();
+    }
 
 }
 
