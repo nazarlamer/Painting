@@ -47,6 +47,8 @@ public:
 
     virtual void setFixY(int iFixY);
 
+    virtual void setWidth(int iWidth);
+
 public slots:
    virtual void isUpdateChild();
 

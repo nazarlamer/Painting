@@ -83,6 +83,12 @@ void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 }
 
+void Twogtext::setWidth(int iWidth)
+{
+    BoundingRectW = iWidth;
+    NodeWidth->setX(BoundingRectW);
+}
+
 void Twogtext::isUpdateChild()
 {
     qDebug() << "Twogtext :: isUpdateChild";

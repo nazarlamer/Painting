@@ -21,6 +21,7 @@ private:
     QGraphicsTextItem *grftxt2;
     int BoundingRectH = 20;
     int BoundingRectW = 80;
+    void setWidth(int iWidth) override;
 
     GrawItem *NodeWidth;
 
