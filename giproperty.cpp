@@ -14,26 +14,41 @@ QList<QPair<QString, QString>> GrItProperty::getListPropText() const
     return ListText;
 }
 
-void GrItProperty::addProperty(const QString ifirst, const QString iopus, const int iValue)
+void GrItProperty::addProperty(const QString ifirst, const QString iopus)
 {
     PropertyItem::Item iItProp;
     iItProp.prText.first = ifirst;
     iItProp.prText.second = iopus;
 
-    iItProp.prValueInt.first = ifirst;
-    iItProp.prValueInt.second = iValue;
+    iItProp.prValue.first = ifirst;
+    iItProp.prValue.second = QString(); //Null
     append(iItProp);
-
 }
 
-void GrItProperty::addProperty(const QString ifirst, const QString iopus, const QString iValue)
+void GrItProperty::setProperty(const QString ifirst, const QVariant iValue)
 {
-    PropertyItem::Item iItProp;
-    iItProp.prText.first = ifirst;
-    iItProp.prText.second = iopus;
+    for (int i=0; i<count(); i++ ) {
+        if (this->at(i).prValue.first == ifirst) {
+            PropertyItem::Item editem;
+            editem.prText = at(i).prText;
+            editem.prValue.first = ifirst;
+            editem.prValue.second = iValue;
+            this->replace(i,editem);
+            break;
+        }
+    }
+}
 
-    iItProp.prValueStr.first = ifirst;
-    iItProp.prValueStr.second = iValue;
-    append(iItProp);
+QVariant GrItProperty::getPropVariant(QString ifirst) const
+{
+    QVariant outVariant{QString()};
+    for (int i=0; i<count(); i++ ) {
+        if (this->at(i).prValue.first == ifirst) {
+            outVariant = this->at(i).prValue.second;
+            break;
+        }
+    }
+
+    return outVariant;
 }
 

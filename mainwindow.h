@@ -43,6 +43,8 @@ private slots:
     void on_actionSvg_changed();
     void on_actionSvg_triggered();
 
+    void on_tWProperty_cellDoubleClicked(int row, int column);
+
 private:
     void initScene();
     void makeConnections();

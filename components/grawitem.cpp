@@ -107,6 +107,27 @@ void GrawItem::setFixY(int iFixY)
 
 }
 
+void GrawItem::setProperty(const QString ifirst, const QVariant iValue)
+{
+    _Propertic->setProperty(ifirst, iValue);
+    applyProperty();
+}
+
+void GrawItem::applyProperty()
+{
+
+}
+
+QList<QPair<QString, QString>> GrawItem::getListPropText() const
+{
+    return _Propertic->getListPropText();
+}
+
+QVariant GrawItem::getPropVariant(QString ifirst) const
+{
+    return _Propertic->getPropVariant(ifirst);
+}
+
 void GrawItem::isUpdateChild()
 {
 

@@ -48,8 +48,16 @@ public:
 
     virtual void setFixY(int iFixY);
 
+    void setProperty(const QString ifirst, const QVariant iValue);
+
+    virtual void applyProperty();
+
+    QList<QPair<QString, QString>> getListPropText() const;
+    QVariant getPropVariant(QString ifirst) const;
+
 public slots:
    virtual void isUpdateChild();
+
 
 signals:
    void signalParent();

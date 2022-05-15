@@ -9,8 +9,7 @@ namespace PropertyItem
 struct Item
 {
     QPair<QString, QString> prText;
-    QPair<QString, int> prValueInt;
-    QPair<QString, QString> prValueStr;
+    QPair<QString, QVariant> prValue;
 };
 
 }
@@ -21,11 +20,15 @@ class GrItProperty : public QList<PropertyItem::Item>
 public:
     explicit GrItProperty();
 
-    //int id() const;
-
     QList<QPair<QString, QString>> getListPropText() const;
 
-    void addProperty(const QString ifirst, const QString iopus, const int iValue);
-    void addProperty(const QString ifirst, const QString iopus, const QString iValue);
+    void addProperty(const QString ifirst, const QString iopus);
+
+    void setProperty(const QString ifirst, const QVariant iValue);
+
+    QVariant getPropVariant(QString ifirst) const;
+
+private:
+
 
 };

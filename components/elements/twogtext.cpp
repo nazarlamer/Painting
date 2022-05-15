@@ -27,8 +27,8 @@ Twogtext::Twogtext(int id) : GrawItem(id)
     NodeWidth->setFixY(0);
     connect(NodeWidth, &GrawItem::signalParent, this, &GrawItem::isUpdateChild);
 
-    _Propertic->addProperty("TEXT1","Головний текст","");
-    _Propertic->addProperty("TEXT1","Примітка","");
+    _Propertic->addProperty("TEXT1","Головний текст");
+    _Propertic->addProperty("TEXT2","Примітка");
 }
 
 QRectF Twogtext::boundingRect() const
@@ -73,9 +73,9 @@ void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->drawRect(boundingRect());
 
     grftxt1->setTextWidth(BoundingRectW);
-    grftxt1->setPlainText("asasas dfgdfg dfgdfgdf bdfgdergerg");
+    grftxt1->setPlainText(GrawText1);
     grftxt2->setTextWidth(BoundingRectW);
-    grftxt2->setPlainText("zxxsdsdd xfdgdsfg dxfgdfg sdfgsdgdsfg");
+    grftxt2->setPlainText(GrawText2);
     grftxt2->setY(grftxt1->boundingRect().height());
     qreal heiF = grftxt1->boundingRect().height()+grftxt2->boundingRect().height();
     int hei = round(heiF/10)*10;
@@ -83,6 +83,11 @@ void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *opti
         BoundingRectH=hei;
         update();
     }
+
+}
+
+void Twogtext::applyProperty()
+{
 
 }
 

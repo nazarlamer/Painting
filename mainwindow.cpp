@@ -29,6 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
     makeConnections();
     loadGraphFile();
     fillTable();
+
+    // Разрешаем выделение только одного элемента
+    ui->tWProperty->setSelectionMode(QAbstractItemView::SingleSelection);
+    // Разрешаем выделение построчно
+    ui->tWProperty->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tWProperty->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tWProperty->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tWProperty->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -374,6 +382,31 @@ void MainWindow::onMousePressed(const QPointF &point)
             const GrawItem *grawsel = listElem[i];
             if (grawsel->isSelected()) {
                 ui->tableWidget->selectRow(i);
+
+                QList<QPair<QString, QString>> listProp = grawsel->getListPropText();
+                if (listProp.count()>0) {
+                    if (!ui->tWProperty->isVisible())
+                        ui->tWProperty->setVisible(true);
+
+                    ui->tWProperty->setRowCount(0);
+                    QStringList heaVert;
+                    for (int i=0; i<listProp.count(); i++) {
+                        ui->tWProperty->insertRow(i);
+                        heaVert.append(listProp.at(i).second);
+                        QVariant varProp = grawsel->getPropVariant(listProp.at(i).first);
+                        if (varProp.isNull())
+                            ui->tWProperty->setItem(i,0,new QTableWidgetItem("[null]"));
+                        else
+                            ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+
+                    }
+                    ui->tWProperty->setVerticalHeaderLabels(heaVert);
+                    ui->tWProperty->resizeColumnsToContents();
+                    ui->tWProperty->horizontalHeader()->setStretchLastSection(true);
+                }else {
+                    ui->tWProperty->setVisible(false);
+                }
+
                 return;
             }
         }
@@ -519,4 +552,28 @@ void MainWindow::on_actionSvg_triggered()
     scene->setSceneRect(0,0,rs.width(), rs.height());
     scene->setSceneState(SceneState::NormalState);
     //qDebug() << " Svg Save" ;
+}
+
+void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
+{
+    qDebug() << "on_tWProperty_cellDoubleClicked" << row << column;
+    if (column==0) {
+        if (state != SceneState::CreateComponentState)
+        {
+            for (int i=0; i<listElem.size(); ++i)
+            {
+                const GrawItem *grawsel = listElem[i];
+                if (grawsel->isSelected()) {
+
+                    QString txtProp = grawsel->getListPropText().at(row).first;
+                    //qDebug() << txtProp;
+
+
+
+                    break;
+                }
+            }
+        }
+    }
+
 }
