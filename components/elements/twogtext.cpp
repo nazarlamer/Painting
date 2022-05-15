@@ -26,6 +26,9 @@ Twogtext::Twogtext(int id) : GrawItem(id)
     NodeWidth->setX(BoundingRectW);
     NodeWidth->setFixY(0);
     connect(NodeWidth, &GrawItem::signalParent, this, &GrawItem::isUpdateChild);
+
+    _Propertic->addProperty("TEXT1","Головний текст","");
+    _Propertic->addProperty("TEXT1","Примітка","");
 }
 
 QRectF Twogtext::boundingRect() const

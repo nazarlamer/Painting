@@ -1,6 +1,7 @@
 #pragma once
 
 #include "componenttype.h"
+#include <giproperty.h>
 #include <QGraphicsItem>
 
 /*!
@@ -57,6 +58,7 @@ signals:
     // QGraphicsItem interface
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    GrItProperty *_Propertic;
 
 private:
     int _id{-1};

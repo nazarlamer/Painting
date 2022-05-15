@@ -35,6 +35,7 @@ SOURCES += \
         components/grawitem.cpp \
         components/lineitem.cpp \
         components/rectangleitem.cpp \
+        giproperty.cpp \
         main.cpp \
         mainwindow.cpp \
         mygraphicsscene.cpp \
@@ -43,7 +44,7 @@ SOURCES += \
 HEADERS += \
         components/arrowitem.h \
         components/circleitem.h \
-        componentfactory.h \
+        components/componentfactory.h \
         components/componenttype.h \
         components/elements/graphnode.h \
         components/elements/polylineitem.h \
@@ -51,6 +52,7 @@ HEADERS += \
         components/grawitem.h \
         components/lineitem.h \
         components/rectangleitem.h \
+        giproperty.h \
         mainwindow.h \
         mygraphicsscene.h \
         mygraphicsview.h \

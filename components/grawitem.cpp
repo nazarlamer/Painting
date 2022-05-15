@@ -4,6 +4,7 @@
 
 GrawItem::GrawItem(int id) : _id(id)
 {
+    _Propertic = new GrItProperty();
     setFlags(QGraphicsItem::ItemIsSelectable |
              QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemSendsGeometryChanges);
