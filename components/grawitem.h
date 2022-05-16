@@ -55,6 +55,9 @@ public:
     QList<QPair<QString, QString>> getListPropText() const;
     QVariant getPropVariant(QString ifirst) const;
 
+    virtual void setWidth(int iWidth);
+
+
 public slots:
    virtual void isUpdateChild();
 

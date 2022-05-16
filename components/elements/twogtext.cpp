@@ -91,6 +91,12 @@ void Twogtext::applyProperty()
 
 }
 
+void Twogtext::setWidth(int iWidth)
+{
+    BoundingRectW = iWidth;
+    NodeWidth->setX(BoundingRectW);
+}
+
 void Twogtext::isUpdateChild()
 {
     qDebug() << "Twogtext :: isUpdateChild";

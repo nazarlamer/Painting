@@ -128,6 +128,7 @@ void MainWindow::saveGraphFile() const
             jsElement.insert("Y", listElem[i]->y());
             jsElement.insert("ID", listElem[i]->id());
             jsElement.insert("R", listElem[i]->rotation());
+            jsElement.insert("W", listElem[i]->boundingRect().width());
 
             if (listElem[i]->IsNodesElement()) {
                 QJsonArray NodesArray;
@@ -198,8 +199,10 @@ void MainWindow::loadGraphFile()
         scene->addItem(item);
         listElem << item;
 
-        if (item->id()==7)
+        if (item->id()==7) {
+            item->setWidth(obj["W"].toInt());
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+        }
 
         if (item->IsNodesElement()) {
             auto arrNodes = obj["NODES"].toArray();

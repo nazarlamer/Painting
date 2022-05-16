@@ -128,6 +128,12 @@ QVariant GrawItem::getPropVariant(QString ifirst) const
     return _Propertic->getPropVariant(ifirst);
 }
 
+
+void GrawItem::setWidth(int iWidth)
+{
+
+}
+
 void GrawItem::isUpdateChild()
 {
 
