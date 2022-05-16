@@ -13,6 +13,7 @@
 #include <QVariant>
 #include <QGraphicsSceneMouseEvent>
 #include <QScrollBar>
+#include <QInputDialog>
 
 #include <QSvgGenerator>
 
@@ -568,10 +569,22 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                 const GrawItem *grawsel = listElem[i];
                 if (grawsel->isSelected()) {
 
-                    QString txtProp = grawsel->getListPropText().at(row).first;
-                    //qDebug() << txtProp;
+                    QList<QPair<QString, QString>> listProp = grawsel->getListPropText();
+                    QVariant varProp = grawsel->getPropVariant(listProp.at(row).first);
 
-
+                    if ((varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("str")))
+                    {
+                        QString txtProp = grawsel->getListPropText().at(row).first;
+                        QString txtPropT = grawsel->getListPropText().at(row).second;
+                        //qDebug() << txtProp;
+                        bool ok;
+                        QString text = QInputDialog::getText(this, "Параметр: " + txtPropT,
+                                                             txtPropT+":", QLineEdit::Normal,
+                                                             varProp.toString(), &ok);
+                        if (ok && !text.isEmpty()) {
+                            //textLabel->setText(text);
+                        }
+                    }
 
                     break;
                 }
