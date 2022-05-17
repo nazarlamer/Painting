@@ -1,3 +1,4 @@
+/*Ще не остаточна версія Ітема*/
 #include "graphnode.h"
 #include <QPainter>
 #include <QDebug>
@@ -25,15 +26,16 @@ void GraphNode::paintSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::blue, 1));
     painter->setBrush(Qt::SolidPattern);
-    painter->drawEllipse(QRect(-5, -5, 10, 10));
+    painter->drawEllipse(QRect(-4, -4, 8, 8));
 }
 
 void GraphNode::paintNotSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::cyan, 1));
     painter->setBrush(Qt::SolidPattern);
-    painter->drawEllipse(QRect(-5, -5, 10, 10));
+    painter->drawEllipse(QRect(-4, -4, 8, 8));
 }
+
 
 void GraphNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -41,6 +43,13 @@ void GraphNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     ptY=y();
     emit signalParent();
     QGraphicsItem::mouseReleaseEvent(event);
+}
+
+void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseMoveEvent(event);
+    if (_fixY>=0)
+        setY(_fixY);
 }
 
 ComponentType GraphNode::componentType() const
@@ -101,6 +110,11 @@ QPointF GraphNode::getPoint() const
 {
     //qDebug() << "GraphNode::getPoint() 111";
     return QPointF(ptX, ptY);
+}
+
+void GraphNode::setFixY(int iFixY)
+{
+    _fixY = iFixY;
 }
 
 

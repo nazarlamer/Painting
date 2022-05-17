@@ -101,6 +101,16 @@ void GrawItem::setParentItem(QGraphicsItem *parent)
     QGraphicsItem::setParentItem(parent);
 }
 
+void GrawItem::setFixY(int iFixY)
+{
+
+}
+
+void GrawItem::setWidth(int iWidth)
+{
+
+}
+
 void GrawItem::isUpdateChild()
 {
 

@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += widgets svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,6 +31,7 @@ SOURCES += \
         components/componentfactory.cpp \
         components/elements/graphnode.cpp \
         components/elements/polylineitem.cpp \
+        components/elements/twogtext.cpp \
         components/grawitem.cpp \
         components/lineitem.cpp \
         components/rectangleitem.cpp \
@@ -41,16 +43,18 @@ SOURCES += \
 HEADERS += \
         components/arrowitem.h \
         components/circleitem.h \
-        components/componentfactory.h \
+        componentfactory.h \
         components/componenttype.h \
         components/elements/graphnode.h \
         components/elements/polylineitem.h \
+        components/elements/twogtext.h \
         components/grawitem.h \
         components/lineitem.h \
         components/rectangleitem.h \
         mainwindow.h \
         mygraphicsscene.h \
-        mygraphicsview.h
+        mygraphicsview.h \
+        scenestates.h
 
 FORMS += \
         mainwindow.ui

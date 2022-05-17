@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include "scenestates.h"
 
 class GrawItem;
 class MyGraphicsScene;
@@ -19,15 +20,6 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
-private:
-    enum class SceneState
-    {
-        CreateComponentState,
-        NormalState,
-        NewLineMouse,
-        NewLineMouseVyzol
-    };
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -46,6 +38,10 @@ private slots:
     void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
     void onMouseLeftScene();
     void onMousePressed(const QPointF &point);
+
+    void on_action_3_triggered();
+    void on_actionSvg_changed();
+    void on_actionSvg_triggered();
 
 private:
     void initScene();

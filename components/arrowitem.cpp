@@ -7,7 +7,7 @@ ArrowItem::ArrowItem(int id) : GrawItem(id)
 
 QRectF ArrowItem::boundingRect() const
 {
-    return QRectF(-20, -20, 40, 40);
+    return QRectF(-20, -15, 40, 30);
 }
 
 void ArrowItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/,
@@ -23,32 +23,28 @@ void ArrowItem::paintSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::blue, 1));
     painter->setBrush(Qt::NoBrush);
-    painter->drawRect(QRect(-20, -20, 40, 40));
-
-    painter->setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    QVector<QPoint> linemufta;
-    linemufta << QPoint(-15, -10) << QPoint(15,-10) << QPoint(0,6);
-    painter->drawPolygon(linemufta);
-
-    painter->setPen(QPen(Qt::black, 5, Qt::SolidLine, Qt::SquareCap, Qt::BevelJoin));
-    painter->drawLine(0, -11, 0, -18);
-    painter->drawLine(0, 10, 0, 18);
+    painter->drawRect(QRect(-20, -15, 40, 30));
+    paintMain(painter);
 }
 
 void ArrowItem::paintNotSelected(QPainter *painter)
 {
     painter->setPen(QPen(Qt::red, 1));
     painter->setBrush(Qt::NoBrush);
-    painter->drawRect(QRect(-20, -20, 40, 40));
+    painter->drawRect(QRect(-20, -15, 40, 30));
+    paintMain(painter);
+}
 
-    painter->setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+void ArrowItem::paintMain(QPainter *painter)
+{
+    painter->setPen(QPen(Qt::black, 5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     QVector<QPoint> linemufta;
-    linemufta << QPoint(-15, -10) << QPoint(15,-10) << QPoint(0,6);
+    linemufta << QPoint(-13, -5) << QPoint(13,-5) << QPoint(0,8);
     painter->drawPolygon(linemufta);
 
     painter->setPen(QPen(Qt::black, 5, Qt::SolidLine, Qt::SquareCap, Qt::BevelJoin));
-    painter->drawLine(0, -11, 0, -18);
-    painter->drawLine(0, 10, 0, 18);
+    painter->drawLine(0, -9, 0, -13);
+    painter->drawLine(0, 9, 0, 13);
 }
 
 ComponentType ArrowItem::componentType() const

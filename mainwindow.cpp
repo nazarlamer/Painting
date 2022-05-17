@@ -14,6 +14,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QScrollBar>
 
+#include <QSvgGenerator>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -118,6 +120,7 @@ void MainWindow::saveGraphFile() const
             jsElement.insert("Y", listElem[i]->y());
             jsElement.insert("ID", listElem[i]->id());
             jsElement.insert("R", listElem[i]->rotation());
+            jsElement.insert("W", listElem[i]->boundingRect().width());
 
             if (listElem[i]->IsNodesElement()) {
                 QJsonArray NodesArray;
@@ -187,6 +190,11 @@ void MainWindow::loadGraphFile()
         item->setRotation(obj["R"].toInt());
         scene->addItem(item);
         listElem << item;
+
+        if (item->id()==7) {
+            item->setWidth(obj["W"].toInt());
+            connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+        }
 
         if (item->IsNodesElement()) {
             auto arrNodes = obj["NODES"].toArray();
@@ -282,6 +290,10 @@ void MainWindow::fillComponentLibrary() const
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
         category3TreeItem->addChild(treeItem);
     }
+    QTreeWidgetItem *treeItem = new QTreeWidgetItem (ui->treeWidget);
+    treeItem->setText(columnIndex, "2text");
+    treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::TwoText));
+
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -470,4 +482,44 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             }
         }
     }
+}
+
+void MainWindow::on_actionSvg_triggered()
+{
+    //qDebug() << " Scene has " << scene->items().count() << " items" ;
+    int maxX = 0;
+    int maxY = 0;
+
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        if ((ItemScene->x()+ItemScene->boundingRect().width())>maxX)
+            maxX = ItemScene->x()+ItemScene->boundingRect().width();
+
+        if (ItemScene->y()+ItemScene->boundingRect().height()>maxY)
+            maxY = ItemScene->y()+ItemScene->boundingRect().height();
+
+    }
+    maxX = maxX + 10;
+    maxY = maxY + 10;
+
+
+    QRectF rs = scene->sceneRect();
+    scene->setSceneRect(0,0,maxX,maxY);
+    scene->setSceneState(SceneState::SaveSvgFile);
+
+    QSvgGenerator svgGen;
+
+    svgGen.setFileName( "scene2svg.svg" );
+    svgGen.setSize(QSize(scene->width(), scene->height()));
+    svgGen.setViewBox(QRect(0, 0, scene->width(), scene->height()));
+    svgGen.setTitle(tr("SVG Generator Example Drawing"));
+    svgGen.setDescription(tr("An SVG drawing created by the SVG Generator "
+                             "Example provided with Qt."));
+
+    QPainter painter( &svgGen );
+    scene->render( &painter );
+
+    scene->setSceneRect(0,0,rs.width(), rs.height());
+    scene->setSceneState(SceneState::NormalState);
+    //qDebug() << " Svg Save" ;
 }

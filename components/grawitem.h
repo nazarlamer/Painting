@@ -36,7 +36,7 @@ public:
     /*
      Віртуальні (інтерфейсні) методи без документації (коментарів).
         І ще одне, чи підтримують всі елементи таке зміщення?
-     */
+    */
 
     virtual void setPtX(qreal iptX);
     virtual void setPtY(qreal iptY);
@@ -44,6 +44,10 @@ public:
     virtual QPointF getPoint() const;
 
     void setParentItem(QGraphicsItem *parent);
+
+    virtual void setFixY(int iFixY);
+
+    virtual void setWidth(int iWidth);
 
 public slots:
    virtual void isUpdateChild();
@@ -59,4 +63,5 @@ protected:
 private:
     int _id{-1};
     int _type_parent{0};
+
 };

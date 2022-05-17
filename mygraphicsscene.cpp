@@ -34,6 +34,12 @@ void MyGraphicsScene::setSceneRect(qreal x, qreal y, qreal w, qreal h) {
     */
 }
 
+void MyGraphicsScene::setSceneState(SceneState iscenestate)
+{
+    _scenestate = iscenestate;
+    update();
+}
+
 void MyGraphicsScene::UpdateScen()
 {
     qDebug() << "MyGraphicsScene :: UpdateScen";
@@ -45,8 +51,7 @@ static const int GRID_STEP = 30;
 void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
    //qDebug() << rect.x();
-
-    /*
+   /*
    int step = GRID_STEP;
    painter->setPen(QPen(QColor(200, 200, 255, 125)));
    // draw horizontal grid
@@ -69,49 +74,47 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
    }
    */
 
-   painter->save();
+    painter->save();
 
-   painter->fillRect(rect, QColor(255, 237, 176, 255));
+    painter->fillRect(rect, QColor(255, 237, 176, 255));
 
-   const QRectF rectp = rect.normalized();
-   painter->setPen(QPen(Qt::lightGray,1));
-   int l = int(rectp.left());
-   l -= (l % 10);
+    if (_scenestate!=SceneState::SaveSvgFile) {
 
-   int r = int(rectp.right());
-   r -= (r % 10);
-   if(r < int(rectp.right()))
-    r += 10;
+        const QRectF rectp = rect.normalized();
+        painter->setPen(QPen(Qt::lightGray,1));
+        int l = int(rectp.left());
+        l -= (l % 10);
 
-    int t = int(rectp.top());
-    t -= (t % 10);
+        int r = int(rectp.right());
+        r -= (r % 10);
+        if(r < int(rectp.right()))
+        r += 10;
 
-    int b = int(rectp.bottom());
-    b -= (b % 10);
-    if(b < int(rectp.bottom()))
-       b += 10;
+        int t = int(rectp.top());
+        t -= (t % 10);
 
-    for( int x = l; x <= r; x+=10)
-       for( int y = t; y <= b; y+=10)
-          painter->drawPoint(x, y);
+        int b = int(rectp.bottom());
+        b -= (b % 10);
+        if(b < int(rectp.bottom()))
+           b += 10;
+
+        for( int x = l; x <= r; x+=10)
+           for( int y = t; y <= b; y+=10)
+              painter->drawPoint(x, y);
+    }
 
     painter->restore();
 
    /*
    const int gridSize = 10;
-
    qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
    qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
-
    QVarLengthArray<QLineF, 100> lines;
-
    for (qreal x = left; x < rect.right(); x += gridSize)
        lines.append(QLineF(x, rect.top(), x, rect.bottom()));
    for (qreal y = top; y < rect.bottom(); y += gridSize)
        lines.append(QLineF(rect.left(), y, rect.right(), y));
-
    qDebug() << lines.size();
-
    painter->drawLines(lines.data(), lines.size());
    */
 

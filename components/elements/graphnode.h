@@ -1,3 +1,4 @@
+/*Ще не остаточна версія Ітема*/
 #pragma once
 
 #include "../grawitem.h"
@@ -20,6 +21,7 @@ public:
     void setPtX(qreal iptX) override;
     void setPtY(qreal iptY) override;
     QPointF getPoint() const override;
+    void setFixY(int iFixY) override;
 
 private:
     void paintSelected(QPainter *painter);
@@ -28,9 +30,11 @@ private:
     qreal deltaY=0;
     qreal ptX=0;
     qreal ptY=0;
+    int _fixY=-1;
 
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
 };
 
