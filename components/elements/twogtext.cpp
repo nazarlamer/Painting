@@ -88,7 +88,9 @@ void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 void Twogtext::applyProperty()
 {
-
+    GrawText1 = getPropVariant("TEXT1").toString();
+    GrawText2 = getPropVariant("TEXT2").toString();
+    update();
 }
 
 void Twogtext::setWidth(int iWidth)
