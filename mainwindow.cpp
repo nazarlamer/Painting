@@ -328,6 +328,10 @@ void MainWindow::fillComponentLibrary() const
     treeItem->setText(columnIndex, "2text");
     treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::TwoText));
 
+    QTreeWidgetItem *treeItem2 = new QTreeWidgetItem (ui->treeWidget);
+    treeItem2->setText(columnIndex, "svg item");
+    treeItem2->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
+
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -437,17 +441,17 @@ void MainWindow::onMousePressed(const QPointF &point)
 {
     if (state != SceneState::CreateComponentState)
     {
-        for (int i=0; i<listElem.size(); ++i)
+        /* for (int i=0; i<listElem.size(); i++)
         {
             const GrawItem *grawsel = listElem[i];
             if (grawsel->isSelected()) {
-                ui->tableWidget->selectRow(i);
+                //ui->tableWidget->selectRow(i);
 
-                fillTblProp(grawsel);
+                //fillTblProp(grawsel);
 
                 return;
             }
-        }
+        }*/
         return;
     }
 

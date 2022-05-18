@@ -2,6 +2,8 @@
 
 #include "../grawitem.h"
 
+#include <qgraphicssvgitem.h>
+
 class SvgItem : public GrawItem
 {
 public:
@@ -18,5 +20,7 @@ public:
 private:
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
+    void paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QGraphicsSvgItem *svgitem;
 };
 
