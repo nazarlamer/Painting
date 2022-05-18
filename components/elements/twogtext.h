@@ -25,6 +25,11 @@ private:
 
     GrawItem *NodeWidth;
 
+    QString GrawText1{""};
+    QString GrawText2{""};
+
+    void applyProperty() override;
+
 public slots:
     void isUpdateChild() override;
 

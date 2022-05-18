@@ -33,6 +33,7 @@ public:
 protected:
     void closeEvent(QCloseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private slots:
     void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
@@ -43,6 +44,8 @@ private slots:
     void on_actionSvg_changed();
     void on_actionSvg_triggered();
 
+    void on_tWProperty_cellDoubleClicked(int row, int column);
+
 private:
     void initScene();
     void makeConnections();
@@ -52,6 +55,7 @@ private:
     void fillComponentLibrary() const;
     void setSceneState(SceneState sceneState);
     void addItemToTable(const GrawItem *item) const;
+    void fillTblProp(const GrawItem *item) const;
 
 private:
     Ui::MainWindow *ui{nullptr};

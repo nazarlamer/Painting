@@ -13,6 +13,7 @@
 #include <QVariant>
 #include <QGraphicsSceneMouseEvent>
 #include <QScrollBar>
+#include <QInputDialog>
 
 #include <QSvgGenerator>
 
@@ -29,6 +30,14 @@ MainWindow::MainWindow(QWidget *parent) :
     makeConnections();
     loadGraphFile();
     fillTable();
+
+    // Разрешаем выделение только одного элемента
+    ui->tWProperty->setSelectionMode(QAbstractItemView::SingleSelection);
+    // Разрешаем выделение построчно
+    ui->tWProperty->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tWProperty->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tWProperty->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tWProperty->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -122,6 +131,21 @@ void MainWindow::saveGraphFile() const
             jsElement.insert("R", listElem[i]->rotation());
             jsElement.insert("W", listElem[i]->boundingRect().width());
 
+            QJsonArray jsArrProperty;
+
+            QList<QPair<QString, QString>> listProp = listElem[i]->getListPropText();
+            if (listProp.count()>0) {
+                for (int k=0; k<listProp.count(); k++) {
+                    QVariant varProp = listElem[i]->getPropVariant(listProp.at(k).first);
+
+                    QJsonObject jsProperty;
+                    jsProperty.insert(listProp[k].first, QJsonValue::fromVariant(varProp));
+                    jsArrProperty.append(jsProperty);
+                }
+            }
+
+            jsElement.insert("PROPERTY", jsArrProperty);
+
             if (listElem[i]->IsNodesElement()) {
                 QJsonArray NodesArray;
                 for (int k=0; k<listElem[i]->GetPoints().count(); k++) {
@@ -213,8 +237,17 @@ void MainWindow::loadGraphFile()
                 //scene->addItem(itemNode);
             }
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
-      }
+        }
 
+        auto arrProperty = obj["PROPERTY"].toArray();
+        if (arrProperty.count()>0) {
+            for (const auto& ArrNodeP: arrProperty) {
+                auto ObjProp = ArrNodeP.toObject();
+                for (const QString& keyProp: ObjProp.keys()) {
+                    item->setProperty(keyProp, ObjProp[keyProp].toVariant());
+                }
+            }
+        }
     }
 }
 
@@ -307,6 +340,37 @@ void MainWindow::setSceneState(SceneState sceneState)
     }
 }
 
+void MainWindow::fillTblProp(const GrawItem *item) const
+{
+    QList<QPair<QString, QString>> listProp = item->getListPropText();
+    if (listProp.count()>0) {
+        if (!ui->tWProperty->isVisible())
+            ui->tWProperty->setVisible(true);
+
+        ui->tWProperty->setRowCount(0);
+        QStringList heaVert;
+        for (int i=0; i<listProp.count(); i++) {
+            ui->tWProperty->insertRow(i);
+            heaVert.append(listProp.at(i).second);
+            QVariant varProp = item->getPropVariant(listProp.at(i).first);
+            if (varProp.isNull())
+                ui->tWProperty->setItem(i,0,new QTableWidgetItem("[null]"));
+            else{
+                if (varProp.typeName()==tr("QString")) {
+                    ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
+                }else
+                    ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+            }
+
+        }
+        ui->tWProperty->setVerticalHeaderLabels(heaVert);
+        ui->tWProperty->resizeColumnsToContents();
+        ui->tWProperty->horizontalHeader()->setStretchLastSection(true);
+    }else {
+        ui->tWProperty->setVisible(false);
+    }
+}
+
 void MainWindow::makeConnections()
 {
     connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
@@ -377,6 +441,9 @@ void MainWindow::onMousePressed(const QPointF &point)
             const GrawItem *grawsel = listElem[i];
             if (grawsel->isSelected()) {
                 ui->tableWidget->selectRow(i);
+
+                fillTblProp(grawsel);
+
                 return;
             }
         }
@@ -443,6 +510,23 @@ void MainWindow::onMousePressed(const QPointF &point)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     //qDebug() << QKeySequence(event->key()).toString();
+    if (event->key()==Qt::Key_Control) {
+        for (int i=0; i<listElem.size(); ++i)
+        {
+            GrawItem *grawitem = listElem[i];
+
+            grawitem->setSelected(false);
+
+
+            if (! grawitem->IsNodesElement())
+                continue;
+
+            grawitem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            grawitem->setFlag(QGraphicsItem::ItemIsMovable, true);
+        }
+        return;
+    }
+
     if (event->key()== Qt::Key_Delete) {
 
         const QMessageBox::StandardButton resBtn = QMessageBox::question(this,
@@ -484,6 +568,22 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void MainWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    if (event->key()==Qt::Key_Control) {
+        for (int i=0; i<listElem.size(); ++i)
+        {
+            GrawItem *grawitem = listElem[i];
+            if (! grawitem->IsNodesElement())
+                continue;
+
+            grawitem->setFlag(QGraphicsItem::ItemIsSelectable, false);
+            grawitem->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
+        return;
+    }
+}
+
 void MainWindow::on_actionSvg_triggered()
 {
     //qDebug() << " Scene has " << scene->items().count() << " items" ;
@@ -522,4 +622,40 @@ void MainWindow::on_actionSvg_triggered()
     scene->setSceneRect(0,0,rs.width(), rs.height());
     scene->setSceneState(SceneState::NormalState);
     //qDebug() << " Svg Save" ;
+}
+
+void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
+{
+    qDebug() << "on_tWProperty_cellDoubleClicked" << row << column;
+    if (column==0) {
+        if (state != SceneState::CreateComponentState)
+        {
+            for (int i=0; i<listElem.size(); ++i)
+            {
+                GrawItem *grawsel = listElem[i];
+                if (grawsel->isSelected()) {
+
+                    QList<QPair<QString, QString>> listProp = grawsel->getListPropText();
+                    QVariant varProp = grawsel->getPropVariant(listProp.at(row).first);
+
+                    if ((varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString")))
+                    {
+                        QString txtProp = grawsel->getListPropText().at(row).first;
+                        QString txtPropT = grawsel->getListPropText().at(row).second;
+                        //qDebug() << txtProp;
+                        bool ok;
+                        QString text = QInputDialog::getText(this, "Параметр: " + txtPropT,
+                                                             txtPropT+":", QLineEdit::Normal,
+                                                             varProp.toString(), &ok);
+                        if (ok && !text.isEmpty()) {
+                            //textLabel->setText(text);
+                            grawsel->setProperty(txtProp,text);
+                            fillTblProp(grawsel);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }

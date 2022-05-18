@@ -1,6 +1,7 @@
 #pragma once
 
 #include "componenttype.h"
+#include <giproperty.h>
 #include <QGraphicsItem>
 
 /*!
@@ -47,10 +48,19 @@ public:
 
     virtual void setFixY(int iFixY);
 
+    void setProperty(const QString ifirst, const QVariant iValue);
+
+    virtual void applyProperty();
+
+    QList<QPair<QString, QString>> getListPropText() const;
+    QVariant getPropVariant(QString ifirst) const;
+
     virtual void setWidth(int iWidth);
+
 
 public slots:
    virtual void isUpdateChild();
+
 
 signals:
    void signalParent();
@@ -59,6 +69,7 @@ signals:
     // QGraphicsItem interface
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    GrItProperty *_Propertic;
 
 private:
     int _id{-1};
