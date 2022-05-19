@@ -134,6 +134,16 @@ void GrawItem::setWidth(int iWidth)
 
 }
 
+QByteArray GrawItem::getByteArrCont()
+{
+
+}
+
+void GrawItem::setByteArrCont(QByteArray iBAContent)
+{
+
+}
+
 void GrawItem::isUpdateChild()
 {
 

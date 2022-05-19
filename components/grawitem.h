@@ -57,6 +57,10 @@ public:
 
     virtual void setWidth(int iWidth);
 
+    virtual QByteArray getByteArrCont();
+
+    virtual void setByteArrCont(QByteArray iBAContent);
+
 
 public slots:
    virtual void isUpdateChild();

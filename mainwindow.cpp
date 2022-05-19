@@ -58,7 +58,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     if (event->type() == QEvent::GraphicsSceneContextMenu)
     {
         if (PolyItem){
-            delete PolyItem;
+            //delete PolyItem; // це видаляє обєкт, не можна, тільки посилання
             PolyItem=nullptr;
         }
 
@@ -159,6 +159,10 @@ void MainWindow::saveGraphFile() const
                 jsElement.insert("NODES", NodesArray);
             }
 
+            if (listElem[i]->componentType() == ComponentType::SvgItem) {
+                jsElement.insert("CONTENT", listElem[i]->getByteArrCont().data());
+            }
+
             jsonArray.append(jsElement);
 
         }
@@ -219,6 +223,10 @@ void MainWindow::loadGraphFile()
         if (item->id()==7) {
             item->setWidth(obj["W"].toInt());
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+        }
+
+        if (item->id()==8) {
+           item->setByteArrCont(obj["CONTENT"].toVariant().toByteArray());
         }
 
         if (item->IsNodesElement()) {
@@ -441,17 +449,17 @@ void MainWindow::onMousePressed(const QPointF &point)
 {
     if (state != SceneState::CreateComponentState)
     {
-        /* for (int i=0; i<listElem.size(); i++)
+        for (int i=0; i<listElem.size(); i++)
         {
             const GrawItem *grawsel = listElem[i];
             if (grawsel->isSelected()) {
-                //ui->tableWidget->selectRow(i);
+                ui->tableWidget->selectRow(i);
 
-                //fillTblProp(grawsel);
+                fillTblProp(grawsel);
 
                 return;
             }
-        }*/
+        }
         return;
     }
 
