@@ -8,6 +8,9 @@ PolylineItem::PolylineItem(int id) : GrawItem(id)
 {
     setFlag(QGraphicsItem::ItemIsSelectable, false);
     setFlag(QGraphicsItem::ItemIsMovable, false);
+
+    _Propertic->addProperty("COLOR","Колір");
+    _Propertic->addProperty("WIDTH2","Товщина");
 }
 
 QRectF PolylineItem::boundingRect() const
@@ -23,7 +26,7 @@ QRectF PolylineItem::boundingRect() const
             if (max_y < ListVyzl[i]->getPoint().y())
                 max_y = ListVyzl[i]->getPoint().y();
         }
-        return QRectF(0, 0, max_x, max_y);
+        return QRectF(0-_penwidth, 0-_penwidth, max_x+_penwidth*2, max_y+_penwidth*2);
     }else {
         return QRectF(-5, -5, 10, 10);
     }
@@ -57,37 +60,16 @@ void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*op
 
 void PolylineItem::paintSelected(QPainter *painter)
 {
-    painter->setPen(QPen(Qt::blue, 5));
+    painter->setPen(QPen(Qt::blue, _penwidth));
     painter->setBrush(Qt::NoBrush);
-
-    QVector<QPointF> points;
-
-    if (ListVyzl.count() > 0) {
-        for (int i=0; i<ListVyzl.count(); i++)
-        {
-            //points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
-            points.append(ListVyzl[i]->getPoint());
-        }
-    }
-    painter->drawPolyline(points);
-
+    paintMain(painter);
 }
 
 void PolylineItem::paintNotSelected(QPainter *painter)
 {
-    painter->setPen(QPen(Qt::red, 5));
+    painter->setPen(QPen(_pencolor, _penwidth));
     painter->setBrush(Qt::NoBrush);
-
-    QVector<QPointF> points;
-
-    if (ListVyzl.count() > 0) {
-        for (int i=0; i<ListVyzl.count(); i++)
-        {
-            //points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
-            points.append(ListVyzl[i]->getPoint());
-        }
-    }
-    painter->drawPolyline(points);
+    paintMain(painter);
 }
 
 void PolylineItem::UpdateVyzols()
@@ -146,6 +128,30 @@ void PolylineItem::UpdateVyzols()
     }
 
     emit updScen();
+}
+
+void PolylineItem::paintMain(QPainter *painter)
+{
+    QVector<QPointF> points;
+    if (ListVyzl.count() > 0) {
+        for (int i=0; i<ListVyzl.count(); i++)
+        {
+            //points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
+            points.append(ListVyzl[i]->getPoint());
+        }
+    }
+    painter->drawPolyline(points);
+}
+
+void PolylineItem::applyProperty()
+{
+    if (!getPropVariant("COLOR").isNull())
+        _pencolor = getPropVariant("COLOR").value<QColor>();
+
+    if (!getPropVariant("WIDTH2").isNull())
+        _penwidth = getPropVariant("WIDTH2").toInt();
+
+    update();
 }
 
 void PolylineItem::isUpdateChild()

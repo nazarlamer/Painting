@@ -23,10 +23,15 @@ private:
     QVector<GrawItem*> ListVyzl;
     qreal _width = 0;
     qreal _heigth = 0;
+    int _penwidth{5};
+    QColor _pencolor{Qt::red};
 
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
     void UpdateVyzols();
+    void paintMain(QPainter *painter);
+
+    void applyProperty() override;
 
 public slots:
     void isUpdateChild() override;

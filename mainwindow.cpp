@@ -15,6 +15,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QScrollBar>
 #include <QInputDialog>
+#include <QColorDialog>
 
 #include <QSvgGenerator>
 
@@ -138,7 +139,8 @@ void MainWindow::saveGraphFile() const
             if (listProp.count()>0) {
                 for (int k=0; k<listProp.count(); k++) {
                     QVariant varProp = listElem[i]->getPropVariant(listProp.at(k).first);
-
+                    if (varProp.isNull())
+                        continue;
                     QJsonObject jsProperty;
                     jsProperty.insert(listProp[k].first, QJsonValue::fromVariant(varProp));
                     jsArrProperty.append(jsProperty);
@@ -254,6 +256,8 @@ void MainWindow::loadGraphFile()
                 auto ObjProp = ArrNodeP.toObject();
                 for (const QString& keyProp: ObjProp.keys()) {
                     item->setProperty(keyProp, ObjProp[keyProp].toVariant());
+                    if (item->id()==5 and keyProp=="COLOR")
+                        item->setProperty(keyProp, ObjProp[keyProp].toVariant().value<QColor>());
                 }
             }
         }
@@ -371,10 +375,18 @@ void MainWindow::fillTblProp(const GrawItem *item) const
             else{
                 if (varProp.typeName()==tr("QString")) {
                     ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
-                }else
-                    ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+                }else{
+                    if (varProp.typeName()==tr("int") or varProp.typeName()==tr("double")) {
+                        ui->tWProperty->setItem(i,0,new QTableWidgetItem(QString::number(varProp.toInt())));
+                    }else{
+                        if (varProp.typeName()==tr("QColor")) {
+                            ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
+                            ui->tWProperty->item(i,0)->setBackground(varProp.value<QColor>());
+                        }else
+                            ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+                    }
+                }
             }
-
         }
         ui->tWProperty->setVerticalHeaderLabels(heaVert);
         ui->tWProperty->resizeColumnsToContents();
@@ -530,9 +542,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
             grawitem->setSelected(false);
 
-
-            if (! grawitem->IsNodesElement())
+            if (! grawitem->IsNodesElement()) {
                 continue;
+            }
 
             grawitem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             grawitem->setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -587,7 +599,10 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         for (int i=0; i<listElem.size(); ++i)
         {
             GrawItem *grawitem = listElem[i];
-            if (! grawitem->IsNodesElement())
+            if (!grawitem->IsNodesElement())
+                continue;
+
+            if (grawitem->isSelected())
                 continue;
 
             grawitem->setFlag(QGraphicsItem::ItemIsSelectable, false);
@@ -651,10 +666,13 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                     QList<QPair<QString, QString>> listProp = grawsel->getListPropText();
                     QVariant varProp = grawsel->getPropVariant(listProp.at(row).first);
 
-                    if ((varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString")))
+                    QString txtProp = grawsel->getListPropText().at(row).first;
+                    QString txtPropT = grawsel->getListPropText().at(row).second;
+
+                    qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName();
+                    if ((varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull()))
                     {
-                        QString txtProp = grawsel->getListPropText().at(row).first;
-                        QString txtPropT = grawsel->getListPropText().at(row).second;
+
                         //qDebug() << txtProp;
                         bool ok;
                         QString text = QInputDialog::getText(this, "Параметр: " + txtPropT,
@@ -663,6 +681,28 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                         if (ok && !text.isEmpty()) {
                             //textLabel->setText(text);
                             grawsel->setProperty(txtProp,text);
+                            fillTblProp(grawsel);
+                        }
+                    }
+                    if ((varProp.isNull() and grawsel->id()==5 and txtProp=="COLOR")
+                        or (varProp.typeName()==tr("QColor") and !varProp.isNull())) {
+
+                        QColor color = QColorDialog::getColor(varProp.value<QColor>(), this);
+                        if( color.isValid() )
+                        {
+                            grawsel->setProperty(txtProp,color);
+                            fillTblProp(grawsel);
+                        }
+                    }
+                    if ((varProp.isNull() and grawsel->id()==5 and txtProp=="WIDTH2")
+                        or (varProp.typeName()==tr("int") and !varProp.isNull())
+                        or (grawsel->id()==5 and varProp.typeName()==tr("double") and !varProp.isNull())) {
+
+                        bool ok;
+                        int ipar = QInputDialog::getInt(this,  "Параметр: " + txtPropT,
+                                                     txtPropT+":", varProp.toInt(), 1, 20, 1, &ok);
+                        if (ok) {
+                            grawsel->setProperty(txtProp,ipar);
                             fillTblProp(grawsel);
                         }
                     }
