@@ -20,7 +20,7 @@ if (!file.fileName().isEmpty) {
 
 SvgItem::SvgItem(int id) : GrawItem(id)
 {
-    QString filename = QDir::currentPath() + "/zap1.svg";
+    QString filename = QDir::currentPath() + "/zap1_.svg";
     if(QFileInfo::exists(filename)) {
         QFile file(filename);
         if(file.open(QIODevice::ReadOnly)) {

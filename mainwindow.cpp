@@ -344,6 +344,26 @@ void MainWindow::fillComponentLibrary() const
     treeItem2->setText(columnIndex, "svg item");
     treeItem2->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
 
+
+    QTreeWidgetItem *category4TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category4TreeItem->setText(columnIndex, "Categry Custom Elem");
+    {
+        QDir dir;
+        dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+        dir.setNameFilters(QStringList("assel_*.svg"));
+        //dir.setNameFilters(QStringList("*.svg"));
+        dir.setSorting(QDir::Size);
+
+        QFileInfoList list = dir.entryInfoList();
+        for (int i = 0; i < list.size(); ++i) {
+            QFileInfo fileInfo = list.at(i);
+            //qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
+            QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+            treeItem->setText(columnIndex, fileInfo.fileName());
+            treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
+            category4TreeItem->addChild(treeItem);
+        }
+    }
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -442,8 +462,22 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
         grawV->setTypeParent(var.toInt());
         draftItem = grawV;
     }
-    else
+    else{
+        //draftItem = graw;
+        if (graw->id()==8) {
+            QString filename = QDir::currentPath() + "/"+item->text(column);
+            if(QFileInfo::exists(filename)) {
+                qDebug() << filename;
+                QFile file(filename);
+                if(file.open(QIODevice::ReadOnly)) {
+                    QByteArray ba = file.readAll();
+                    graw->setByteArrCont(ba);
+                }
+            }
+            //item->text()
+        }
         draftItem = graw;
+    }
 
     draftItem->setFlag(QGraphicsItem::ItemIsMovable);
     //draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
@@ -483,6 +517,10 @@ void MainWindow::onMousePressed(const QPointF &point)
         newItem = ComponentFactory::createComponent(draftItem->getTypeParent());
     else
         newItem = ComponentFactory::createComponent(draftItem->componentType());
+
+    if (newItem->id()==8) {
+        newItem->setByteArrCont(draftItem->getByteArrCont());
+    }
 
     if (!newItem->IsNodesElement() or !PolyItem) {
         newItem->setPos(draftItem->pos());
