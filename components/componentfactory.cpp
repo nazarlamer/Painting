@@ -7,6 +7,7 @@
 #include "elements/polylineitem.h"
 #include "elements/graphnode.h"
 #include "elements/twogtext.h"
+#include "elements/svgitem.h"
 
 // В GrawItem можна зберігати ComponentType як айді
 //і тоді ці статік касти будуть не потрібні.
@@ -35,6 +36,9 @@ GrawItem *ComponentFactory::createComponent(ComponentType type)
 
     case ComponentType::TwoText:
         return new Twogtext(static_cast<int>(type));
+
+    case ComponentType::SvgItem:
+        return new SvgItem(static_cast<int>(type));
 
     default:
         return nullptr;

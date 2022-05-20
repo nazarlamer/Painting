@@ -58,7 +58,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     if (event->type() == QEvent::GraphicsSceneContextMenu)
     {
         if (PolyItem){
-            delete PolyItem;
+            //delete PolyItem; // це видаляє обєкт, не можна, тільки посилання
             PolyItem=nullptr;
         }
 
@@ -159,6 +159,10 @@ void MainWindow::saveGraphFile() const
                 jsElement.insert("NODES", NodesArray);
             }
 
+            if (listElem[i]->componentType() == ComponentType::SvgItem) {
+                jsElement.insert("CONTENT", listElem[i]->getByteArrCont().data());
+            }
+
             jsonArray.append(jsElement);
 
         }
@@ -219,6 +223,10 @@ void MainWindow::loadGraphFile()
         if (item->id()==7) {
             item->setWidth(obj["W"].toInt());
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+        }
+
+        if (item->id()==8) {
+           item->setByteArrCont(obj["CONTENT"].toVariant().toByteArray());
         }
 
         if (item->IsNodesElement()) {
@@ -327,6 +335,10 @@ void MainWindow::fillComponentLibrary() const
     QTreeWidgetItem *treeItem = new QTreeWidgetItem (ui->treeWidget);
     treeItem->setText(columnIndex, "2text");
     treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::TwoText));
+
+    QTreeWidgetItem *treeItem2 = new QTreeWidgetItem (ui->treeWidget);
+    treeItem2->setText(columnIndex, "svg item");
+    treeItem2->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
 
 }
 
@@ -437,7 +449,7 @@ void MainWindow::onMousePressed(const QPointF &point)
 {
     if (state != SceneState::CreateComponentState)
     {
-        for (int i=0; i<listElem.size(); ++i)
+        for (int i=0; i<listElem.size(); i++)
         {
             const GrawItem *grawsel = listElem[i];
             if (grawsel->isSelected()) {

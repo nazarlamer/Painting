@@ -11,7 +11,8 @@ enum class ComponentType
     Rectangle,
     Polyline,
     GraphNode,
-    TwoText
+    TwoText,
+    SvgItem
 };
 
 // for QVariant support

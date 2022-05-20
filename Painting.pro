@@ -31,6 +31,7 @@ SOURCES += \
         components/componentfactory.cpp \
         components/elements/graphnode.cpp \
         components/elements/polylineitem.cpp \
+        components/elements/svgitem.cpp \
         components/elements/twogtext.cpp \
         components/grawitem.cpp \
         components/lineitem.cpp \
@@ -48,10 +49,12 @@ HEADERS += \
         components/componenttype.h \
         components/elements/graphnode.h \
         components/elements/polylineitem.h \
+        components/elements/svgitem.h \
         components/elements/twogtext.h \
         components/grawitem.h \
         components/lineitem.h \
         components/rectangleitem.h \
+        components/svgitem.h \
         giproperty.h \
         mainwindow.h \
         mygraphicsscene.h \
