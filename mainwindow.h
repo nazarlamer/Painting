@@ -39,11 +39,7 @@ private slots:
     void onComponentTreeItemPressed(QTreeWidgetItem *item, int column);
     void onMouseLeftScene();
     void onMousePressed(const QPointF &point);
-
-    void on_action_3_triggered();
-    void on_actionSvg_changed();
     void on_actionSvg_triggered();
-
     void on_tWProperty_cellDoubleClicked(int row, int column);
 
 private:
