@@ -37,10 +37,6 @@ void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*op
 {
     //qDebug() << "paint";
     if (ListVyzl.count() == 0) {
-        //painter->setPen(QPen(Qt::red, 1));
-        //painter->setBrush(Qt::NoBrush);
-        //painter->drawRect(QRect(-5, -5, 10, 10));
-
         painter->setPen(QPen(Qt::green, 1));
         painter->setBrush(Qt::SolidPattern);
         painter->setBrush(Qt::darkCyan);
@@ -136,7 +132,6 @@ void PolylineItem::paintMain(QPainter *painter)
     if (ListVyzl.count() > 0) {
         for (int i=0; i<ListVyzl.count(); i++)
         {
-            //points.append(QPointF(ListVyzl[i]->x(), ListVyzl[i]->y()));
             points.append(ListVyzl[i]->getPoint());
         }
     }
@@ -229,10 +224,6 @@ void PolylineItem::AddPoint(const QPointF &iPos)
     newItem->setDeltaX(pos().x()-deltx);
     newItem->setDeltaY(pos().y()-delty);
 
-    //newpos.setX(iPos.x()-pos().x()+deltx);
-    //newpos.setY(iPos.y()-pos().y()+delty);
-
-    //newItem->setPos(newpos);
     ListVyzl.append(newItem);
 
     setX(pos().x()-deltx);
@@ -246,7 +237,7 @@ void PolylineItem::AddPoint(GrawItem *igi)
 
 QVector<GrawItem*>PolylineItem::GetPoints() const
 {
-    qDebug() << "PolylineItem : :GetPoints()";
+    //qDebug() << "PolylineItem : :GetPoints()";
     for (int i=0; i<ListVyzl.count(); i++) {
         ListVyzl[i]->setDeltaX(x());
         ListVyzl[i]->setDeltaY(y());
