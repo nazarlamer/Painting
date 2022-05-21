@@ -23,7 +23,7 @@ public:
     Як то правильно би правильно мало б бути. Деяким GrawItem це потрібно.
     */
     virtual void AddPoint(const QPointF &pos);
-    virtual void AddPoint(GrawItem *igi);
+    virtual void AddPoint();
 
     /*int _type_parent{0}; а потім 40 годин дебагу чого воно не працює.*/
 
@@ -61,6 +61,9 @@ public:
 
     virtual void setByteArrCont(QByteArray iBAContent);
 
+    virtual void DeleteSelectNode();
+
+    virtual void InsertNode();
 
 public slots:
    virtual void isUpdateChild();

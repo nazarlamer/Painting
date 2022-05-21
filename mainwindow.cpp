@@ -235,18 +235,24 @@ void MainWindow::loadGraphFile()
             auto arrNodes = obj["NODES"].toArray();
             for(const auto& ArrNode: arrNodes) {
                 GrawItem *itemNode = ComponentFactory::createComponent(ComponentType::GraphNode);
-
-                auto obPosx = ArrNode.toArray();
+                //itemNode->setParent(item);
                 itemNode->setParentItem(item);
 
-                itemNode->setPtX(obPosx[0].toInt());
-                itemNode->setPtY(obPosx[1].toInt());
+                auto obPosx = ArrNode.toArray();
+                //itemNode->setParentItem(item);
+
+                //itemNode->setPtX(obPosx[0].toInt());
+                //itemNode->setPtY(obPosx[1].toInt());
+                itemNode->setX(obPosx[0].toInt());
+                itemNode->setY(obPosx[1].toInt());
+
 
                 connect(itemNode, &GrawItem::signalParent, item, &GrawItem::isUpdateChild);
-                item->AddPoint(itemNode);
-                listElem << itemNode;
+                //item->AddPoint(itemNode);
+                // listElem << itemNode;
                 //scene->addItem(itemNode);
             }
+            item->update();
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         }
 
@@ -535,6 +541,7 @@ void MainWindow::onMousePressed(const QPointF &point)
     }
 
     if (newItem->IsNodesElement()) {
+        newItem->AddPoint();
         connect(newItem, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         if (!PolyItem) {
             PolyItem=newItem;
@@ -573,6 +580,17 @@ void MainWindow::onMousePressed(const QPointF &point)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     //qDebug() << QKeySequence(event->key()).toString();
+    if (event->key()==Qt::Key_I) {
+        //InsertNode()
+        for (GrawItem *insitemnode : listElem)
+        {
+            if (insitemnode->id()==5) {
+                insitemnode->InsertNode();
+            }
+        }
+        return;
+    }
+
     if (event->key()==Qt::Key_Control) {
         for (int i=0; i<listElem.size(); ++i)
         {
@@ -610,6 +628,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                         scene->removeItem(selectedItem);
                         ui->tableWidget->removeRow(index);
                     }
+                }
+            }
+
+            for (GrawItem *delitem : listElem)
+            {
+                if (delitem->id()==5) {
+                    delitem->DeleteSelectNode();
                 }
             }
         }

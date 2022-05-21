@@ -16,11 +16,13 @@ public:
 public:
     ComponentType componentType() const override;
     void AddPoint(const QPointF &iPos) override;
-    void AddPoint(GrawItem *igi) override;
+    void AddPoint() override;
     QVector<GrawItem*> GetPoints() const override;
+    void DeleteSelectNode() override;
+    void InsertNode() override;
 
 private:
-    QVector<GrawItem*> ListVyzl;
+    /*QVector<GrawItem*> ListVyzl;*/
     qreal _width = 0;
     qreal _heigth = 0;
     int _penwidth{5};
