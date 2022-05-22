@@ -10,7 +10,7 @@ GraphNode::GraphNode(int id) : GrawItem(id)
 
 QRectF GraphNode::boundingRect() const
 {
-    return QRectF(-5, -5, 10, 10);
+    return QRectF(-4, -4, 8, 8);
 }
 
 void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/,
@@ -57,7 +57,7 @@ ComponentType GraphNode::componentType() const
     return ComponentType::GraphNode;
 }
 
-void GraphNode::setDeltaX(qreal iDeltaX)
+/*void GraphNode::setDeltaX(qreal iDeltaX)
 {
     if (!parentItem()){
         deltaX = iDeltaX;
@@ -66,7 +66,7 @@ void GraphNode::setDeltaX(qreal iDeltaX)
     }
 
     setX(ptX+deltaX);
-}
+}*/
 
 /*
 В чому різниця між setDelta і setPt функціями? Чи не можна було в клієнтському коді порахувати потрібні
@@ -78,7 +78,7 @@ item->setX(deltaForX);
 item->setY(deltaForY);
  */
 
-void GraphNode::setDeltaY(qreal iDeltaY)
+/*void GraphNode::setDeltaY(qreal iDeltaY)
 {
     if (!parentItem()){
         deltaY = iDeltaY;
@@ -99,7 +99,7 @@ void GraphNode::setPtY(qreal iptY)
 {
     ptY = iptY;
     setY(ptY+deltaY);
-}
+}*/
 
 /*
 Цей метод вертає точку на що, на середину фігури чи її низ(верх)???

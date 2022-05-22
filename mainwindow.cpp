@@ -15,6 +15,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QScrollBar>
 #include <QInputDialog>
+#include <QColorDialog>
 
 #include <QSvgGenerator>
 
@@ -138,7 +139,8 @@ void MainWindow::saveGraphFile() const
             if (listProp.count()>0) {
                 for (int k=0; k<listProp.count(); k++) {
                     QVariant varProp = listElem[i]->getPropVariant(listProp.at(k).first);
-
+                    if (varProp.isNull())
+                        continue;
                     QJsonObject jsProperty;
                     jsProperty.insert(listProp[k].first, QJsonValue::fromVariant(varProp));
                     jsArrProperty.append(jsProperty);
@@ -233,18 +235,24 @@ void MainWindow::loadGraphFile()
             auto arrNodes = obj["NODES"].toArray();
             for(const auto& ArrNode: arrNodes) {
                 GrawItem *itemNode = ComponentFactory::createComponent(ComponentType::GraphNode);
-
-                auto obPosx = ArrNode.toArray();
+                //itemNode->setParent(item);
                 itemNode->setParentItem(item);
 
-                itemNode->setPtX(obPosx[0].toInt());
-                itemNode->setPtY(obPosx[1].toInt());
+                auto obPosx = ArrNode.toArray();
+                //itemNode->setParentItem(item);
+
+                //itemNode->setPtX(obPosx[0].toInt());
+                //itemNode->setPtY(obPosx[1].toInt());
+                itemNode->setX(obPosx[0].toInt());
+                itemNode->setY(obPosx[1].toInt());
+
 
                 connect(itemNode, &GrawItem::signalParent, item, &GrawItem::isUpdateChild);
-                item->AddPoint(itemNode);
-                listElem << itemNode;
+                //item->AddPoint(itemNode);
+                // listElem << itemNode;
                 //scene->addItem(itemNode);
             }
+            item->update();
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         }
 
@@ -254,6 +262,8 @@ void MainWindow::loadGraphFile()
                 auto ObjProp = ArrNodeP.toObject();
                 for (const QString& keyProp: ObjProp.keys()) {
                     item->setProperty(keyProp, ObjProp[keyProp].toVariant());
+                    if (item->id()==5 and keyProp=="COLOR")
+                        item->setProperty(keyProp, ObjProp[keyProp].toVariant().value<QColor>());
                 }
             }
         }
@@ -340,6 +350,26 @@ void MainWindow::fillComponentLibrary() const
     treeItem2->setText(columnIndex, "svg item");
     treeItem2->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
 
+
+    QTreeWidgetItem *category4TreeItem = new QTreeWidgetItem(ui->treeWidget);
+    category4TreeItem->setText(columnIndex, "Categry Custom Elem");
+    {
+        QDir dir;
+        dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+        dir.setNameFilters(QStringList("assel_*.svg"));
+        //dir.setNameFilters(QStringList("*.svg"));
+        dir.setSorting(QDir::Size);
+
+        QFileInfoList list = dir.entryInfoList();
+        for (int i = 0; i < list.size(); ++i) {
+            QFileInfo fileInfo = list.at(i);
+            //qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
+            QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+            treeItem->setText(columnIndex, fileInfo.fileName());
+            treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
+            category4TreeItem->addChild(treeItem);
+        }
+    }
 }
 
 void MainWindow::setSceneState(SceneState sceneState)
@@ -371,10 +401,18 @@ void MainWindow::fillTblProp(const GrawItem *item) const
             else{
                 if (varProp.typeName()==tr("QString")) {
                     ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
-                }else
-                    ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+                }else{
+                    if (varProp.typeName()==tr("int") or varProp.typeName()==tr("double")) {
+                        ui->tWProperty->setItem(i,0,new QTableWidgetItem(QString::number(varProp.toInt())));
+                    }else{
+                        if (varProp.typeName()==tr("QColor")) {
+                            ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
+                            ui->tWProperty->item(i,0)->setBackground(varProp.value<QColor>());
+                        }else
+                            ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+                    }
+                }
             }
-
         }
         ui->tWProperty->setVerticalHeaderLabels(heaVert);
         ui->tWProperty->resizeColumnsToContents();
@@ -430,8 +468,22 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
         grawV->setTypeParent(var.toInt());
         draftItem = grawV;
     }
-    else
+    else{
+        //draftItem = graw;
+        if (graw->id()==8) {
+            QString filename = QDir::currentPath() + "/"+item->text(column);
+            if(QFileInfo::exists(filename)) {
+                qDebug() << filename;
+                QFile file(filename);
+                if(file.open(QIODevice::ReadOnly)) {
+                    QByteArray ba = file.readAll();
+                    graw->setByteArrCont(ba);
+                }
+            }
+            //item->text()
+        }
         draftItem = graw;
+    }
 
     draftItem->setFlag(QGraphicsItem::ItemIsMovable);
     //draftItem->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
@@ -472,6 +524,10 @@ void MainWindow::onMousePressed(const QPointF &point)
     else
         newItem = ComponentFactory::createComponent(draftItem->componentType());
 
+    if (newItem->id()==8) {
+        newItem->setByteArrCont(draftItem->getByteArrCont());
+    }
+
     if (!newItem->IsNodesElement() or !PolyItem) {
         newItem->setPos(draftItem->pos());
         scene->addItem(newItem);
@@ -485,6 +541,7 @@ void MainWindow::onMousePressed(const QPointF &point)
     }
 
     if (newItem->IsNodesElement()) {
+        newItem->AddPoint();
         connect(newItem, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         if (!PolyItem) {
             PolyItem=newItem;
@@ -523,6 +580,17 @@ void MainWindow::onMousePressed(const QPointF &point)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     //qDebug() << QKeySequence(event->key()).toString();
+    if (event->key()==Qt::Key_I) {
+        //InsertNode()
+        for (GrawItem *insitemnode : listElem)
+        {
+            if (insitemnode->id()==5) {
+                insitemnode->InsertNode();
+            }
+        }
+        return;
+    }
+
     if (event->key()==Qt::Key_Control) {
         for (int i=0; i<listElem.size(); ++i)
         {
@@ -530,9 +598,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
             grawitem->setSelected(false);
 
-
-            if (! grawitem->IsNodesElement())
+            if (! grawitem->IsNodesElement()) {
                 continue;
+            }
 
             grawitem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             grawitem->setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -562,6 +630,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                     }
                 }
             }
+
+            for (GrawItem *delitem : listElem)
+            {
+                if (delitem->id()==5) {
+                    delitem->DeleteSelectNode();
+                }
+            }
         }
     }
 
@@ -587,7 +662,10 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         for (int i=0; i<listElem.size(); ++i)
         {
             GrawItem *grawitem = listElem[i];
-            if (! grawitem->IsNodesElement())
+            if (!grawitem->IsNodesElement())
+                continue;
+
+            if (grawitem->isSelected())
                 continue;
 
             grawitem->setFlag(QGraphicsItem::ItemIsSelectable, false);
@@ -651,10 +729,13 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                     QList<QPair<QString, QString>> listProp = grawsel->getListPropText();
                     QVariant varProp = grawsel->getPropVariant(listProp.at(row).first);
 
-                    if ((varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString")))
+                    QString txtProp = grawsel->getListPropText().at(row).first;
+                    QString txtPropT = grawsel->getListPropText().at(row).second;
+
+                    qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName();
+                    if ((varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull()))
                     {
-                        QString txtProp = grawsel->getListPropText().at(row).first;
-                        QString txtPropT = grawsel->getListPropText().at(row).second;
+
                         //qDebug() << txtProp;
                         bool ok;
                         QString text = QInputDialog::getText(this, "Параметр: " + txtPropT,
@@ -663,6 +744,28 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                         if (ok && !text.isEmpty()) {
                             //textLabel->setText(text);
                             grawsel->setProperty(txtProp,text);
+                            fillTblProp(grawsel);
+                        }
+                    }
+                    if ((varProp.isNull() and grawsel->id()==5 and txtProp=="COLOR")
+                        or (varProp.typeName()==tr("QColor") and !varProp.isNull())) {
+
+                        QColor color = QColorDialog::getColor(varProp.value<QColor>(), this);
+                        if( color.isValid() )
+                        {
+                            grawsel->setProperty(txtProp,color);
+                            fillTblProp(grawsel);
+                        }
+                    }
+                    if ((varProp.isNull() and grawsel->id()==5 and txtProp=="WIDTH2")
+                        or (varProp.typeName()==tr("int") and !varProp.isNull())
+                        or (grawsel->id()==5 and varProp.typeName()==tr("double") and !varProp.isNull())) {
+
+                        bool ok;
+                        int ipar = QInputDialog::getInt(this,  "Параметр: " + txtPropT,
+                                                     txtPropT+":", varProp.toInt(), 1, 20, 1, &ok);
+                        if (ok) {
+                            grawsel->setProperty(txtProp,ipar);
                             fillTblProp(grawsel);
                         }
                     }

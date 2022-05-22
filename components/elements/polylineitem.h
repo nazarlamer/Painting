@@ -16,17 +16,24 @@ public:
 public:
     ComponentType componentType() const override;
     void AddPoint(const QPointF &iPos) override;
-    void AddPoint(GrawItem *igi) override;
+    void AddPoint() override;
     QVector<GrawItem*> GetPoints() const override;
+    void DeleteSelectNode() override;
+    void InsertNode() override;
 
 private:
-    QVector<GrawItem*> ListVyzl;
+    /*QVector<GrawItem*> ListVyzl;*/
     qreal _width = 0;
     qreal _heigth = 0;
+    int _penwidth{5};
+    QColor _pencolor{Qt::red};
 
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
     void UpdateVyzols();
+    void paintMain(QPainter *painter);
+
+    void applyProperty() override;
 
 public slots:
     void isUpdateChild() override;

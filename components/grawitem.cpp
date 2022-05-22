@@ -52,7 +52,7 @@ void GrawItem::AddPoint(const QPointF &pos)
 
 }
 
-void GrawItem::AddPoint(GrawItem *igi)
+void GrawItem::AddPoint()
 {
 
 }
@@ -140,6 +140,16 @@ QByteArray GrawItem::getByteArrCont()
 }
 
 void GrawItem::setByteArrCont(QByteArray iBAContent)
+{
+
+}
+
+void GrawItem::DeleteSelectNode()
+{
+
+}
+
+void GrawItem::InsertNode()
 {
 
 }

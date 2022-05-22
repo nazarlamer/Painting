@@ -16,10 +16,10 @@ public:
 
 public:
     ComponentType componentType() const override;
-    void setDeltaX(qreal iDeltaX) override;
+    /*void setDeltaX(qreal iDeltaX) override;
     void setDeltaY(qreal iDeltaY) override;
     void setPtX(qreal iptX) override;
-    void setPtY(qreal iptY) override;
+    void setPtY(qreal iptY) override;*/
     QPointF getPoint() const override;
     void setFixY(int iFixY) override;
 
