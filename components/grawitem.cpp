@@ -154,6 +154,12 @@ void GrawItem::InsertNode()
 
 }
 
+void GrawItem::setModeView(int iMode)
+{
+    _ModeView = iMode;
+    update();
+}
+
 void GrawItem::isUpdateChild()
 {
 

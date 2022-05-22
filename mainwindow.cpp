@@ -591,6 +591,23 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
 
+    if (event->key()==Qt::Key_B) {
+        //InsertNode()
+        for (GrawItem *itmBMode : listElem)
+        {
+            if (itmBMode->isSelected()) {
+                qDebug() << itmBMode->zValue();
+                if (itmBMode->zValue()>0) {
+                    itmBMode->setZValue(0);
+                }else{
+                    itmBMode->setZValue(1);
+                }
+            }
+        }
+
+        return;
+    }
+
     if (event->key()==Qt::Key_Control) {
         for (int i=0; i<listElem.size(); ++i)
         {
