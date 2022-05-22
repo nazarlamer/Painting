@@ -18,6 +18,7 @@ PolylineItem::PolylineItem(int id) : GrawItem(id)
 
 QRectF PolylineItem::boundingRect() const
 {
+    //return QRectF(nullptr_t);
     //qDebug() << "boundingRect";
     qreal max_x = 0;
     qreal max_y = 0;
@@ -49,6 +50,7 @@ QRectF PolylineItem::boundingRect() const
 void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/,
                       QWidget */*widget*/)
 {
+    //return;
     //qDebug() << "paint";
     //if (ListVyzl.count() == 0) {
     if (this->childItems().count()==0) {
@@ -318,16 +320,17 @@ void PolylineItem::InsertNode()
     for (QGraphicsItem *itm: this->childItems()) {
         GrawItem *insItem = dynamic_cast<GrawItem*>(itm);
         if (insItem->isSelected()) {
-            const int index = this->childItems().indexOf(insItem);
+            //const int index = this->childItems().indexOf(insItem);
 
             GrawItem *newItem = ComponentFactory::createComponent(ComponentType::GraphNode);
             newItem->setParentItem(this);
-            const int indN = this->childItems().indexOf(newItem);
+            //const int indN = this->childItems().indexOf(newItem);
 
             newItem->setX(insItem->x()+5);
             newItem->setY(insItem->y()+5);
             //this->childItems().move(index+1, indN);
             //this->childItems().replace(index+1,newItem);
+
             connect(newItem, &GrawItem::signalParent, this, &GrawItem::isUpdateChild);
             break;
         }
