@@ -604,7 +604,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 }
             }
         }
-
         return;
     }
 
@@ -791,4 +790,22 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
             }
         }
     }
+}
+
+void MainWindow::on_actSSPrint_triggered()
+{
+
+
+}
+
+void MainWindow::on_actSSReadOnly_triggered()
+{
+    setSceneState(SceneState::ReadOnlyState);
+    scene->UpdateScen();
+}
+
+void MainWindow::on_actSSNormal_triggered()
+{
+    setSceneState(SceneState::NormalState);
+    scene->UpdateScen();
 }
