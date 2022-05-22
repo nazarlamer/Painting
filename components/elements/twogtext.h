@@ -30,6 +30,8 @@ private:
 
     void applyProperty() override;
 
+    void setModeView(int iMode) override;
+
 public slots:
     void isUpdateChild() override;
 

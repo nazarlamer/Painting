@@ -38,10 +38,14 @@ QRectF Twogtext::boundingRect() const
 
 void Twogtext::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    if (isSelected())
-        paintSelected(painter,option,widget);
-    else
-        paintNotSelected(painter,option,widget);
+    if (_ModeView==0) {
+        if (isSelected())
+            paintSelected(painter,option,widget);
+        else
+            paintNotSelected(painter,option,widget);
+    }else{
+        paintMain(painter,option,widget);
+    }
 }
 
 ComponentType Twogtext::componentType() const
@@ -67,10 +71,14 @@ void Twogtext::paintNotSelected(QPainter *painter, const QStyleOptionGraphicsIte
 
 void Twogtext::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    if (_ModeView!=0) {
+        painter->setPen(QPen(QColor(225,225,225), 1));
+    }
 
     painter->setBrush(Qt::SolidPattern);
     painter->setBrush(QColor(225,225,225));
-    painter->drawRect(boundingRect());
+    painter->drawRect(QRect(0, 0, BoundingRectW, BoundingRectH));
+    //painter->drawRect(boundingRect());
 
     grftxt1->setTextWidth(BoundingRectW);
     grftxt1->setPlainText(GrawText1);
@@ -91,6 +99,22 @@ void Twogtext::applyProperty()
     GrawText1 = getPropVariant("TEXT1").toString();
     GrawText2 = getPropVariant("TEXT2").toString();
     update();
+}
+
+void Twogtext::setModeView(int iMode)
+{
+    if (iMode==0) {
+        setFlag(QGraphicsItem::ItemIsSelectable, true);
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
+    if (iMode==1) {
+        setFlag(QGraphicsItem::ItemIsSelectable, false);
+        setFlag(QGraphicsItem::ItemIsMovable, false);
+    }
+
+    NodeWidth->setModeView(iMode);
+
+    GrawItem::setModeView(iMode);
 }
 
 void Twogtext::setWidth(int iWidth)
