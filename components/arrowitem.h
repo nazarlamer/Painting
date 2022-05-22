@@ -20,5 +20,6 @@ private:
     void paintNotSelected(QPainter *painter);
     void paintMain(QPainter *painter);
 
+    void setModeView(int iMode) override;
 };
 
