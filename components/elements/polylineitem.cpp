@@ -60,9 +60,11 @@ void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*op
         painter->drawEllipse(QRect(-5, -5, 10, 10));
         return;
     }else{
-        painter->setPen(QPen(Qt::red, 1));
-        painter->setBrush(Qt::NoBrush);
-        painter->drawRect(boundingRect());
+        if (_ModeView==0) {
+            painter->setPen(QPen(Qt::red, 1));
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(boundingRect());
+        }
     }
 
     if (isSelected())

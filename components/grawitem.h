@@ -64,6 +64,7 @@ public:
     virtual void DeleteSelectNode();
 
     virtual void InsertNode();
+    virtual void setModeView(int iMode);
 
 public slots:
    virtual void isUpdateChild();
@@ -77,9 +78,11 @@ signals:
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     GrItProperty *_Propertic;
+    int _ModeView{0};
 
 private:
     int _id{-1};
     int _type_parent{0};
+
 
 };

@@ -42,6 +42,12 @@ private slots:
     void on_actionSvg_triggered();
     void on_tWProperty_cellDoubleClicked(int row, int column);
 
+    void on_actSSPrint_triggered();
+
+    void on_actSSReadOnly_triggered();
+
+    void on_actSSNormal_triggered();
+
 private:
     void initScene();
     void makeConnections();

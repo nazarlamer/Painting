@@ -25,5 +25,7 @@ private:
     void paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QGraphicsSvgItem *svgitem;
     QByteArray arrContent;
+
+    void setModeView(int iMode) override;
 };
 

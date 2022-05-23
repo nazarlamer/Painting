@@ -10,12 +10,16 @@ GraphNode::GraphNode(int id) : GrawItem(id)
 
 QRectF GraphNode::boundingRect() const
 {
-    return QRectF(-4, -4, 8, 8);
+    if (_ModeView==0)
+        return QRectF(-4, -4, 8, 8);
 }
 
 void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/,
                       QWidget */*widget*/)
 {
+    if (_ModeView!=0)
+        return;
+
     if (isSelected())
         paintSelected(painter);
     else

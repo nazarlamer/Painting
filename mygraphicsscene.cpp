@@ -78,7 +78,7 @@ void MyGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 
     painter->fillRect(rect, QColor(255, 237, 176, 255));
 
-    if (_scenestate!=SceneState::SaveSvgFile) {
+    if (_scenestate!=SceneState::SaveSvgFile and _scenestate!=SceneState::ReadOnlyState) {
 
         const QRectF rectp = rect.normalized();
         painter->setPen(QPen(Qt::lightGray,1));

@@ -591,21 +591,39 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
 
-    if (event->key()==Qt::Key_Control) {
-        for (int i=0; i<listElem.size(); ++i)
+    if (event->key()==Qt::Key_B) {
+        //InsertNode()
+        for (GrawItem *itmBMode : listElem)
         {
-            GrawItem *grawitem = listElem[i];
-
-            grawitem->setSelected(false);
-
-            if (! grawitem->IsNodesElement()) {
-                continue;
+            if (itmBMode->isSelected()) {
+                qDebug() << itmBMode->zValue();
+                if (itmBMode->zValue()>0) {
+                    itmBMode->setZValue(0);
+                }else{
+                    itmBMode->setZValue(1);
+                }
             }
-
-            grawitem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-            grawitem->setFlag(QGraphicsItem::ItemIsMovable, true);
         }
         return;
+    }
+
+    if (state==SceneState::NormalState) {
+        if (event->key()==Qt::Key_Control) {
+            for (int i=0; i<listElem.size(); ++i)
+            {
+                GrawItem *grawitem = listElem[i];
+
+                grawitem->setSelected(false);
+
+                if (! grawitem->IsNodesElement()) {
+                    continue;
+                }
+
+                grawitem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                grawitem->setFlag(QGraphicsItem::ItemIsMovable, true);
+            }
+            return;
+        }
     }
 
     if (event->key()== Qt::Key_Delete) {
@@ -696,7 +714,7 @@ void MainWindow::on_actionSvg_triggered()
 
     QRectF rs = scene->sceneRect();
     scene->setSceneRect(0,0,maxX,maxY);
-    scene->setSceneState(SceneState::SaveSvgFile);
+    //scene->setSceneState(SceneState::SaveSvgFile);
 
     QSvgGenerator svgGen;
 
@@ -711,7 +729,7 @@ void MainWindow::on_actionSvg_triggered()
     scene->render( &painter );
 
     scene->setSceneRect(0,0,rs.width(), rs.height());
-    scene->setSceneState(SceneState::NormalState);
+    //scene->setSceneState(SceneState::NormalState);
     //qDebug() << " Svg Save" ;
 }
 
@@ -774,4 +792,53 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
             }
         }
     }
+}
+
+void MainWindow::on_actSSPrint_triggered()
+{
+
+
+}
+
+void MainWindow::on_actSSReadOnly_triggered()
+{
+    int maxX = 0;
+    int maxY = 0;
+
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        if ((ItemScene->x()+ItemScene->boundingRect().width())>maxX)
+            maxX = ItemScene->x()+ItemScene->boundingRect().width();
+
+        if (ItemScene->y()+ItemScene->boundingRect().height()>maxY)
+            maxY = ItemScene->y()+ItemScene->boundingRect().height();
+
+        GrawItem *ItemViewMode = dynamic_cast<GrawItem*>(ItemScene);
+        if (ItemViewMode)
+            ItemViewMode->setModeView(1);
+
+
+    }
+    maxX = maxX + 10;
+    maxY = maxY + 10;
+
+    scene->setSceneRect(0,0,maxX,maxY);
+    scene->setSceneState(SceneState::ReadOnlyState);
+
+    state = SceneState::ReadOnlyState;
+}
+
+void MainWindow::on_actSSNormal_triggered()
+{
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        GrawItem *ItemViewMode = dynamic_cast<GrawItem*>(ItemScene);
+        if (ItemViewMode)
+            ItemViewMode->setModeView(0);
+    }
+
+    scene->setSceneRect(0,0,20000,20000);
+    scene->setSceneState(SceneState::NormalState);
+
+    state = SceneState::NormalState;
 }

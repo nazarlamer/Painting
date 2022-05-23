@@ -56,10 +56,12 @@ QRectF SvgItem::boundingRect() const
 void SvgItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (svgitem) {
-        if (isSelected())
-            paintSelected(painter);
-        else
-            paintNotSelected(painter);
+        if (_ModeView==0) {
+            if (isSelected())
+                paintSelected(painter);
+            else
+                paintNotSelected(painter);
+        }
 
         paintMain(painter, option, widget);
     }
@@ -108,4 +110,17 @@ void SvgItem::paintNotSelected(QPainter *painter)
 void SvgItem::paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     svgitem->paint(painter, option, widget);
+}
+
+void SvgItem::setModeView(int iMode)
+{
+    if (iMode==0) {
+        setFlag(QGraphicsItem::ItemIsSelectable, true);
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
+    if (iMode==1) {
+        setFlag(QGraphicsItem::ItemIsSelectable, false);
+        setFlag(QGraphicsItem::ItemIsMovable, false);
+    }
+    GrawItem::setModeView(iMode);
 }
