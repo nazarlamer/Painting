@@ -2,10 +2,10 @@
 
 #include "grawitem.h"
 
-class RectangleItem : public GrawItem
+class RectangleTextItem : public GrawItem
 {
 public:
-    explicit RectangleItem(int id);
+    explicit RectangleTextItem(int id);
 
     // QGraphicsItem interface
 public:
@@ -18,5 +18,26 @@ public:
 private:
     void paintSelected(QPainter *painter);
     void paintNotSelected(QPainter *painter);
+    void paintMain(QPainter *painter);
+
+    void setWidth(int iWidth) override;
+    void setHeight(int iHeight) override;
+
+    GrawItem *NodeWidth;
+    GrawItem *NodeHeigth;
+
+    QString GrawText{""};
+    QGraphicsTextItem *grftxt;
+
+    int BoundingRectH = 10;
+    int BoundingRectW = 10;
+
+    void applyProperty() override;
+
+    void setModeView(int iMode) override;
+
+public slots:
+    void isUpdateChild() override;
+
 };
 

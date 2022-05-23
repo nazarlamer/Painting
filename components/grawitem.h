@@ -47,6 +47,7 @@ public:
     void setParentItem(QGraphicsItem *parent);
 
     virtual void setFixY(int iFixY);
+    virtual void setFixX(int iFixX);
 
     void setProperty(const QString ifirst, const QVariant iValue);
 
@@ -56,6 +57,7 @@ public:
     QVariant getPropVariant(QString ifirst) const;
 
     virtual void setWidth(int iWidth);
+    virtual void setHeight(int iHeight);
 
     virtual QByteArray getByteArrCont();
 

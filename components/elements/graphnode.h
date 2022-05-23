@@ -22,6 +22,7 @@ public:
     void setPtY(qreal iptY) override;*/
     QPointF getPoint() const override;
     void setFixY(int iFixY) override;
+    void setFixX(int iFixX) override;
 
 private:
     void paintSelected(QPainter *painter);
@@ -31,6 +32,7 @@ private:
     qreal ptX=0;
     qreal ptY=0;
     int _fixY=-1;
+    int _fixX=-1;
 
 protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;

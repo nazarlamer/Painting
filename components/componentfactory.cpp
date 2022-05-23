@@ -3,7 +3,7 @@
 #include "lineitem.h"
 #include "grawitem.h"
 #include "circleitem.h"
-#include "rectangleitem.h"
+#include "rectangletextitem.h"
 #include "elements/polylineitem.h"
 #include "elements/graphnode.h"
 #include "elements/twogtext.h"
@@ -25,8 +25,8 @@ GrawItem *ComponentFactory::createComponent(ComponentType type)
     case ComponentType::Circle:
         return new CircleItem(static_cast<int>(type));
 
-    case ComponentType::Rectangle:
-        return new RectangleItem(static_cast<int>(type));
+    case ComponentType::RectangleText:
+        return new RectangleTextItem(static_cast<int>(type));
 
     case ComponentType::Polyline:
         return new PolylineItem(static_cast<int>(type));
