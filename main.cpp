@@ -1,3 +1,4 @@
+/*Стабільний коміт 23.05.2022*/
 #include "mainwindow.h"
 #include <QApplication>
 

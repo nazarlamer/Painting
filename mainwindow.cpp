@@ -1,4 +1,4 @@
-/*Стабільний коміт*/
+/*Стабільний коміт 23.05.2022*/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mygraphicsscene.h"
