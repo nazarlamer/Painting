@@ -107,6 +107,11 @@ void GrawItem::setFixY(int iFixY)
 
 }
 
+void GrawItem::setFixX(int iFixX)
+{
+
+}
+
 void GrawItem::setProperty(const QString ifirst, const QVariant iValue)
 {
     _Propertic->setProperty(ifirst, iValue);
@@ -130,6 +135,11 @@ QVariant GrawItem::getPropVariant(QString ifirst) const
 
 
 void GrawItem::setWidth(int iWidth)
+{
+
+}
+
+void GrawItem::setHeight(int iHeight)
 {
 
 }

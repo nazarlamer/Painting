@@ -8,7 +8,7 @@ enum class ComponentType
     Line,
     Arrow,
     Circle,
-    Rectangle,
+    RectangleText,
     Polyline,
     GraphNode,
     TwoText,

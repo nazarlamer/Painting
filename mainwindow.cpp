@@ -132,6 +132,7 @@ void MainWindow::saveGraphFile() const
             jsElement.insert("ID", listElem[i]->id());
             jsElement.insert("R", listElem[i]->rotation());
             jsElement.insert("W", listElem[i]->boundingRect().width());
+            jsElement.insert("H", listElem[i]->boundingRect().height());
 
             QJsonArray jsArrProperty;
 
@@ -224,6 +225,12 @@ void MainWindow::loadGraphFile()
 
         if (item->id()==7) {
             item->setWidth(obj["W"].toInt());
+            connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+        }
+
+        if (item->id()==4) {
+            item->setWidth(obj["W"].toInt());
+            item->setHeight(obj["H"].toInt());
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         }
 
@@ -331,7 +338,7 @@ void MainWindow::fillComponentLibrary() const
     {
         QTreeWidgetItem *treeItem = new QTreeWidgetItem;
         treeItem->setText(columnIndex, "Rectangle");
-        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::RectangleText));
         category2TreeItem->addChild(treeItem);
     }
     QTreeWidgetItem *category3TreeItem = new QTreeWidgetItem(ui->treeWidget);
@@ -408,8 +415,15 @@ void MainWindow::fillTblProp(const GrawItem *item) const
                         if (varProp.typeName()==tr("QColor")) {
                             ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
                             ui->tWProperty->item(i,0)->setBackground(varProp.value<QColor>());
-                        }else
-                            ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+                        }else{
+                            if (varProp.typeName()==tr("bool")) {
+                                if (varProp.toBool())
+                                    ui->tWProperty->setItem(i,0,new QTableWidgetItem("Так"));
+                                else
+                                    ui->tWProperty->setItem(i,0,new QTableWidgetItem("Ні"));
+                            }else
+                                ui->tWProperty->setItem(i,0,new QTableWidgetItem("["+QString(varProp.typeName())+"]"));
+                        }
                     }
                 }
             }
@@ -538,6 +552,10 @@ void MainWindow::onMousePressed(const QPointF &point)
         ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,1, new QTableWidgetItem((QString::number(newItem->y()))));
         ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,2, new QTableWidgetItem(""));
         ui->tableWidget->setRowHeight(ui->tableWidget->rowCount()-1,16);
+    }
+
+    if (newItem->id()==4 or newItem->id()==7) {
+        connect(newItem, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
     }
 
     if (newItem->IsNodesElement()) {
@@ -751,7 +769,8 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                     QString txtPropT = grawsel->getListPropText().at(row).second;
 
                     qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName();
-                    if ((varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull()))
+                    if ( (varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull())
+                        or (varProp.isNull() and grawsel->id()==4 and txtProp=="TEXT") )
                     {
 
                         //qDebug() << txtProp;
@@ -777,16 +796,28 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                     }
                     if ((varProp.isNull() and grawsel->id()==5 and txtProp=="WIDTH2")
                         or (varProp.typeName()==tr("int") and !varProp.isNull())
-                        or (grawsel->id()==5 and varProp.typeName()==tr("double") and !varProp.isNull())) {
+                        or ((grawsel->id()==4 or grawsel->id()==5) and varProp.typeName()==tr("double") and !varProp.isNull())
+                        or (varProp.isNull() and grawsel->id()==4 and txtProp=="SIZE")
+                        ) {
 
                         bool ok;
                         int ipar = QInputDialog::getInt(this,  "Параметр: " + txtPropT,
-                                                     txtPropT+":", varProp.toInt(), 1, 20, 1, &ok);
+                                                     txtPropT+":", varProp.toInt(), 1, 32, 1, &ok);
                         if (ok) {
                             grawsel->setProperty(txtProp,ipar);
                             fillTblProp(grawsel);
                         }
                     }
+                    if ( (varProp.isNull() and grawsel->id()==4 and txtProp=="BOLD")
+                        or (varProp.typeName()==tr("bool")) ) {
+                        if (varProp.isNull()) {
+                            grawsel->setProperty(txtProp,false);
+                        }else{
+                            grawsel->setProperty(txtProp,!varProp.toBool());
+                        }
+                        fillTblProp(grawsel);
+                    }
+
                     break;
                 }
             }
