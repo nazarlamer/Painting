@@ -323,6 +323,7 @@ void MainWindow::fillTable() const
 
 void MainWindow::fillFilesShems() const
 {
+
     QStringList List;
     //List << "Clair de Lune" << "Reverie" << "Prelude";
 
@@ -923,6 +924,7 @@ void MainWindow::on_lvFiles_doubleClicked(const QModelIndex &index)
     QString itemText = ind.data(Qt::DisplayRole).toString();
     _FileNameJSC = itemText;
     loadGraphFile();
+    fillFilesShems();
 
     //qDebug() << "on_lvFiles_doubleClicked" <<itemText;
 }
@@ -934,9 +936,11 @@ void MainWindow::on_action_triggered()
 
     QString str = QUuid::createUuid().toString();
     _FileNameJSC = str + ".aqjs";
+    fillFilesShems();
 }
 
 void MainWindow::on_action_2_triggered()
 {
     saveGraphFile();
+    fillFilesShems();
 }
