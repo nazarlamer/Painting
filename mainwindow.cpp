@@ -16,6 +16,8 @@
 #include <QScrollBar>
 #include <QInputDialog>
 #include <QColorDialog>
+#include <QStringListModel>
+#include <QUuid>
 
 #include <QSvgGenerator>
 
@@ -30,8 +32,12 @@ MainWindow::MainWindow(QWidget *parent) :
     fillComponentLibrary();
     initScene();
     makeConnections();
-    loadGraphFile();
-    fillTable();
+
+    //_FileNameJSC = "Q_SXEMA_JS.aqjs";
+    //loadGraphFile();
+
+    model = new QStringListModel(this);
+    fillFilesShems();
 
     // Разрешаем выделение только одного элемента
     ui->tWProperty->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -40,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tWProperty->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tWProperty->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tWProperty->setVisible(false);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -99,7 +107,7 @@ void MainWindow::initScene()
     ui->graphicsView->horizontalScrollBar()->setValue(1);
 }
 
-void MainWindow::saveGraphFile() const
+void MainWindow::saveGraphFile()
 {
     if (!listElem.isEmpty())
     {
@@ -115,7 +123,12 @@ void MainWindow::saveGraphFile() const
         }
         file.close();*/
 
-        QFile filejs("Q_SXEMA_JS.aqjs");
+        if (_FileNameJSC=="") {
+            QString str = QUuid::createUuid().toString();
+            _FileNameJSC = str + ".aqjs";
+        }
+
+        QFile filejs(_FileNameJSC);
         filejs.open(QIODevice::WriteOnly);
         QJsonArray jsonArray;
         for (int i=0; i<listElem.count(); i++)
@@ -205,7 +218,10 @@ void MainWindow::loadGraphFile()
     }
     file2.close();*/
 
-    QFile filejs(QStringLiteral("Q_SXEMA_JS.aqjs"));
+    scene->clear();
+    listElem.clear();
+
+    QFile filejs(_FileNameJSC);
     filejs.open(QIODevice::ReadOnly);
 
     QByteArray saveData = filejs.readAll();
@@ -275,6 +291,7 @@ void MainWindow::loadGraphFile()
             }
         }
     }
+    fillTable();
 }
 
 void MainWindow::fillTable() const
@@ -302,6 +319,32 @@ void MainWindow::fillTable() const
 
     ui->tableWidget->resizeColumnsToContents();
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+}
+
+void MainWindow::fillFilesShems() const
+{
+    QStringList List;
+    //List << "Clair de Lune" << "Reverie" << "Prelude";
+
+    QDir dir;
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setNameFilters(QStringList("*.aqjs"));
+    dir.setSorting(QDir::Size);
+
+    QFileInfoList list = dir.entryInfoList();
+    for (int i = 0; i < list.size(); ++i) {
+        QFileInfo fileInfo = list.at(i);
+        //qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
+        //QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        //treeItem->setText(columnIndex, fileInfo.fileName());
+        //treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
+        //category4TreeItem->addChild(treeItem);
+        List << fileInfo.fileName();
+    }
+
+    model->setStringList(List);
+    ui->lvFiles->setModel(model);
+    ui->lvFiles->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void MainWindow::fillComponentLibrary() const
@@ -872,4 +915,28 @@ void MainWindow::on_actSSNormal_triggered()
     scene->setSceneState(SceneState::NormalState);
 
     state = SceneState::NormalState;
+}
+
+void MainWindow::on_lvFiles_doubleClicked(const QModelIndex &index)
+{
+    QModelIndex ind = ui->lvFiles->currentIndex();
+    QString itemText = ind.data(Qt::DisplayRole).toString();
+    _FileNameJSC = itemText;
+    loadGraphFile();
+
+    //qDebug() << "on_lvFiles_doubleClicked" <<itemText;
+}
+
+void MainWindow::on_action_triggered()
+{
+    scene->clear();
+    listElem.clear();
+
+    QString str = QUuid::createUuid().toString();
+    _FileNameJSC = str + ".aqjs";
+}
+
+void MainWindow::on_action_2_triggered()
+{
+    saveGraphFile();
 }

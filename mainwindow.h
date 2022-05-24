@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QStringListModel>
 #include "scenestates.h"
 
 class GrawItem;
@@ -48,16 +49,25 @@ private slots:
 
     void on_actSSNormal_triggered();
 
+    void on_lvFiles_doubleClicked(const QModelIndex &index);
+
+    void on_action_triggered();
+
+    void on_action_2_triggered();
+
 private:
     void initScene();
     void makeConnections();
-    void saveGraphFile() const;
+    void saveGraphFile();
     void loadGraphFile();
     void fillTable() const;
+    void fillFilesShems() const;
     void fillComponentLibrary() const;
     void setSceneState(SceneState sceneState);
     void addItemToTable(const GrawItem *item) const;
     void fillTblProp(const GrawItem *item) const;
+    QString _FileNameJSC{""};
+    QStringListModel *model{nullptr};
 
 private:
     Ui::MainWindow *ui{nullptr};

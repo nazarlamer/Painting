@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>753</width>
+    <width>902</width>
     <height>640</height>
    </rect>
   </property>
@@ -44,25 +44,32 @@
          <enum>QLayout::SetMaximumSize</enum>
         </property>
         <item>
-         <widget class="QTreeWidget" name="treeWidget">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>171</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <column>
-           <property name="text">
-            <string notr="true">1</string>
-           </property>
-          </column>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QTreeWidget" name="treeWidget">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>171</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <column>
+             <property name="text">
+              <string notr="true">1</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <widget class="QListView" name="lvFiles"/>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="MyGraphicsView" name="graphicsView">
@@ -180,7 +187,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>753</width>
+     <width>902</width>
      <height>18</height>
     </rect>
    </property>
@@ -188,6 +195,9 @@
     <property name="title">
      <string>Файл</string>
     </property>
+    <addaction name="action"/>
+    <addaction name="action_2"/>
+    <addaction name="separator"/>
     <addaction name="action_3"/>
     <addaction name="separator"/>
     <addaction name="actionSvg"/>
@@ -274,6 +284,16 @@
   <action name="actSSPrint">
    <property name="text">
     <string>для друку</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Новий</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Зберегти</string>
    </property>
   </action>
  </widget>
