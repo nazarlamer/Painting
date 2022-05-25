@@ -191,7 +191,7 @@ void MainWindow::saveGraphFile(bool isMakros=false)
 
             if (isMakros) {
                 QJsonObject jsElement;
-                jsElement.insert("NAME", listElem[i]->x());
+                jsElement.insert("NAME", "");
                 jsElement.insert("ID", -2);
                 jsonArray.append(jsElement);
             }
