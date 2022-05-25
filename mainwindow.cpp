@@ -132,7 +132,7 @@ void MainWindow::saveGraphFile(bool isMakros=false)
         if (isMakros) {
             PNameFile = _FileNameJSC;
             QString str = QUuid::createUuid().toString();
-            _FileNameJSC = "makros\\" + str + ".aqjs";
+            _FileNameJSC = "makros\\" + str + ".mkjs";
         }
 
         QFile filejs(_FileNameJSC);
@@ -343,9 +343,7 @@ void MainWindow::fillTable() const
 
 void MainWindow::fillFilesShems() const
 {
-
     QStringList List;
-    //List << "Clair de Lune" << "Reverie" << "Prelude";
 
     QDir dir;
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
@@ -972,17 +970,53 @@ void MainWindow::on_actInsMakros_triggered()
     //                                              tr("Address:"), "John Doe\nFreedom Street", &ok);
     //if (ok && !text.isEmpty())
     //    multiLineTextLabel->setText(text);
-
-
-
     QStringList items;
-    items << tr("Spring") << tr("Summer") << tr("Fall") << tr("Winter");
+    QStringList itemsFile;
+
+    QDir dir;
+    dir.setPath("makros");
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setNameFilters(QStringList("*.mkjs"));
+    dir.setSorting(QDir::Size);
+
+    QFileInfoList list = dir.entryInfoList();
+    for (int i = 0; i < list.size(); ++i) {
+        QFileInfo fileInfo = list.at(i);
+        itemsFile << "makros//"+fileInfo.fileName();
+        qDebug()<<fileInfo.fileName();
+
+        QFile filejs("makros//"+fileInfo.fileName());
+        filejs.open(QIODevice::ReadOnly);
+
+        QByteArray saveData = filejs.readAll();
+        QJsonDocument DocJs(QJsonDocument::fromJson(saveData));
+        auto array = DocJs.array();
+        QString tMakros="";
+        for(const auto& json: array)
+        {
+            auto obj = json.toObject();
+
+            if (obj["ID"].toInt()==-2) {
+                tMakros = obj["NAME"].toString();
+
+                break;
+            }
+        }
+        if (tMakros=="")
+            items<<fileInfo.fileName();
+        else
+            items<<tMakros;
+    }
 
     bool ok;
     QString item = QInputDialog::getItem(this, tr("Оберіть макрос"),
-                                         tr("Макрос:"), items, 0, false, &ok);
+        tr("Макрос:"), items, 0, false, &ok);
+
     if (ok && !item.isEmpty()) {
-        //itemLabel->setText(item);
+        int indx = items.indexOf(item);
+        _FileNameJSC = itemsFile[indx];
+        loadGraphFile();
+        _FileNameJSC = "";
     }
 }
 
