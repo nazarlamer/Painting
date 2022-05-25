@@ -55,10 +55,14 @@ private slots:
 
     void on_action_2_triggered();
 
+    void on_actInsMakros_triggered();
+
+    void on_actNewMakros_triggered();
+
 private:
     void initScene();
     void makeConnections();
-    void saveGraphFile();
+    void saveGraphFile(bool isMakros);
     void loadGraphFile();
     void fillTable() const;
     void fillFilesShems() const;

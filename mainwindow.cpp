@@ -107,10 +107,11 @@ void MainWindow::initScene()
     ui->graphicsView->horizontalScrollBar()->setValue(1);
 }
 
-void MainWindow::saveGraphFile()
+void MainWindow::saveGraphFile(bool isMakros=false)
 {
     if (!listElem.isEmpty())
     {
+        QString PNameFile;
         /*QFile file("Q_SXEMA");
         file.open(QIODevice::WriteOnly);
         QDataStream out(&file);
@@ -126,6 +127,12 @@ void MainWindow::saveGraphFile()
         if (_FileNameJSC=="") {
             QString str = QUuid::createUuid().toString();
             _FileNameJSC = str + ".aqjs";
+        }
+
+        if (isMakros) {
+            PNameFile = _FileNameJSC;
+            QString str = QUuid::createUuid().toString();
+            _FileNameJSC = "makros\\" + str + ".aqjs";
         }
 
         QFile filejs(_FileNameJSC);
@@ -146,6 +153,7 @@ void MainWindow::saveGraphFile()
             jsElement.insert("R", listElem[i]->rotation());
             jsElement.insert("W", listElem[i]->boundingRect().width());
             jsElement.insert("H", listElem[i]->boundingRect().height());
+            jsElement.insert("Z", listElem[i]->zValue());
 
             QJsonArray jsArrProperty;
 
@@ -181,11 +189,22 @@ void MainWindow::saveGraphFile()
 
             jsonArray.append(jsElement);
 
+            if (isMakros) {
+                QJsonObject jsElement;
+                jsElement.insert("NAME", listElem[i]->x());
+                jsElement.insert("ID", -2);
+                jsonArray.append(jsElement);
+            }
+
         }
         QJsonDocument jsFile;
         jsFile.setArray(jsonArray);
         filejs.write(jsFile.toJson());
         filejs.close();
+
+        if (isMakros) {
+            _FileNameJSC = PNameFile;
+        }
     }
 }
 
@@ -236,6 +255,7 @@ void MainWindow::loadGraphFile()
 
         item->setPos(obj["X"].toInt(), obj["Y"].toInt());
         item->setRotation(obj["R"].toInt());
+        item->setZValue(obj["Z"].toInt());
         scene->addItem(item);
         listElem << item;
 
@@ -943,4 +963,30 @@ void MainWindow::on_action_2_triggered()
 {
     saveGraphFile();
     fillFilesShems();
+}
+
+void MainWindow::on_actInsMakros_triggered()
+{
+    //bool ok;
+    //QString text = QInputDialog::getMultiLineText(this, tr("QInputDialog::getMultiLineText()"),
+    //                                              tr("Address:"), "John Doe\nFreedom Street", &ok);
+    //if (ok && !text.isEmpty())
+    //    multiLineTextLabel->setText(text);
+
+
+
+    QStringList items;
+    items << tr("Spring") << tr("Summer") << tr("Fall") << tr("Winter");
+
+    bool ok;
+    QString item = QInputDialog::getItem(this, tr("Оберіть макрос"),
+                                         tr("Макрос:"), items, 0, false, &ok);
+    if (ok && !item.isEmpty()) {
+        //itemLabel->setText(item);
+    }
+}
+
+void MainWindow::on_actNewMakros_triggered()
+{
+    saveGraphFile(true);
 }

@@ -110,7 +110,7 @@
              <number>1</number>
             </property>
             <attribute name="horizontalHeaderVisible">
-             <bool>true</bool>
+             <bool>false</bool>
             </attribute>
             <attribute name="horizontalHeaderDefaultSectionSize">
              <number>60</number>
@@ -122,7 +122,7 @@
              <number>60</number>
             </attribute>
             <attribute name="verticalHeaderVisible">
-             <bool>true</bool>
+             <bool>false</bool>
             </attribute>
             <attribute name="verticalHeaderDefaultSectionSize">
              <number>21</number>
@@ -225,9 +225,17 @@
     <addaction name="actSSReadOnly"/>
     <addaction name="actSSPrint"/>
    </widget>
+   <widget class="QMenu" name="menu_5">
+    <property name="title">
+     <string>Макроси</string>
+    </property>
+    <addaction name="actInsMakros"/>
+    <addaction name="actNewMakros"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
    <addaction name="menu_4"/>
+   <addaction name="menu_5"/>
   </widget>
   <action name="action_3">
    <property name="text">
@@ -294,6 +302,16 @@
   <action name="action_2">
    <property name="text">
     <string>Зберегти</string>
+   </property>
+  </action>
+  <action name="actInsMakros">
+   <property name="text">
+    <string>Вставити макрос</string>
+   </property>
+  </action>
+  <action name="actNewMakros">
+   <property name="text">
+    <string>Створити макрос</string>
    </property>
   </action>
  </widget>
