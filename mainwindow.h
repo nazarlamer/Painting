@@ -72,6 +72,7 @@ private:
     void fillTblProp(const GrawItem *item) const;
     QString _FileNameJSC{""};
     QStringListModel *model{nullptr};
+    void CloneElement(const GrawItem *item);
 
 private:
     Ui::MainWindow *ui{nullptr};

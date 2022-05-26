@@ -144,7 +144,7 @@ void GrawItem::setHeight(int iHeight)
 
 }
 
-QByteArray GrawItem::getByteArrCont()
+QByteArray GrawItem::getByteArrCont() const
 {
 
 }

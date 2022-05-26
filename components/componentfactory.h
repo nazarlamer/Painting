@@ -1,3 +1,4 @@
+/*Фабрика*/
 #pragma once
 
 #include "componenttype.h"

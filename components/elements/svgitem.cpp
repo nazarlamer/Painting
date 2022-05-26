@@ -72,7 +72,7 @@ ComponentType SvgItem::componentType() const
     return ComponentType::SvgItem;
 }
 
-QByteArray SvgItem::getByteArrCont()
+QByteArray SvgItem::getByteArrCont() const
 {
     return arrContent;
 }

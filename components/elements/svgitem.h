@@ -16,7 +16,6 @@ public:
     // GrawItem interface
 public:
     ComponentType componentType() const override;
-    QByteArray getByteArrCont() override;
     void setByteArrCont(QByteArray iBAContent) override;
 
 private:
@@ -25,6 +24,7 @@ private:
     void paintMain(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QGraphicsSvgItem *svgitem;
     QByteArray arrContent;
+    QByteArray getByteArrCont() const override;
 
     void setModeView(int iMode) override;
 };

@@ -59,7 +59,7 @@ public:
     virtual void setWidth(int iWidth);
     virtual void setHeight(int iHeight);
 
-    virtual QByteArray getByteArrCont();
+    virtual QByteArray getByteArrCont() const;
 
     virtual void setByteArrCont(QByteArray iBAContent);
 

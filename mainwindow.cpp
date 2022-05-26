@@ -46,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tWProperty->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tWProperty->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tWProperty->setVisible(false);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -498,6 +496,55 @@ void MainWindow::fillTblProp(const GrawItem *item) const
     }
 }
 
+void MainWindow::CloneElement(const GrawItem *item)
+{
+    GrawItem *newgraw = ComponentFactory::createComponent(item->id());
+    newgraw->setX(item->x()+10);
+    newgraw->setY(item->y()+10);
+    newgraw->setRotation(item->rotation());
+    newgraw->setZValue(item->zValue());
+
+    if (newgraw->id()==7) {
+        newgraw->setWidth(item->boundingRect().width());
+        connect(newgraw, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+    }
+
+    if (newgraw->id()==4) {
+        newgraw->setWidth(item->boundingRect().width());
+        newgraw->setHeight(item->boundingRect().width());
+        connect(newgraw, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+    }
+
+    if (newgraw->IsNodesElement()) {
+        for (const GrawItem *ni : item->GetPoints()) {
+            GrawItem *itemNode = ComponentFactory::createComponent(ComponentType::GraphNode);
+            itemNode->setParentItem(newgraw);
+            itemNode->setX(ni->x());
+            itemNode->setY(ni->y());
+            connect(itemNode, &GrawItem::signalParent, newgraw, &GrawItem::isUpdateChild);
+        }
+        newgraw->update();
+        connect(newgraw, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
+    }
+
+    if (newgraw->componentType()==ComponentType::SvgItem) {
+        newgraw->setByteArrCont(item->getByteArrCont());
+    }
+
+    QList<QPair<QString, QString>> listProp = item->getListPropText();
+    if (listProp.count()>0) {
+        for (int k=0; k<listProp.count(); k++) {
+            QVariant varProp = item->getPropVariant(listProp.at(k).first);
+            if (varProp.isNull())
+                continue;
+            newgraw->setProperty(listProp[k].first, varProp);
+        }
+    }
+
+    scene->addItem(newgraw);
+    listElem << newgraw;
+}
+
 void MainWindow::makeConnections()
 {
     connect(ui->treeWidget, &QTreeWidget::itemPressed, this, &MainWindow::onComponentTreeItemPressed);
@@ -660,8 +707,19 @@ void MainWindow::onMousePressed(const QPointF &point)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     //qDebug() << QKeySequence(event->key()).toString();
-    if (event->key()==Qt::Key_I) {
+
+    if (event->key()==Qt::Key_D) {
         //InsertNode()
+        for (GrawItem *itmBMode : listElem)
+        {
+            if (itmBMode->isSelected()) {
+                CloneElement(itmBMode);
+            }
+        }
+        return;
+    }
+
+    if (event->key()==Qt::Key_I) {
         for (GrawItem *insitemnode : listElem)
         {
             if (insitemnode->id()==5) {
