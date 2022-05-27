@@ -61,8 +61,13 @@ void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*op
         return;
     }else{
         if (_ModeView==0) {
-            painter->setPen(QPen(Qt::red, 1));
+            if (isSelected())
+                painter->setPen(QPen(Qt::blue, 1));
+            else
+                painter->setPen(QPen(Qt::red, 1));
+
             painter->setBrush(Qt::NoBrush);
+
             painter->drawRect(boundingRect());
         }
     }

@@ -511,7 +511,7 @@ void MainWindow::CloneElement(const GrawItem *item)
 
     if (newgraw->id()==4) {
         newgraw->setWidth(item->boundingRect().width());
-        newgraw->setHeight(item->boundingRect().width());
+        newgraw->setHeight(item->boundingRect().height());
         connect(newgraw, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
     }
 
