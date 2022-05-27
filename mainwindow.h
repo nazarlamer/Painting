@@ -59,6 +59,12 @@ private slots:
 
     void on_actNewMakros_triggered();
 
+    void on_action_4_triggered();
+
+    void on_action_5_triggered();
+
+    void on_action_6_triggered();
+
 private:
     void initScene();
     void makeConnections();

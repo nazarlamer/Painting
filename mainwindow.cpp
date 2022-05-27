@@ -1082,3 +1082,52 @@ void MainWindow::on_actNewMakros_triggered()
 {
     saveGraphFile(true);
 }
+
+void MainWindow::on_action_4_triggered()
+{
+    qreal minX = scene->width();
+    qreal minY = scene->height();
+    //qDebug()<<minX<<minY;
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        if (ItemScene->x()<minX)
+            minX = ItemScene->x();
+
+        if (ItemScene->y()<minY)
+            minY = ItemScene->y();
+    }
+
+    minX = minX - 20;
+    minY = minY - 20;
+    // qDebug()<<minX<<minY;
+
+    if (minX>0 or minY>0) {
+        for (QGraphicsItem *ItemScene : scene->items())
+        {
+            ItemScene->setX(ItemScene->x()-minX);
+            ItemScene->setY(ItemScene->y()-minY);
+        }
+        scene->update();
+    }
+
+}
+
+void MainWindow::on_action_5_triggered()
+{
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        GrawItem *item = static_cast<GrawItem *>(ItemScene);
+        if (item->id()==5)
+            item->setZValue(2);
+    }
+}
+
+void MainWindow::on_action_6_triggered()
+{
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        GrawItem *item = static_cast<GrawItem *>(ItemScene);
+        if (item->id()==5)
+            item->setZValue(0);
+    }
+}
