@@ -77,6 +77,7 @@ private:
     void addItemToTable(const GrawItem *item) const;
     void fillTblProp(const GrawItem *item) const;
     QString _FileNameJSC{""};
+    QString _WindowsTitle{""};
     QStringListModel *model{nullptr};
     void CloneElement(const GrawItem *item);
 
