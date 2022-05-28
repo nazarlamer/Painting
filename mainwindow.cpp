@@ -841,16 +841,25 @@ void MainWindow::on_actionSvg_triggered()
 
     for (QGraphicsItem *ItemScene : scene->items())
     {
-        if ((ItemScene->x()+ItemScene->boundingRect().width())>maxX)
-            maxX = ItemScene->x()+ItemScene->boundingRect().width();
+        GrawItem *item = static_cast<GrawItem *>(ItemScene);
+        qDebug()<<item->id();
 
-        if (ItemScene->y()+ItemScene->boundingRect().height()>maxY)
-            maxY = ItemScene->y()+ItemScene->boundingRect().height();
+        if (item->id()==6)
+            continue;
 
+        if (item->id()>=0) {
+            if ((ItemScene->x()+ItemScene->boundingRect().width())>maxX)
+                maxX = ItemScene->x()+ItemScene->boundingRect().width();
+
+            if ((ItemScene->y()+ItemScene->boundingRect().height())>maxY)
+                maxY = ItemScene->y()+ItemScene->boundingRect().height();
+        }
     }
-    maxX = maxX + 10;
-    maxY = maxY + 10;
 
+    maxX = maxX + 20;
+    maxY = maxY + 20;
+
+    qDebug() << maxX << maxY;
 
     QRectF rs = scene->sceneRect();
     scene->setSceneRect(0,0,maxX,maxY);
@@ -970,10 +979,9 @@ void MainWindow::on_actSSReadOnly_triggered()
         if (ItemViewMode)
             ItemViewMode->setModeView(1);
 
-
     }
-    maxX = maxX + 10;
-    maxY = maxY + 10;
+    maxX = maxX + 20;
+    maxY = maxY + 20;
 
     scene->setSceneRect(0,0,maxX,maxY);
     scene->setSceneState(SceneState::ReadOnlyState);
@@ -1149,4 +1157,9 @@ void MainWindow::on_action_6_triggered()
         if (item->id()==5)
             item->setZValue(0);
     }
+}
+
+void MainWindow::on_action_3_triggered()
+{
+
 }
