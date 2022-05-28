@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     fillComponentLibrary();
     initScene();
     makeConnections();
+    _WindowsTitle = this->windowTitle();
 
     //_FileNameJSC = "Q_SXEMA_JS.aqjs";
     //loadGraphFile();
@@ -53,7 +54,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete draftItem;
-    _WindowsTitle = this->windowTitle();
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
@@ -127,7 +127,7 @@ void MainWindow::saveGraphFile(bool isMakros=false)
         if (_FileNameJSC=="") {
             QString str = QUuid::createUuid().toString();
             _FileNameJSC = str + ".aqjs";
-            this->setWindowTitle(_WindowsTitle+"["+_FileNameJSC+"]");
+            this->setWindowTitle(_WindowsTitle+" ["+_FileNameJSC+"]");
         }
 
         if (isMakros) {
@@ -981,7 +981,7 @@ void MainWindow::on_lvFiles_doubleClicked(const QModelIndex &index)
     QModelIndex ind = ui->lvFiles->currentIndex();
     QString itemText = ind.data(Qt::DisplayRole).toString();
     _FileNameJSC = itemText;
-    this->setWindowTitle(_WindowsTitle+"["+_FileNameJSC+"]");
+    this->setWindowTitle(_WindowsTitle+" ["+_FileNameJSC+"]");
     loadGraphFile();
     fillFilesShems();
 
@@ -995,7 +995,7 @@ void MainWindow::on_action_triggered()
 
     QString str = QUuid::createUuid().toString();
     _FileNameJSC = str + ".aqjs";
-    this->setWindowTitle(_WindowsTitle+"["+_FileNameJSC+"]");
+    this->setWindowTitle(_WindowsTitle+" ["+_FileNameJSC+"]");
     fillFilesShems();
 }
 
