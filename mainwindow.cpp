@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tWProperty->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tWProperty->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tWProperty->setVisible(false);
+    ui->tableWidget->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -374,54 +375,33 @@ void MainWindow::fillComponentLibrary() const
     ui->treeWidget->setHeaderHidden(true);
     ui->treeWidget->setAlternatingRowColors(true);
 
-    QTreeWidgetItem *category1TreeItem = new QTreeWidgetItem(ui->treeWidget);
-    category1TreeItem->setText(columnIndex, "Categry 1");
-    {
-        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-        treeItem->setText(columnIndex, "Line");
-        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Line));
-        category1TreeItem->addChild(treeItem);
-    }
-    {
-        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-        treeItem->setText(columnIndex, "Arrow");
-        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Arrow));
-        category1TreeItem->addChild(treeItem);
-    }
+    QTreeWidgetItem *treeItem1 = new QTreeWidgetItem(ui->treeWidget);
+    treeItem1->setText(columnIndex, "Елемент лінії");
+    treeItem1->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Line));
 
-    QTreeWidgetItem *category2TreeItem = new QTreeWidgetItem(ui->treeWidget);
-    category2TreeItem->setText(columnIndex, "Categry 2");
-    {
-        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-        treeItem->setText(columnIndex, "Circle");
-        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Circle));
-        category2TreeItem->addChild(treeItem);
-    }
-    {
-        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-        treeItem->setText(columnIndex, "Rectangle");
-        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::RectangleText));
-        category2TreeItem->addChild(treeItem);
-    }
-    QTreeWidgetItem *category3TreeItem = new QTreeWidgetItem(ui->treeWidget);
-    category3TreeItem->setText(columnIndex, "Categry Polyline");
-    {
-        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-        treeItem->setText(columnIndex, "Polyline");
-        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
-        category3TreeItem->addChild(treeItem);
-    }
-    QTreeWidgetItem *treeItem = new QTreeWidgetItem (ui->treeWidget);
-    treeItem->setText(columnIndex, "2text");
+    QTreeWidgetItem *treeItem2 = new QTreeWidgetItem(ui->treeWidget);
+    treeItem2->setText(columnIndex, "Муфта-кабель");
+    treeItem2->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Arrow));
+
+    QTreeWidgetItem *treeItem3 = new QTreeWidgetItem(ui->treeWidget);
+    treeItem3->setText(columnIndex, "Текст");
+    treeItem3->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::RectangleText));
+
+    QTreeWidgetItem *treeItem4 = new QTreeWidgetItem(ui->treeWidget);;
+    treeItem4->setText(columnIndex, "Лінія-полілінія");
+    treeItem4->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Polyline));
+
+
+    QTreeWidgetItem *treeItem = new QTreeWidgetItem(ui->treeWidget);
+    treeItem->setText(columnIndex, "Подвійний текст");
     treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::TwoText));
 
-    QTreeWidgetItem *treeItem2 = new QTreeWidgetItem (ui->treeWidget);
-    treeItem2->setText(columnIndex, "svg item");
-    treeItem2->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
-
+    //QTreeWidgetItem *treeItem2 = new QTreeWidgetItem (ui->treeWidget);
+    //treeItem2->setText(columnIndex, "svg item");
+    //treeItem2->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
 
     QTreeWidgetItem *category4TreeItem = new QTreeWidgetItem(ui->treeWidget);
-    category4TreeItem->setText(columnIndex, "Categry Custom Elem");
+    category4TreeItem->setText(columnIndex, "Інші елементи");
     {
         QDir dir;
         dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
