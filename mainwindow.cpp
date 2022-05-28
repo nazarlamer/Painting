@@ -1072,14 +1072,21 @@ void MainWindow::on_action_4_triggered()
 {
     qreal minX = scene->width();
     qreal minY = scene->height();
-    //qDebug()<<minX<<minY;
+    qDebug()<<minX<<minY;
     for (QGraphicsItem *ItemScene : scene->items())
     {
-        if (ItemScene->x()<minX)
-            minX = ItemScene->x();
+        GrawItem *item = static_cast<GrawItem *>(ItemScene);
+        qDebug()<<item->id();
+        if (item->id()==6)
+            continue;
 
-        if (ItemScene->y()<minY)
-            minY = ItemScene->y();
+        if (item->id()>=0) {
+            if (ItemScene->x()<minX)
+                minX = ItemScene->x();
+
+            if (ItemScene->y()<minY)
+                minY = ItemScene->y();
+        }
     }
 
     minX = minX - 20;
@@ -1089,12 +1096,19 @@ void MainWindow::on_action_4_triggered()
     if (minX>0 or minY>0) {
         for (QGraphicsItem *ItemScene : scene->items())
         {
-            ItemScene->setX(ItemScene->x()-minX);
-            ItemScene->setY(ItemScene->y()-minY);
+            GrawItem *item = static_cast<GrawItem *>(ItemScene);
+            qDebug()<<item->id();
+
+            if (item->id()==6)
+                continue;
+
+            if (item->id()>=0) {
+                ItemScene->setX(ItemScene->x()-minX);
+                ItemScene->setY(ItemScene->y()-minY);
+            }
         }
         scene->update();
     }
-
 }
 
 void MainWindow::on_action_5_triggered()
