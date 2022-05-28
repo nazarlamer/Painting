@@ -65,6 +65,8 @@ private slots:
 
     void on_action_6_triggered();
 
+    void on_action_3_triggered();
+
 private:
     void initScene();
     void makeConnections();
