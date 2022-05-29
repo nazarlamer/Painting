@@ -35,7 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _WindowsTitle = this->windowTitle();
 
     //_FileNameJSC = "Q_SXEMA_JS.aqjs";
-    //loadGraphFile();
+    if (_FileNameJSC!="") {
+        loadGraphFile();
+    }
 
     model = new QStringListModel(this);
     fillFilesShems();
@@ -93,6 +95,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     }
 
     return false;
+}
+
+void MainWindow::setFileNameCommandLine(QString cFileNAme)
+{
+    _FileNameJSC = cFileNAme+".aqjs";
 }
 
 void MainWindow::initScene()

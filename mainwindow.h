@@ -29,6 +29,7 @@ public:
     // QObject interface
 public:
     bool eventFilter(QObject *watched, QEvent *event) override;
+    void setFileNameCommandLine(QString cFileNAme);
 
     // QWidget interface
 protected:
