@@ -1044,10 +1044,10 @@ void MainWindow::on_actInsMakros_triggered()
     QFileInfoList list = dir.entryInfoList();
     for (int i = 0; i < list.size(); ++i) {
         QFileInfo fileInfo = list.at(i);
-        itemsFile << "makros//"+fileInfo.fileName();
+        itemsFile << "makros\\"+fileInfo.fileName();
         qDebug()<<fileInfo.fileName();
 
-        QFile filejs("makros//"+fileInfo.fileName());
+        QFile filejs(QCoreApplication::applicationDirPath()+"\\makros\\"+fileInfo.fileName());
         filejs.open(QIODevice::ReadOnly);
 
         QByteArray saveData = filejs.readAll();
