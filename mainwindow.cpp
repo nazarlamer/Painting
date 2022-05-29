@@ -100,6 +100,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 void MainWindow::setFileNameCommandLine(QString cFileNAme)
 {
     _FileNameJSC = cFileNAme+".aqjs";
+    this->setWindowTitle(_WindowsTitle+" ["+_FileNameJSC+"]");
 }
 
 void MainWindow::initScene()
