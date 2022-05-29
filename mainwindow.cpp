@@ -35,9 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _WindowsTitle = this->windowTitle();
 
     //_FileNameJSC = "Q_SXEMA_JS.aqjs";
-    if (_FileNameJSC!="") {
-        loadGraphFile();
-    }
 
     model = new QStringListModel(this);
     fillFilesShems();
@@ -144,7 +141,7 @@ void MainWindow::saveGraphFile(bool isMakros=false)
             _FileNameJSC = "makros\\" + str + ".mkjs";
         }
 
-        QFile filejs(_FileNameJSC);
+        QFile filejs(QCoreApplication::applicationDirPath() + "\\" + _FileNameJSC);
         filejs.open(QIODevice::WriteOnly);
         QJsonArray jsonArray;
         for (int i=0; i<listElem.count(); i++)
@@ -821,6 +818,14 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
             grawitem->setFlag(QGraphicsItem::ItemIsMovable, false);
         }
         return;
+    }
+}
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    if (_FileNameJSC!="") {
+        loadGraphFile();
     }
 }
 
