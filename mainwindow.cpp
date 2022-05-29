@@ -1076,9 +1076,10 @@ void MainWindow::on_actInsMakros_triggered()
 
     if (ok && !item.isEmpty()) {
         int indx = items.indexOf(item);
+        QString pFNJSC = _FileNameJSC;
         _FileNameJSC = itemsFile[indx];
         loadGraphFile();
-        _FileNameJSC = "";
+        _FileNameJSC = pFNJSC;
         this->setWindowTitle(_WindowsTitle);
     }
 }
