@@ -247,7 +247,7 @@ void MainWindow::loadGraphFile()
     scene->clear();
     listElem.clear();
 
-    QFile filejs(_FileNameJSC);
+    QFile filejs(QCoreApplication::applicationDirPath() + "\\" + _FileNameJSC);
     filejs.open(QIODevice::ReadOnly);
 
     QByteArray saveData = filejs.readAll();
@@ -353,6 +353,7 @@ void MainWindow::fillFilesShems() const
     QStringList List;
 
     QDir dir;
+    dir.setPath(QCoreApplication::applicationDirPath());
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     dir.setNameFilters(QStringList("*.aqjs"));
     dir.setSorting(QDir::Size);
@@ -431,6 +432,7 @@ void MainWindow::fillComponentLibrary() const
     category4TreeItem->setText(columnIndex, "Categry Custom Elem");
     {
         QDir dir;
+        dir.setPath(QCoreApplication::applicationDirPath());
         dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
         dir.setNameFilters(QStringList("assel_*.svg"));
         //dir.setNameFilters(QStringList("*.svg"));
@@ -603,7 +605,8 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
     else{
         //draftItem = graw;
         if (graw->id()==8) {
-            QString filename = QDir::currentPath() + "/"+item->text(column);
+            //QString filename = QDir::currentPath() + "/"+item->text(column);
+            QString filename = QCoreApplication::applicationDirPath() + "\\"+item->text(column);
             if(QFileInfo::exists(filename)) {
                 qDebug() << filename;
                 QFile file(filename);
@@ -1051,7 +1054,8 @@ void MainWindow::on_actInsMakros_triggered()
     QStringList itemsFile;
 
     QDir dir;
-    dir.setPath("makros");
+    dir.setPath(QCoreApplication::applicationDirPath()+"\\makros");
+    //dir.setPath("makros");
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     dir.setNameFilters(QStringList("*.mkjs"));
     dir.setSorting(QDir::Size);
