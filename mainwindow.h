@@ -78,7 +78,7 @@ private:
     void fillTable() const;
     void fillFilesShems() const;
 
-    QMap<int, QString> mpSvg;
+    QMap<QString, QString> mpSvg;
     void fillComponentLibrary();
 
     void setSceneState(SceneState sceneState);

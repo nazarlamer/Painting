@@ -425,6 +425,7 @@ void MainWindow::fillComponentLibrary()
 
         QFileInfoList list = dir.entryInfoList();
         for (int i = 0; i < list.size(); ++i) {
+
             QFileInfo fileInfo = list.at(i);
             QTreeWidgetItem *treeItem = new QTreeWidgetItem;
             if (!objl[fileInfo.fileName()].isNull())
@@ -434,7 +435,7 @@ void MainWindow::fillComponentLibrary()
 
             treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
             category4TreeItem->addChild(treeItem);
-            mpSvg.insert(columnIndex, fileInfo.fileName());
+            mpSvg.insert(treeItem->text(columnIndex), fileInfo.fileName());
         }
     }
 }
@@ -595,7 +596,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
         //draftItem = graw;
         if (graw->id()==8) {
             //QString filename = QDir::currentPath() + "/"+item->text(column);
-            QString filename = QCoreApplication::applicationDirPath() + "\\libs\\"+mpSvg.value(column);
+            QString filename = QCoreApplication::applicationDirPath() + "\\libs\\"+mpSvg.value(item->text(0));
             if(QFileInfo::exists(filename)) {
                 qDebug() << filename;
                 QFile file(filename);
