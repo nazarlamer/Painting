@@ -373,7 +373,7 @@ void MainWindow::fillFilesShems() const
     ui->lvFiles->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
-void MainWindow::fillComponentLibrary() const
+void MainWindow::fillComponentLibrary()
 {
     const int columnIndex = 0;
 
@@ -409,21 +409,32 @@ void MainWindow::fillComponentLibrary() const
     QTreeWidgetItem *category4TreeItem = new QTreeWidgetItem(ui->treeWidget);
     category4TreeItem->setText(columnIndex, "Інші елементи");
     {
+        QFile filejs(QCoreApplication::applicationDirPath() + "\\libs\\list.jsel");
+        filejs.open(QIODevice::ReadOnly);
+
+        QByteArray saveData = filejs.readAll();
+        QJsonDocument DocJs(QJsonDocument::fromJson(saveData));
+        auto objl = DocJs.object();
+
         QDir dir;
-        dir.setPath(QCoreApplication::applicationDirPath());
+        dir.setPath(QCoreApplication::applicationDirPath()+"\\libs");
         dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-        dir.setNameFilters(QStringList("assel_*.svg"));
+        dir.setNameFilters(QStringList("assel_*.svg")); //sgsfdfg
         //dir.setNameFilters(QStringList("*.svg"));
         dir.setSorting(QDir::Size);
 
         QFileInfoList list = dir.entryInfoList();
         for (int i = 0; i < list.size(); ++i) {
             QFileInfo fileInfo = list.at(i);
-            //qDebug() << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10).arg(fileInfo.fileName()));
             QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-            treeItem->setText(columnIndex, fileInfo.fileName());
+            if (!objl[fileInfo.fileName()].isNull())
+                treeItem->setText(columnIndex, objl[fileInfo.fileName()].toString());
+            else
+                treeItem->setText(columnIndex, fileInfo.fileName());
+
             treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::SvgItem));
             category4TreeItem->addChild(treeItem);
+            mpSvg.insert(columnIndex, fileInfo.fileName());
         }
     }
 }
@@ -584,7 +595,7 @@ void MainWindow::onComponentTreeItemPressed(QTreeWidgetItem *item, int column)
         //draftItem = graw;
         if (graw->id()==8) {
             //QString filename = QDir::currentPath() + "/"+item->text(column);
-            QString filename = QCoreApplication::applicationDirPath() + "\\"+item->text(column);
+            QString filename = QCoreApplication::applicationDirPath() + "\\libs\\"+mpSvg.value(column);
             if(QFileInfo::exists(filename)) {
                 qDebug() << filename;
                 QFile file(filename);

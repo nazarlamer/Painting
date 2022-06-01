@@ -70,13 +70,17 @@ private slots:
     void on_action_3_triggered();
 
 private:
+
     void initScene();
     void makeConnections();
     void saveGraphFile(bool isMakros);
     void loadGraphFile();
     void fillTable() const;
     void fillFilesShems() const;
-    void fillComponentLibrary() const;
+
+    QMap<int, QString> mpSvg;
+    void fillComponentLibrary();
+
     void setSceneState(SceneState sceneState);
     void addItemToTable(const GrawItem *item) const;
     void fillTblProp(const GrawItem *item) const;
@@ -84,6 +88,7 @@ private:
     QString _WindowsTitle{""};
     QStringListModel *model{nullptr};
     void CloneElement(const GrawItem *item);
+
 
 private:
     Ui::MainWindow *ui{nullptr};
@@ -95,6 +100,7 @@ private:
     GrawItem *draftItem{nullptr};
     GrawItem *PolyItem{nullptr}; //для додавання вузлових елементів
     const int componentTypeRole{Qt::UserRole + 1};
+
 };
 
 #endif // MAINWINDOW_H
