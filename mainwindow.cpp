@@ -156,9 +156,15 @@ void MainWindow::saveGraphFile(bool isMakros=false)
             jsElement.insert("Y", listElem[i]->y());
             jsElement.insert("ID", listElem[i]->id());
             jsElement.insert("R", listElem[i]->rotation());
-            jsElement.insert("W", listElem[i]->boundingRect().width());
-            jsElement.insert("H", listElem[i]->boundingRect().height());
             jsElement.insert("Z", listElem[i]->zValue());
+
+            if (listElem[i]->id()==9) {
+                jsElement.insert("W", listElem[i]->getWidthFromSave());
+                jsElement.insert("H", listElem[i]->getHeightFromSave());
+            }else{
+                jsElement.insert("W", listElem[i]->boundingRect().width());
+                jsElement.insert("H", listElem[i]->boundingRect().height());
+            }
 
             QJsonArray jsArrProperty;
 
@@ -193,15 +199,15 @@ void MainWindow::saveGraphFile(bool isMakros=false)
             }
 
             jsonArray.append(jsElement);
-
-            if (isMakros) {
-                QJsonObject jsElement;
-                jsElement.insert("NAME", "");
-                jsElement.insert("ID", -2);
-                jsonArray.append(jsElement);
-            }
-
         }
+
+        if (isMakros) {
+            QJsonObject jsElement;
+            jsElement.insert("NAME", "");
+            jsElement.insert("ID", -2);
+            jsonArray.append(jsElement);
+        }
+
         QJsonDocument jsFile;
         jsFile.setArray(jsonArray);
         filejs.write(jsFile.toJson());
@@ -269,7 +275,7 @@ void MainWindow::loadGraphFile()
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
         }
 
-        if (item->id()==4) {
+        if (item->id()==4 or item->id()==9) {
             item->setWidth(obj["W"].toInt());
             item->setHeight(obj["H"].toInt());
             connect(item, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
@@ -310,7 +316,7 @@ void MainWindow::loadGraphFile()
                 auto ObjProp = ArrNodeP.toObject();
                 for (const QString& keyProp: ObjProp.keys()) {
                     item->setProperty(keyProp, ObjProp[keyProp].toVariant());
-                    if (item->id()==5 and keyProp=="COLOR")
+                    if ((item->id()==5 and keyProp=="COLOR") or (item->id()==9 and keyProp=="COLOR") or (item->id()==9 and keyProp=="FILL"))
                         item->setProperty(keyProp, ObjProp[keyProp].toVariant().value<QColor>());
                 }
             }
@@ -405,8 +411,14 @@ void MainWindow::fillComponentLibrary()
     }
     {
         QTreeWidgetItem *treeItem = new QTreeWidgetItem;
-        treeItem->setText(columnIndex, "Rectangle");
+        treeItem->setText(columnIndex, "Rectangle Text");
         treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::RectangleText));
+        category2TreeItem->addChild(treeItem);
+    }
+    {
+        QTreeWidgetItem *treeItem = new QTreeWidgetItem;
+        treeItem->setText(columnIndex, "Rectangle");
+        treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
         category2TreeItem->addChild(treeItem);
     }
     QTreeWidgetItem *category3TreeItem = new QTreeWidgetItem(ui->treeWidget);
@@ -530,7 +542,7 @@ void MainWindow::CloneElement(const GrawItem *item)
         connect(newgraw, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
     }
 
-    if (newgraw->id()==4) {
+    if (newgraw->id()==4 or newgraw->id()==9) {
         newgraw->setWidth(item->boundingRect().width());
         newgraw->setHeight(item->boundingRect().height());
         connect(newgraw, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
@@ -685,7 +697,7 @@ void MainWindow::onMousePressed(const QPointF &point)
         ui->tableWidget->setRowHeight(ui->tableWidget->rowCount()-1,16);
     }
 
-    if (newItem->id()==4 or newItem->id()==7) {
+    if (newItem->id()==4 or newItem->id()==7 or newItem->id()==9) {
         connect(newItem, &GrawItem::updScen, scene, &MyGraphicsScene::UpdateScen);
     }
 
@@ -928,6 +940,7 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                     QString txtPropT = grawsel->getListPropText().at(row).second;
 
                     qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName();
+
                     if ( (varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull())
                         or (varProp.isNull() and grawsel->id()==4 and txtProp=="TEXT") )
                     {
@@ -943,7 +956,10 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                             fillTblProp(grawsel);
                         }
                     }
+
                     if ((varProp.isNull() and grawsel->id()==5 and txtProp=="COLOR")
+                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="COLOR")
+                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILL")
                         or (varProp.typeName()==tr("QColor") and !varProp.isNull())) {
 
                         QColor color = QColorDialog::getColor(varProp.value<QColor>(), this);
@@ -953,10 +969,13 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                             fillTblProp(grawsel);
                         }
                     }
+
                     if ((varProp.isNull() and grawsel->id()==5 and txtProp=="WIDTH2")
                         or (varProp.typeName()==tr("int") and !varProp.isNull())
-                        or ((grawsel->id()==4 or grawsel->id()==5) and varProp.typeName()==tr("double") and !varProp.isNull())
+                        or ((grawsel->id()==4 or grawsel->id()==5 or grawsel->id()==9) and varProp.typeName()==tr("double") and !varProp.isNull())
                         or (varProp.isNull() and grawsel->id()==4 and txtProp=="SIZE")
+                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="HEIGHT")
+
                         ) {
 
                         bool ok;
@@ -967,7 +986,9 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                             fillTblProp(grawsel);
                         }
                     }
+
                     if ( (varProp.isNull() and grawsel->id()==4 and txtProp=="BOLD")
+                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILLB")
                         or (varProp.typeName()==tr("bool")) ) {
                         if (varProp.isNull()) {
                             grawsel->setProperty(txtProp,false);
@@ -992,6 +1013,8 @@ void MainWindow::on_actSSPrint_triggered()
 
 void MainWindow::on_actSSReadOnly_triggered()
 {
+    ui->tWProperty->setVisible(false);
+
     int maxX = 0;
     int maxY = 0;
 

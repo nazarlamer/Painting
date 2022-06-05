@@ -8,6 +8,7 @@
 #include "elements/graphnode.h"
 #include "elements/twogtext.h"
 #include "elements/svgitem.h"
+#include "rectangleitem.h"
 
 // В GrawItem можна зберігати ComponentType як айді
 //і тоді ці статік касти будуть не потрібні.
@@ -39,6 +40,9 @@ GrawItem *ComponentFactory::createComponent(ComponentType type)
 
     case ComponentType::SvgItem:
         return new SvgItem(static_cast<int>(type));
+
+    case ComponentType::Rectangle:
+        return new RectangleItem(static_cast<int>(type));
 
     default:
         return nullptr;

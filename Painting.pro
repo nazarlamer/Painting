@@ -35,6 +35,7 @@ SOURCES += \
         components/elements/twogtext.cpp \
         components/grawitem.cpp \
         components/lineitem.cpp \
+        components/rectangleitem.cpp \
         components/rectangletextitem.cpp \
         giproperty.cpp \
         main.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
         components/elements/twogtext.h \
         components/grawitem.h \
         components/lineitem.h \
+        components/rectangleitem.h \
         components/rectangletextitem.h \
         components/svgitem.h \
         giproperty.h \
