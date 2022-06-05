@@ -407,7 +407,7 @@ void MainWindow::fillComponentLibrary()
     treeItem->setText(columnIndex, "Подвійний текст");
     treeItem->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::TwoText));
 
-    QTreeWidgetItem *treeItem5 = new QTreeWidgetItem;
+    QTreeWidgetItem *treeItem5 = new QTreeWidgetItem(ui->treeWidget);
     treeItem5->setText(columnIndex, "Прямокутник");
     treeItem5->setData(columnIndex, componentTypeRole, qVariantFromValue(ComponentType::Rectangle));
 
