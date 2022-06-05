@@ -144,6 +144,16 @@ void GrawItem::setHeight(int iHeight)
 
 }
 
+int GrawItem::getWidthFromSave() const
+{
+
+}
+
+int GrawItem::getHeightFromSave() const
+{
+
+}
+
 QByteArray GrawItem::getByteArrCont() const
 {
 
