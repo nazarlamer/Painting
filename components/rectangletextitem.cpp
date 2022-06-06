@@ -27,6 +27,7 @@ RectangleTextItem::RectangleTextItem(int id) : GrawItem(id)
     _Propertic->addProperty("TEXT","Текст");
     _Propertic->addProperty("SIZE","Розмір");
     _Propertic->addProperty("BOLD","Грубий");
+    _Propertic->addProperty("COLOR","Колір тексту");
 }
 
 QRectF RectangleTextItem::boundingRect() const
@@ -62,6 +63,11 @@ void RectangleTextItem::paintMain(QPainter *painter)
 {
     grftxt->setTextWidth(BoundingRectW);
     grftxt->setPlainText(GrawText);
+
+    /*QColor _penfill{QColor(255, 255, 140, 145)};
+    QPainterPath path;
+    path.addRoundedRect(QRectF(0, 0, grftxt->boundingRect().width(), grftxt->boundingRect().height()), 0, 0);
+    painter->fillPath(path, _penfill);*/
 }
 
 void RectangleTextItem::setWidth(int iWidth)
@@ -91,6 +97,9 @@ void RectangleTextItem::applyProperty()
         QFont fnt = grftxt->font();
         fnt.setBold(getPropVariant("BOLD").toBool());
         grftxt->setFont(fnt);
+    }
+    if (!getPropVariant("COLOR").isNull()) {
+        grftxt->setDefaultTextColor(getPropVariant("COLOR").value<QColor>());
     }
 
     update();

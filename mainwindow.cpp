@@ -316,7 +316,8 @@ void MainWindow::loadGraphFile()
                 auto ObjProp = ArrNodeP.toObject();
                 for (const QString& keyProp: ObjProp.keys()) {
                     item->setProperty(keyProp, ObjProp[keyProp].toVariant());
-                    if ((item->id()==5 and keyProp=="COLOR") or (item->id()==9 and keyProp=="COLOR") or (item->id()==9 and keyProp=="FILL"))
+                    if ((item->id()==5 and keyProp=="COLOR") or (item->id()==9 and keyProp=="COLOR") or (item->id()==4 and keyProp=="COLOR")
+                        or (item->id()==9 and keyProp=="FILL"))
                         item->setProperty(keyProp, ObjProp[keyProp].toVariant().value<QColor>());
                 }
             }
@@ -960,10 +961,11 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                     if ((varProp.isNull() and grawsel->id()==5 and txtProp=="COLOR")
                         or (varProp.isNull() and grawsel->id()==9 and txtProp=="COLOR")
                         or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILL")
+                        or (varProp.isNull() and grawsel->id()==4 and txtProp=="COLOR")
                         or (varProp.typeName()==tr("QColor") and !varProp.isNull())) {
 
                         QColor color = QColorDialog::getColor(varProp.value<QColor>(), this);
-                        if( color.isValid() )
+                        if(color.isValid() )
                         {
                             grawsel->setProperty(txtProp,color);
                             fillTblProp(grawsel);
