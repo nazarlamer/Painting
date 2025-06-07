@@ -6,7 +6,7 @@
 
 PolylineItem::PolylineItem(int id) : GrawItem(id)
 {
-    setFlag(QGraphicsItem::ItemIsSelectable, false);
+    //setFlag(QGraphicsItem::ItemIsSelectable, false);
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
     _Propertic->addProperty("COLOR","Колір");

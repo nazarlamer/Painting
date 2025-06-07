@@ -352,6 +352,7 @@ void MainWindow::fillTable() const
 
     ui->tableWidget->resizeColumnsToContents();
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+    // ui->tableWidget->setVisible(true);
 }
 
 void MainWindow::fillFilesShems() const
@@ -634,6 +635,8 @@ void MainWindow::onMouseLeftScene()
 
 void MainWindow::onMousePressed(const QPointF &point)
 {
+    qDebug() << "onMousePressed";
+
     if (state != SceneState::CreateComponentState)
     {
         for (int i=0; i<listElem.size(); i++)
@@ -746,7 +749,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         for (GrawItem *itmBMode : listElem)
         {
             if (itmBMode->isSelected()) {
-                qDebug() << itmBMode->zValue();
+                //qDebug() << itmBMode->zValue();
                 if (itmBMode->zValue()>0) {
                     itmBMode->setZValue(0);
                 }else{
@@ -1132,15 +1135,21 @@ void MainWindow::on_action_4_triggered()
 {
     qreal minX = scene->width();
     qreal minY = scene->height();
-    qDebug()<<minX<<minY;
+    qDebug() << minX << minY;
     for (QGraphicsItem *ItemScene : scene->items())
     {
         GrawItem *item = static_cast<GrawItem *>(ItemScene);
-        qDebug()<<item->id();
-        if (item->id()==6)
+        qDebug() << item->id();
+        if (item->id() ==6 )
             continue;
 
         if (item->id()>=0) {
+            if (ItemScene->x()<0)
+                ItemScene->setX(0);
+
+            if (ItemScene->y()<0)
+                ItemScene->setY(0);
+
             if (ItemScene->x()<minX)
                 minX = ItemScene->x();
 
@@ -1153,7 +1162,7 @@ void MainWindow::on_action_4_triggered()
     minY = minY - 20;
     // qDebug()<<minX<<minY;
 
-    if (minX>0 or minY>0) {
+    if (minX > 0 or minY > 0) {
         for (QGraphicsItem *ItemScene : scene->items())
         {
             GrawItem *item = static_cast<GrawItem *>(ItemScene);
@@ -1176,8 +1185,11 @@ void MainWindow::on_action_5_triggered()
     for (QGraphicsItem *ItemScene : scene->items())
     {
         GrawItem *item = static_cast<GrawItem *>(ItemScene);
-        if (item->id()==5)
+        if (item->id()==5) {
             item->setZValue(2);
+        } else {
+            item->setZValue(1);
+        }
     }
 }
 
@@ -1186,8 +1198,11 @@ void MainWindow::on_action_6_triggered()
     for (QGraphicsItem *ItemScene : scene->items())
     {
         GrawItem *item = static_cast<GrawItem *>(ItemScene);
-        if (item->id()==5)
+        if (item->id()==5) {
             item->setZValue(0);
+        } else {
+            item->setZValue(1);
+        }
     }
 }
 
