@@ -3,6 +3,7 @@
 
 LineItem::LineItem(int id) : GrawItem(id)
 {
+
 }
 
 QRectF LineItem::boundingRect() const
