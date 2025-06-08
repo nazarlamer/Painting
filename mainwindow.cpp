@@ -503,7 +503,7 @@ void MainWindow::fillTblProp(const GrawItem *item) const
         ui->tWProperty->setVerticalHeaderLabels(heaVert);
         ui->tWProperty->resizeColumnsToContents();
         ui->tWProperty->horizontalHeader()->setStretchLastSection(true);
-    }else {
+    } else {
         ui->tWProperty->setVisible(false);
     }
 }
@@ -635,6 +635,7 @@ void MainWindow::onMouseLeftScene()
 
 void MainWindow::onMousePressed(const QPointF &point)
 {
+    // Сюди залітає ліва клавіша від миші зі сцени
     qDebug() << "onMousePressed";
 
     if (state != SceneState::CreateComponentState)
@@ -642,6 +643,7 @@ void MainWindow::onMousePressed(const QPointF &point)
         for (int i=0; i<listElem.size(); i++)
         {
             const GrawItem *grawsel = listElem[i];
+
             if (grawsel->isSelected()) {
                 ui->tableWidget->selectRow(i);
 
@@ -649,7 +651,16 @@ void MainWindow::onMousePressed(const QPointF &point)
 
                 return;
             }
+            if (grawsel->IsNodesElement()) {
+                for (QGraphicsItem *itmV: grawsel->childItems()) {
+                    if (itmV->isSelected()) {
+                        fillTblProp(grawsel);
+                        return;
+                    }
+                }
+            }
         }
+        ui->tWProperty->setVisible(false);
         return;
     }
 
@@ -906,81 +917,95 @@ void MainWindow::on_actionSvg_triggered()
 void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
 {
     qDebug() << "on_tWProperty_cellDoubleClicked" << row << column;
-    if (column==0) {
+    if (column==0)
+    {
         if (state != SceneState::CreateComponentState)
         {
+            GrawItem *grawsel = nullptr;
             for (int i=0; i<listElem.size(); ++i)
             {
-                GrawItem *grawsel = listElem[i];
-                if (grawsel->isSelected()) {
-
-                    QList<QPair<QString, QString>> listProp = grawsel->getListPropText();
-                    QVariant varProp = grawsel->getPropVariant(listProp.at(row).first);
-
-                    QString txtProp = grawsel->getListPropText().at(row).first;
-                    QString txtPropT = grawsel->getListPropText().at(row).second;
-
-                    qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName();
-
-                    if ( (varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull())
-                        or (varProp.isNull() and grawsel->id()==4 and txtProp=="TEXT") )
-                    {
-
-                        //qDebug() << txtProp;
-                        bool ok;
-                        QString text = QInputDialog::getText(this, "Параметр: " + txtPropT,
-                                                             txtPropT+":", QLineEdit::Normal,
-                                                             varProp.toString(), &ok);
-                        if (ok && !text.isEmpty()) {
-                            //textLabel->setText(text);
-                            grawsel->setProperty(txtProp,text);
-                            fillTblProp(grawsel);
+                GrawItem *lgrawsel = listElem[i];
+                if (lgrawsel -> isSelected()) {
+                    grawsel = lgrawsel;
+                    break;
+                }
+                if (lgrawsel -> IsNodesElement()) {
+                    for (QGraphicsItem *itmV: lgrawsel->childItems()) {
+                        if (itmV->isSelected()) {
+                            grawsel = lgrawsel;
+                            break;
                         }
                     }
+                    if (grawsel != nullptr)
+                        break;
+                }
+            }
 
-                    if ((varProp.isNull() and grawsel->id()==5 and txtProp=="COLOR")
-                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="COLOR")
-                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILL")
-                        or (varProp.isNull() and grawsel->id()==4 and txtProp=="COLOR")
-                        or (varProp.typeName()==tr("QColor") and !varProp.isNull())) {
+            if (grawsel != nullptr) {
+                QList<QPair<QString, QString>> listProp = grawsel->getListPropText();
+                QVariant varProp = grawsel->getPropVariant(listProp.at(row).first);
 
-                        QColor color = QColorDialog::getColor(varProp.value<QColor>(), this);
-                        if(color.isValid() )
-                        {
-                            grawsel->setProperty(txtProp,color);
-                            fillTblProp(grawsel);
-                        }
-                    }
+                QString txtProp = grawsel->getListPropText().at(row).first;
+                QString txtPropT = grawsel->getListPropText().at(row).second;
 
-                    if ((varProp.isNull() and grawsel->id()==5 and txtProp=="WIDTH2")
-                        or (varProp.typeName()==tr("int") and !varProp.isNull())
-                        or ((grawsel->id()==4 or grawsel->id()==5 or grawsel->id()==9) and varProp.typeName()==tr("double") and !varProp.isNull())
-                        or (varProp.isNull() and grawsel->id()==4 and txtProp=="SIZE")
-                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="HEIGHT")
+                qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName();
 
-                        ) {
+                if ( (varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull())
+                    or (varProp.isNull() and grawsel->id()==4 and txtProp=="TEXT") )
+                {
 
-                        bool ok;
-                        int ipar = QInputDialog::getInt(this,  "Параметр: " + txtPropT,
-                                                     txtPropT+":", varProp.toInt(), 1, 32, 1, &ok);
-                        if (ok) {
-                            grawsel->setProperty(txtProp,ipar);
-                            fillTblProp(grawsel);
-                        }
-                    }
-
-                    if ( (varProp.isNull() and grawsel->id()==4 and txtProp=="BOLD")
-                        or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILLB")
-                        or (varProp.typeName()==tr("bool")) ) {
-                        if (varProp.isNull()) {
-                            grawsel->setProperty(txtProp,false);
-                        }else{
-                            grawsel->setProperty(txtProp,!varProp.toBool());
-                        }
+                    //qDebug() << txtProp;
+                    bool ok;
+                    QString text = QInputDialog::getText(this, "Параметр: " + txtPropT,
+                                                         txtPropT+":", QLineEdit::Normal,
+                                                         varProp.toString(), &ok);
+                    if (ok && !text.isEmpty()) {
+                        //textLabel->setText(text);
+                        grawsel->setProperty(txtProp,text);
                         fillTblProp(grawsel);
                     }
+                }
 
-                    break;
+                if ((varProp.isNull() and grawsel->id()==5 and txtProp=="COLOR")
+                    or (varProp.isNull() and grawsel->id()==9 and txtProp=="COLOR")
+                    or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILL")
+                    or (varProp.isNull() and grawsel->id()==4 and txtProp=="COLOR")
+                    or (varProp.typeName()==tr("QColor") and !varProp.isNull())) {
+
+                    QColor color = QColorDialog::getColor(varProp.value<QColor>(), this);
+                    if(color.isValid() )
+                    {
+                        grawsel->setProperty(txtProp,color);
+                        fillTblProp(grawsel);
+                    }
+                }
+
+                if ((varProp.isNull() and grawsel->id()==5 and txtProp=="WIDTH2")
+                    or (varProp.typeName()==tr("int") and !varProp.isNull())
+                    or ((grawsel->id()==4 or grawsel->id()==5 or grawsel->id()==9) and varProp.typeName()==tr("double") and !varProp.isNull())
+                    or (varProp.isNull() and grawsel->id()==4 and txtProp=="SIZE")
+                    or (varProp.isNull() and grawsel->id()==9 and txtProp=="HEIGHT")
+
+                    ) {
+
+                    bool ok;
+                    int ipar = QInputDialog::getInt(this,  "Параметр: " + txtPropT,
+                                                 txtPropT+":", varProp.toInt(), 1, 32, 1, &ok);
+                    if (ok) {
+                        grawsel->setProperty(txtProp,ipar);
+                        fillTblProp(grawsel);
+                    }
+                }
+
+                if ( (varProp.isNull() and grawsel->id()==4 and txtProp=="BOLD")
+                    or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILLB")
+                    or (varProp.typeName()==tr("bool")) ) {
+                    if (varProp.isNull()) {
+                        grawsel->setProperty(txtProp,false);
+                    }else{
+                        grawsel->setProperty(txtProp,!varProp.toBool());
+                    }
+                    fillTblProp(grawsel);
                 }
             }
         }
