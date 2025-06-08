@@ -21,6 +21,9 @@
 
 #include <QSvgGenerator>
 
+#include <QPrinter>
+#include <QPrintDialog>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -917,9 +920,31 @@ void MainWindow::on_actionSvg_triggered()
     QPainter painter( &svgGen );
     scene->render( &painter );
 
-    scene->setSceneRect(0,0,rs.width(), rs.height());
+
     //scene->setSceneState(SceneState::NormalState);
     //qDebug() << " Svg Save" ;
+
+    /*QPrinter printer(QPrinter::HighResolution);
+    printer.setPageSize(QPrinter::A4);
+    printer.setOrientation(QPrinter::Portrait);
+    QPrintDialog dlg(&printer);
+    if(dlg.exec()==QDialog::Accepted) {
+        QPainter p(&printer);
+        scene->render(&p);
+        p.end();
+    }*/
+
+    QString fileName = QFileDialog::getSaveFileName(this, "Export PDF", QString(), "*.pdf");
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setPageSize(QPrinter::A4);
+    printer.setOrientation(QPrinter::Portrait);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    QPainter p(&printer);
+    scene->render(&p);
+    p.end();
+
+    scene->setSceneRect(0,0,rs.width(), rs.height());
 }
 
 void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
@@ -1030,8 +1055,31 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
 
 void MainWindow::on_actSSPrint_triggered()
 {
+    ui->tWProperty->setVisible(false);
 
+    int maxX = 0;
+    int maxY = 0;
 
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        if ((ItemScene->x()+ItemScene->boundingRect().width())>maxX)
+            maxX = ItemScene->x()+ItemScene->boundingRect().width();
+
+        if (ItemScene->y()+ItemScene->boundingRect().height()>maxY)
+            maxY = ItemScene->y()+ItemScene->boundingRect().height();
+
+        GrawItem *ItemViewMode = dynamic_cast<GrawItem*>(ItemScene);
+        if (ItemViewMode)
+            ItemViewMode->setModeView(1);
+
+    }
+    maxX = maxX + 20;
+    maxY = maxY + 20;
+
+    scene->setSceneRect(0, 0, maxX, maxY);
+    scene->setSceneState(SceneState::PrintState);
+
+    state = SceneState::PrintState;
 }
 
 void MainWindow::on_actSSReadOnly_triggered()
