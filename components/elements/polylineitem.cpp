@@ -11,6 +11,7 @@ PolylineItem::PolylineItem(int id) : GrawItem(id)
 
     _Propertic->addProperty("COLOR","Колір");
     _Propertic->addProperty("WIDTH2","Товщина");
+    _Propertic->addProperty("PENSTYLE","Стиль лінії");
 
     //GrawItem *newItemZero = ComponentFactory::createComponent(ComponentType::GraphNode);
     //newItemZero->setParent(this);
@@ -59,7 +60,7 @@ void PolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem */*op
         painter->setBrush(Qt::darkCyan);
         painter->drawEllipse(QRect(-5, -5, 10, 10));
         return;
-    }else{
+    } else {
         if (_ModeView==0) {
             if (isSelected())
                 painter->setPen(QPen(Qt::blue, 1));
@@ -87,7 +88,15 @@ void PolylineItem::paintSelected(QPainter *painter)
 
 void PolylineItem::paintNotSelected(QPainter *painter)
 {
-    painter->setPen(QPen(_pencolor, _penwidth));
+    QPen sPen;
+    if (getPropVariant("PENSTYLE") == 1)
+        sPen.setStyle(Qt::DashLine);
+    else
+        sPen.setStyle(Qt::SolidLine);
+    sPen.setColor(_pencolor);
+    sPen.setWidth(_penwidth);
+
+    painter->setPen(sPen);
     painter->setBrush(Qt::NoBrush);
     paintMain(painter);
 }

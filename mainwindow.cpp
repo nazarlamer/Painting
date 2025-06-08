@@ -482,7 +482,15 @@ void MainWindow::fillTblProp(const GrawItem *item) const
                     ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
                 }else{
                     if (varProp.typeName()==tr("int") or varProp.typeName()==tr("double")) {
-                        ui->tWProperty->setItem(i,0,new QTableWidgetItem(QString::number(varProp.toInt())));
+                        if (item->id()==5 and listProp.at(i).first == "PENSTYLE") {
+                            if (varProp.toInt()==1) {
+                                ui->tWProperty->setItem(i,0,new QTableWidgetItem("штрихова лінія"));
+                            } else {
+                                ui->tWProperty->setItem(i,0,new QTableWidgetItem("звичайна лінія"));
+                            }
+                        } else {
+                            ui->tWProperty->setItem(i,0,new QTableWidgetItem(QString::number(varProp.toInt())));
+                        }
                     }else{
                         if (varProp.typeName()==tr("QColor")) {
                             ui->tWProperty->setItem(i,0,new QTableWidgetItem(varProp.toString()));
@@ -948,7 +956,7 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                 QString txtProp = grawsel->getListPropText().at(row).first;
                 QString txtPropT = grawsel->getListPropText().at(row).second;
 
-                qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName();
+                qDebug() << varProp.isNull() << grawsel->id() << varProp.typeName() << txtProp;
 
                 if ( (varProp.isNull() and grawsel->id()==7) or (varProp.typeName()==tr("QString") and !varProp.isNull())
                     or (varProp.isNull() and grawsel->id()==4 and txtProp=="TEXT") )
@@ -970,7 +978,8 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                     or (varProp.isNull() and grawsel->id()==9 and txtProp=="COLOR")
                     or (varProp.isNull() and grawsel->id()==9 and txtProp=="FILL")
                     or (varProp.isNull() and grawsel->id()==4 and txtProp=="COLOR")
-                    or (varProp.typeName()==tr("QColor") and !varProp.isNull())) {
+                    or (varProp.typeName()==tr("QColor") and !varProp.isNull())
+                    ) {
 
                     QColor color = QColorDialog::getColor(varProp.value<QColor>(), this);
                     if(color.isValid() )
@@ -981,11 +990,10 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                 }
 
                 if ((varProp.isNull() and grawsel->id()==5 and txtProp=="WIDTH2")
-                    or (varProp.typeName()==tr("int") and !varProp.isNull())
-                    or ((grawsel->id()==4 or grawsel->id()==5 or grawsel->id()==9) and varProp.typeName()==tr("double") and !varProp.isNull())
+                    or (varProp.typeName()==tr("int") and !varProp.isNull() and txtProp!="PENSTYLE")
+                    or ((grawsel->id()==4 or grawsel->id()==5 or grawsel->id()==9) and varProp.typeName()==tr("double") and !varProp.isNull() and (txtProp!="PENSTYLE"))
                     or (varProp.isNull() and grawsel->id()==4 and txtProp=="SIZE")
                     or (varProp.isNull() and grawsel->id()==9 and txtProp=="HEIGHT")
-
                     ) {
 
                     bool ok;
@@ -1004,6 +1012,14 @@ void MainWindow::on_tWProperty_cellDoubleClicked(int row, int column)
                         grawsel->setProperty(txtProp,false);
                     }else{
                         grawsel->setProperty(txtProp,!varProp.toBool());
+                    }
+                    fillTblProp(grawsel);
+                }
+                if (grawsel->id()==5 and txtProp=="PENSTYLE") {
+                    if (varProp==0) {
+                        grawsel->setProperty(txtProp,1);
+                    } else {
+                        grawsel->setProperty(txtProp,0);
                     }
                     fillTblProp(grawsel);
                 }
