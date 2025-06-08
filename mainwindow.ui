@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>888</width>
-    <height>640</height>
+    <width>923</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -197,7 +197,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>888</width>
+     <width>923</width>
      <height>18</height>
     </rect>
    </property>
@@ -354,7 +354,7 @@
   <customwidget>
    <class>MyGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>mygraphicsview.h</header>
+   <header location="global">mygraphicsview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
