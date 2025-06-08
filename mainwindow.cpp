@@ -934,7 +934,7 @@ void MainWindow::on_actionSvg_triggered()
         p.end();
     }*/
 
-    QString fileName = QFileDialog::getSaveFileName(this, "Export PDF", QString(), "*.pdf");
+    /*QString fileName = QFileDialog::getSaveFileName(this, "Export PDF", QString(), "*.pdf");
     QPrinter printer(QPrinter::HighResolution);
     printer.setPageSize(QPrinter::A4);
     printer.setOrientation(QPrinter::Portrait);
@@ -942,7 +942,7 @@ void MainWindow::on_actionSvg_triggered()
     printer.setOutputFileName(fileName);
     QPainter p(&printer);
     scene->render(&p);
-    p.end();
+    p.end();*/
 
     scene->setSceneRect(0,0,rs.width(), rs.height());
 }
@@ -1295,7 +1295,46 @@ void MainWindow::on_action_6_triggered()
     }
 }
 
-void MainWindow::on_action_3_triggered()
+void MainWindow::on_act_exportPDF_triggered()
 {
+    //qDebug() << " Scene has " << scene->items().count() << " items" ;
+    int maxX = 0;
+    int maxY = 0;
 
+    for (QGraphicsItem *ItemScene : scene->items())
+    {
+        GrawItem *item = static_cast<GrawItem *>(ItemScene);
+        qDebug()<<item->id();
+
+        if (item->id()==6)
+            continue;
+
+        if (item->id()>=0) {
+            if ((ItemScene->x()+ItemScene->boundingRect().width())>maxX)
+                maxX = ItemScene->x()+ItemScene->boundingRect().width();
+
+            if ((ItemScene->y()+ItemScene->boundingRect().height())>maxY)
+                maxY = ItemScene->y()+ItemScene->boundingRect().height();
+        }
+    }
+
+    maxX = maxX + 20;
+    maxY = maxY + 20;
+
+    //qDebug() << maxX << maxY;
+
+    QRectF rs = scene->sceneRect();
+    scene->setSceneRect(0,0,maxX,maxY);
+
+    QString fileName = QFileDialog::getSaveFileName(this, "Надіслати в PDF", QString(), "*.pdf");
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setPageSize(QPrinter::A4);
+    printer.setOrientation(QPrinter::Portrait);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    QPainter p(&printer);
+    scene->render(&p);
+    p.end();
+
+    scene->setSceneRect(0,0,rs.width(), rs.height());
 }
