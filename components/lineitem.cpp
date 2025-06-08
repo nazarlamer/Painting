@@ -1,15 +1,12 @@
 #include "lineitem.h"
 #include <QPainter>
-#include <QDebug>
 
 LineItem::LineItem(int id) : GrawItem(id)
 {
-
 }
 
 QRectF LineItem::boundingRect() const
 {
-    qDebug() << "LineItem::boundingRect()";
     return QRectF(-10, -10, 20, 20);
 }
 
