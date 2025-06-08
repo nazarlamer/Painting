@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Askmem PainterSZ</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -55,7 +55,7 @@
             </property>
             <property name="maximumSize">
              <size>
-              <width>171</width>
+              <width>190</width>
               <height>16777215</height>
              </size>
             </property>
@@ -67,7 +67,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QListView" name="lvFiles"/>
+           <widget class="QListView" name="lvFiles">
+            <property name="maximumSize">
+             <size>
+              <width>190</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -100,7 +107,7 @@
             <property name="maximumSize">
              <size>
               <width>300</width>
-              <height>400</height>
+              <height>16777215</height>
              </size>
             </property>
             <property name="rowCount">
